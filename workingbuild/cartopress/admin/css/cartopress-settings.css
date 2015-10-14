@@ -23,6 +23,8 @@ label {
 	font-weight: 700;
 	margin-right:10px;
 	}
+
+
 	
 /*single elements*/
 #cartopress-logo {
@@ -47,7 +49,7 @@ label {
     vertical-align: top;
     text-align: left;
     padding: 8px 0 8px 0;
-    width: 10%;
+    width: 100px;
     line-height: auto;
     font-weight: 700;
 }
@@ -63,11 +65,27 @@ label {
 	padding:0;
 }
 
+.cpdb-specialinstruction {
+	padding:0 0 10px 0;
+	font-size:smaller;
+	font-style:italic;
+}
+
 #cpdb-account-settings input:not([type="submit"]), 
 #cpdb-publishtype-singlepost input:not([type="submit"]) {
 	padding:5px;
 	vertical-align:middle;
 	width:100%;
+}
+
+#cpdb-account-settings input.button:not([type="submit"]) {
+	padding:0;
+	margin:10px 0 0 100px;
+}
+
+#generate_table {
+ 	max-width:200px;
+ 	height:30px;
 }
 
 /*type*/
