@@ -35,153 +35,12 @@ if (!class_exists('cartopress')) {
 	class cartopress {
 	
 		public static function start() {
-		cartopress::definitions();
-		cartopress::activate();
-		cartopress::add_geolocator();
-				
+			cartopress::definitions();
+			cartopress::activate();
+			cartopress::add_geolocator();
 		}
 		
-		// create the database tables @since 0.1.0
-		public static function cartopress_install() {
-			global $wpdb;
-			global $cartopress_db_version;
-			$cartopress_db_version = '1.0';
-		
-			$table_one = $wpdb->prefix . 'cartopress_options';
-			$table_two = $wpdb->prefix . 'cartopress_georeference';
-			
-			$charset_collate = $wpdb->get_charset_collate();
-		
-			$sql = "CREATE TABLE $table_one (
-				cartopress_option_id mediumint(9) NOT NULL AUTO_INCREMENT,
-				cartopress_option_name tinytext NOT NULL,
-				cartopress_option_value text NOT NULL,
-				UNIQUE KEY id (cartopress_option_id)
-			) $charset_collate;
-			
-			CREATE TABLE $table_two (
-				geoid mediumint(9) NOT NULL AUTO_INCREMENT,
-				geoid_postid mediumint NOT NULL,
-				geoid_post_type text NOT NULL,
-				time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-				lat decimal(9,7) NOT NULL,
-				lng decimal(9,7) NOT NULL,
-				address text NOT NULL,
-				post_code int NOT NULL,
-				city_local text NOT NULL,
-				prov_code char(2) NOT NULL,
-				country_code char(2) NOT NULL,
-				url varchar(55) DEFAULT '' NOT NULL,
-				UNIQUE KEY id (geoid)
-			) $charset_collate;";
-			
-		
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			dbDelta( $sql );
-		
-			add_option( 'cartopress_db_version', $cartopress_db_version );
-		
-		} // public static function cartopress_install
-		
-		// begin dummy data 1
-		public static function cartopress_install_sampleoptions() { 
-			global $wpdb;
-			
-			$option_name = 'cartodb_api_key';
-			$option_value = 'k45466nggfgd00945hnd4';
-			
-			$table_one = $wpdb->prefix . 'cartopress_options';
-			
-			$wpdb->insert( 
-				$table_one, 
-				array( 
-					'cartopress_option_name' => $option_name, 
-					'cartopress_option_value' => $option_value, 
-				) 
-			);
-		} //end dummy data 1
-		
-		// begin dummy data 2
-		public static function cartopress_install_samplegeoreference() { 
-			global $wpdb;
-			
-			$lat = '40.2772980';
-			$lng = '-75.5859375';
-			$address = '227 North 7th Street';
-			$city_local = 'Gilbertsville';
-			$post_code = '19525';
-			$state_prov = 'PA';
-			$country_code = 'US';
-			
-			$table_two = $wpdb->prefix . 'cartopress_georeference';
-			
-			$wpdb->insert( 
-				$table_two, 
-				array( 
-					'time' => current_time( 'mysql' ), 
-					'lat' => $lat,
-					'lng' => $lng,
-					'address' => $address, 
-					'city_local' => $city_local,
-					'post_code' => $post_code,
-					'prov_code' => $state_prov,
-					'country_code' => $country_code,
-				) 
-			);
-		} //end dummy data 2
-		
-		// check for database upgrade @since 0.1.0
-		public static function upgradedb() {
-		
-			global $wpdb;
-			$installed_ver = get_option( "cartopress_db_version" );
-			
-			if ( $installed_ver != $cartopress_db_version ) {
-			
-				$table_one = $wpdb->prefix . 'cartopress_options';
-				$table_two = $wpdb->prefix . 'cartopress_georeference';
-			
-				$sql = "CREATE TABLE $table_one (
-					cartopress_option_id mediumint(9) NOT NULL AUTO_INCREMENT,
-					cartopress_option_name tinytext NOT NULL,
-					cartopress_option_value text NOT NULL,
-					UNIQUE KEY id (cartopress_option_id)
-				) $charset_collate;
-				
-				CREATE TABLE $table_two (
-					geoid mediumint(9) NOT NULL AUTO_INCREMENT,
-					geoid_postid mediumint NOT NULL,
-					geoid_post_type text NOT NULL,
-					time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-					lat decimal(9,7) NOT NULL,
-					lng decimal(9,7) NOT NULL,
-					address text NOT NULL,
-					post_code int NOT NULL,
-					city_local text NOT NULL,
-					prov_code char(2) NOT NULL,
-					country_code char(2) NOT NULL,
-					url varchar(55) DEFAULT '' NOT NULL,
-					UNIQUE KEY id (geoid)
-				) $charset_collate;";
-			
-				require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-				dbDelta( $sql );
-			
-				update_option( "cartopress_db_version", $cartopress_db_version );
-			}
-			
-			function cartopress_update_db_check() {
-				global $cartopress_db_version;
-				if ( get_site_option( 'cartopress_db_version' ) != $cartopress_db_version ) {
-					cartopress_install();
-				}
-			}
-			add_action( 'plugins_loaded', 'cartopress_update_db_check' );
-
-		} //end upgradedb
-		
-		
-		// add constants
+		// add constants @since 0.1.0
 		private static function definitions() {
 			define('cartopress_plugin_name', plugin_basename(__FILE__));
 			define('cartopress_dir_path', dirname( __FILE__ ));
@@ -191,15 +50,9 @@ if (!class_exists('cartopress')) {
 			define('cartopress_vers', '0.1.0');
 		}
 		
-
-	
 		// activation @since 0.1.0
 		private static function activate() {
 			
-			register_activation_hook( __FILE__, array( 'cartopress', 'cartopress_install') );
-			register_activation_hook( __FILE__, array( 'cartopress', 'cartopress_install_sampleoptions') ); //for dummy data
-			register_activation_hook( __FILE__,  array( 'cartopress', 'cartopress_install_samplegeoreference') ); // for dummy data
-		
 			// hook in the settings page @since 0.1.0
 			if (is_admin()) {
 				
@@ -208,20 +61,16 @@ if (!class_exists('cartopress')) {
 				add_action( 'admin_init', 'get_admin_styles');
 				add_action( 'admin_init', 'get_admin_scripts');
 				add_action( 'admin_menu', 'cartopress_options_menu' );
-				
-				$cartopress_settings;
-				
+
 				function get_admin_styles() {
 					// add google fonts
 					$query_args = array( 'family' => 'Montserrat:400,700', 'subset' => 'latin,latin-ext' ); 
-					wp_register_style( 'cartopress', cartopress_url . '/admin/css/cartopress-settings.css', array(), cartopress_vers );
 					wp_register_style( 'google_fonts', add_query_arg( $query_args, "//fonts.googleapis.com/css" ), array(), null );
+					wp_register_style( 'cartopress', cartopress_url . '/admin/css/cartopress-settings.css', array(), cartopress_vers );
 				} // end get_admin_styles
 				
 				function get_admin_scripts() {
-					wp_deregister_script('jquery');
-					wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js", false, null);
-				
+					wp_register_script('admin-script', plugin_dir_url( __FILE__ ) . 'admin/js/admin.js', array('jquery'), cartopress_vers );
 				} // end get_admin_scripts
 				
 				function cartopress_options_menu() {
@@ -236,8 +85,73 @@ if (!class_exists('cartopress')) {
 					}
 					
 					require( cartopress_admin_dir . 'options.php' );
-					
+				
 				} // end cartopress_options
+				
+				// process settings ajax
+				function process_generate_table() {
+				   	
+				   // checks the referer to ensure authorized access
+				   if (!isset( $_POST['cartopress_admin_nonce'] ) || !wp_verify_nonce($_POST['cartopress_admin_nonce'], 'cartopress_admin_nonce') )
+				   	die('Unauthorized access denied.');
+				   
+				   // defines the post vars
+				   $apikey = $_POST['apikey'];
+				   $username = $_POST['username'];
+				   $tablename = $_POST['tablename'];
+				   
+				   //SQL create table statment
+				   $sql = "CREATE TABLE " . (string)$tablename . " (post_id integer, post_title text, post_content text, post_date date, post_type text, permalink_guid text);";
+				   
+				   // initializing curl
+				   $ch = curl_init( "https://".$username.".cartodb.com/api/v2/sql" );
+				   $query = http_build_query(array('q'=>$sql,'api_key'=>$apikey));
+				   
+				   // configuring curl options
+				   curl_setopt($ch, CURLOPT_POST, TRUE);
+				   curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+				   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				   
+				   //result
+				   $result_create = curl_exec($ch);
+				   
+				   //close the curl session
+				   curl_close($ch);
+				   
+				   $result = json_decode($result_create);
+				   $error = $result->error[0];
+				   $success = $result->rows;
+				   
+				   if ($error == (string)('relation "' . $tablename . '" already exists')) {
+				   		die('exists');
+				   
+				   } elseif ($result == NULL) {
+				   		die('notfound');
+						
+				   } elseif ($error == "permission denied for schema public") {
+				   		die('badapikey');
+				  
+				   } elseif (fnmatch('syntax error at or near "*"' , $error)) {
+				   		die('specialchar');
+				   
+				   } elseif ($success == NULL)  {
+				   		$ch2 = curl_init( "https://".$username.".cartodb.com/api/v2/sql" );
+						$sql2 = "SELECT cdb_cartodbfytable('" . (string)$tablename . "');";
+						$query2 = http_build_query(array('q'=>$sql2,'api_key'=>$apikey));
+						curl_setopt($ch2, CURLOPT_POST, TRUE);
+				   		curl_setopt($ch2, CURLOPT_POSTFIELDS, $query2);
+				   		curl_setopt($ch2, CURLOPT_RETURNTRANSFER, TRUE);
+						$result_select = curl_exec($ch2);
+						curl_close($ch2);
+						
+						die('success');
+				   
+				   } else {
+						die('Unknown error: ' . print_r($result) );
+				   }
+				   
+				}
+			    add_action('wp_ajax_cartopress_generate_table', 'process_generate_table');
 				
 				function cartopress_admin_styles() {
 				   /*
@@ -248,8 +162,12 @@ if (!class_exists('cartopress')) {
 			    } // end cartopress_admin_styles
 			    
 			    function cartopress_admin_scripts() {
-			    	wp_enqueue_script('jquery');
-			    } //end cartopress_admin)_scripts
+			    	wp_enqueue_script('admin-script');
+					wp_localize_script('admin-script','cartopress_admin_ajax', array(
+							"cartopress_admin_nonce" => wp_create_nonce('cartopress_admin_nonce')
+						)
+					);
+			    } //end cartopress_admin_scripts
 			    
 			    
 			    // add settings link
@@ -261,6 +179,7 @@ if (!class_exists('cartopress')) {
  
 				$plugin = cartopress_plugin_name; 
 				add_filter("plugin_action_links_$plugin", 'cartopress_settings_link' );
+			
 			
 			} else {
 			
