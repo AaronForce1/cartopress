@@ -5,20 +5,18 @@
  * @package cartopress
  */
  
- /* main cartopress settings class
+ /* main cartopress settings markup
  *	@since 0.1.0
  */
 
 ?>
-
-
 <div class="wrap">
 	<header>
 		<?php echo '<img src="' . cartopress_url . '/admin/images/cartopress-logo.png" id="cartopress-logo" />' ?>
 	</header>
 	<div id="content">
 		<h1 id="title">CartoPress — CartoDB for WordPress</h1>
-    	<p><em>This plugin allows you to take advantage of the CartoDB's visualization tools while using your existing WordPress database.</em></p>
+    	<p><em>This plugin allows you to take advantage of the CartoDB's visualization tools while using your existing WordPress database as a data source.</em></p>
 		<?php echo "<h2 id=" . "settings" . ">" . __( 'Settings', 'menu-test' ) . "</h2>";?> 
 		<p>CartoPress requires a CartoDB account. Please visit <a href="https://cartodb.com/signup" target="_blank"><span class="button">cartodb.com/signup</span></a> to create an account.</p>
 		<h3>Required CartoDB Account Information</h3>
@@ -27,10 +25,16 @@
                 // This prints out all hidden setting fields
                 settings_fields( 'cartopress_settings_group' );   
                 do_settings_sections( 'cartopress-settings' );
+				
+        	?>
+        		<input type="button" class="button" id="generate_table" name="generate_table" value="Connect to CartoDB" />
+        		<img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" class="waiting" id="cpbd_tableconnect_loading" style="display:none;" />
+        		
+        	<?php
             	submit_button(); 
         	?>
 		</form>
-		<p>You can take advantage of CartoDB features and extensive custom styling options with CartoCSS by using the CartoDB interface. Please note that for automatic syncing you must have a paid CartoDB account if you are using this plugin for commercial purposes. If you are an individual user or nonprofit organization, please <a href="mailto:support@cartodb.com">contact</a> CartoDB to allow database syncing on your free account.</p>
+		<p>You can take advantage of CartoDB features and extensive custom styling options with CartoCSS by using the CartoDB interface.</p>
 		<p>Login to your CartoDB account here in order to style your map using CartoCSS: <span class="button"><a href="http://cartodb.com/login">Login</a></span>
 		<hr/>
 		<h3>Data Collection</h3>
