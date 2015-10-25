@@ -37,31 +37,31 @@ label {
 	top:18px;
 	}
 
-#cpdb-account-settings table.form-table {
+#cpdb-form-settings table.form-table {
 	width:100%;
 }
 
-#cpdb-account-settings .form-table, #cpdb-account-settings .form-table td, #cpdb-account-settings .form-table td p, #cpdb-account-settings .form-table th, #cpdb-account-settings .form-wrap label {
+#cpdb-form-settings .form-table, #cpdb-form-settings .form-table td, #cpdb-form-settings .form-table td p, #cpdb-form-settings .form-table th, #cpdb-form-settings .form-wrap label {
     font-size: inherit;
 }
 
-#cpdb-account-settings .form-table th {
+#cpdb-form-settings .form-table th {
     vertical-align: top;
     text-align: left;
     padding: 8px 0 8px 0;
     width: 100px;
-    line-height: auto;
+    line-height: normal;
     font-weight: 700;
 }
 
-#cpdb-account-settings .form-table th, #cpdb-account-settings .form-wrap label {
+#cpdb-form-settings .form-table th, #cpdb-form-settings .form-wrap label {
     color: inherit;
     font-weight: 700;
     text-shadow: none;
     vertical-align: baseline;
 }
 
-#cpdb-account-settings table.form-table tr td {
+#cpdb-form-settings table.form-table tr td {
 	padding:0;
 }
 
@@ -71,14 +71,41 @@ label {
 	font-style:italic;
 }
 
-#cpdb-account-settings input:not([type="submit"]), 
+#cpbd_tableconnect_connected {
+	position:absolute;
+	margin-left:-20px;
+	margin-top:5px;
+	display:none;
+}
+#cpbd_tableconnect_loading {
+	position:relative;
+	top:10px;
+	display:none;
+}
+.cpdb-breakout {
+	border-top:1px solid #C7C7C7;
+	border-bottom:1px solid #C7C7C7;
+	padding: 10px 0;
+	margin: 20px 0;
+}
+#cpdb-form-settings input:not([type="submit"]), 
 #cpdb-publishtype-singlepost input:not([type="submit"]) {
 	padding:5px;
 	vertical-align:middle;
 	width:100%;
 }
 
-#cpdb-account-settings input.button:not([type="submit"]) {
+#cpdb-form-settings input[type="checkbox"] {
+	vertical-align:top;
+	margin:0 10px 0 0;
+	width:20px;
+}
+#cpdb-form-settings .label {
+	vertical-align:bottom;
+	margin:0 20px -4px 0;
+}
+
+#cpdb-form-settings input.button:not([type="submit"]) {
 	padding:0;
 	margin:10px 0 0 100px;
 }
@@ -86,6 +113,9 @@ label {
 #generate_table {
  	max-width:200px;
  	height:30px;
+}
+.cpdb-attribution {
+	font-style:italic;
 }
 
 /*type*/
