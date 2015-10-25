@@ -68,8 +68,10 @@
 		
 			.queue(function(){console.log('OS Query 1');
 				// OPENMAPQUEST'S API ACCESS POINT WHICH USES OPEN STREETMAPS
-				var HOST_URL = "http://open.mapquestapi.com/nominatim/v1/search.php?format=json&q=MY_LOC&json_callback=renderResults";
-				var HOST_URL2 = "http://open.mapquestapi.com/nominatim/v1/search.php?format=json&q=MY_LOC";
+				//var HOST_URL = "http://open.mapquestapi.com/nominatim/v1/search.php?format=json&q=MY_LOC&json_callback=renderResults";
+				//var HOST_URL2 = "http://open.mapquestapi.com/nominatim/v1/search.php?format=json&q=MY_LOC";
+				var HOST_URL = "http://nominatim.openstreetmap.org/search?format=json&q=MY_LOC&json_callback=renderResults";
+				var HOST_URL2 = "http://nominatim.openstreetmap.org/search?format=json&q=MY_LOC";
 				
 				var newLoc = $('input#omnibar').val();
 				var newURL = HOST_URL2.replace('MY_LOC', newLoc);				
