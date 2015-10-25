@@ -26,7 +26,22 @@ if (!class_exists('add_location_metabox')) {
 		 * Adds the meta box container.
 		 */
 		public function cartopress_add_meta_box( $post_type ) {
-				$post_types = array('post', 'page');     //limit meta box to certain post types
+				if (get_option( 'cartopress_admin_options', '' )['cartopress_collect_posts'] == 1) {
+					$posts = 'post';
+				} else {
+					$posts = null;
+				}
+				if (get_option( 'cartopress_admin_options', '' )['cartopress_collect_pages'] == 1) {
+					$pages = 'page';
+				} else {
+					$pages = null;
+				}
+				if (get_option( 'cartopress_admin_options', '' )['cartopress_collect_media'] == 1) {
+					$media = 'attachment';
+				} else {
+					$media = null;
+				}
+				$post_types = array($posts, $pages, $media);     //limit meta box to certain post types
 				if ( in_array( $post_type, $post_types )) {
 					
 					add_meta_box('cartopress_locator', __( 'CartoPress Geolocator', 'cartopress_textdomain' ), array( $this, 'cartopress_meta_box_content' ), $post_type, 'normal', 'high' );

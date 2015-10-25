@@ -88,7 +88,27 @@ if (!class_exists('cartopress')) {
 				
 				} // end cartopress_options
 				
-				// process settings ajax
+				// connecting to cartodb
+				function process_curl($ch, $sql, $apikey, $username){
+					//curl init	
+					$ch = curl_init("https://".$username.".cartodb.com/api/v2/sql");
+					$query = http_build_query(array('q'=>$sql,'api_key'=>$apikey));
+					
+					//curl opts
+					curl_setopt($ch, CURLOPT_POST, TRUE);
+				   	curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+				   	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+					
+					//process results
+					$result = curl_exec($ch);
+					curl_close($ch);
+					$result = json_decode($result);
+					
+					//return results
+					return $result;
+				}
+				
+				//process ajax
 				function process_generate_table() {
 				   	
 				   // checks the referer to ensure authorized access
@@ -101,57 +121,96 @@ if (!class_exists('cartopress')) {
 				   $tablename = $_POST['tablename'];
 				   
 				   //SQL create table statment
-				   $sql = "CREATE TABLE " . (string)$tablename . " (post_id integer, post_title text, post_content text, post_date date, post_type text, permalink_guid text);";
+				   $sql_create = "DO $$ BEGIN CREATE TABLE " . (string)$tablename . " (cp_post_id integer, cp_post_title text, cp_post_content text, cp_post_description text, cp_post_date date, cp_post_type text, cp_permalink_guid text, cp_post_categories text, cp_post_tags text, cp_post_featuredimage_url text, cp_post_customfields text, cp_geo_streetnumber text, cp_geo_street text, cp_geo_adminlevel4_vill_neigh text, cp_geo_adminlevel3_city text, cp_geo_adminlevel2_county text, cp_geo_adminlevel1_st_prov_region text, cp_geo_adminlevel0_country text, cp_geo_postal text, cp_geo_lat float, cp_geo_long float, cp_geo_placeid integer, cp_geo_locationtype text, cp_geo_displayname text); RAISE NOTICE 'Success'; END; $$";
 				   
-				   // initializing curl
-				   $ch = curl_init( "https://".$username.".cartodb.com/api/v2/sql" );
-				   $query = http_build_query(array('q'=>$sql,'api_key'=>$apikey));
+				   //process curl
+				   $result_create = process_curl($ch, $sql_create, $apikey, $username);
 				   
-				   // configuring curl options
-				   curl_setopt($ch, CURLOPT_POST, TRUE);
-				   curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
-				   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-				   
-				   //result
-				   $result_create = curl_exec($ch);
-				   
-				   //close the curl session
-				   curl_close($ch);
-				   
-				   $result = json_decode($result_create);
-				   $error = $result->error[0];
-				   $success = $result->rows;
+				   //parse result
+				   $error = $result_create->error[0];
+				   $success = $result_create->notices[0];
 				   
 				   if ($error == (string)('relation "' . $tablename . '" already exists')) {
-				   		die('exists');
+					   update_option('cartopress_cartodb_verified', 'notverified');
+				   	   die('exists');
 				   
-				   } elseif ($result == NULL) {
+				   } elseif ($result_create == NULL) {
+						update_option('cartopress_cartodb_verified', 'notverified');
 				   		die('notfound');
 						
 				   } elseif ($error == "permission denied for schema public") {
+						update_option('cartopress_cartodb_verified', 'notverified');
 				   		die('badapikey');
 				  
 				   } elseif (fnmatch('syntax error at or near "*"' , $error)) {
+						update_option('cartopress_cartodb_verified', 'notverified');
 				   		die('specialchar');
 				   
-				   } elseif ($success == NULL)  {
-				   		$ch2 = curl_init( "https://".$username.".cartodb.com/api/v2/sql" );
-						$sql2 = "SELECT cdb_cartodbfytable('" . (string)$tablename . "');";
-						$query2 = http_build_query(array('q'=>$sql2,'api_key'=>$apikey));
-						curl_setopt($ch2, CURLOPT_POST, TRUE);
-				   		curl_setopt($ch2, CURLOPT_POSTFIELDS, $query2);
-				   		curl_setopt($ch2, CURLOPT_RETURNTRANSFER, TRUE);
-						$result_select = curl_exec($ch2);
-						curl_close($ch2);
-						
+				   } elseif ($success == 'Success')  {
+						$sql_select = "SELECT cdb_cartodbfytable('" . (string)$tablename . "');";
+						process_curl($ch, $sql_select, $apikey, $username);
+						update_option('cartopress_cartodb_verified', 'verified');
 						die('success');
 				   
 				   } else {
-						die('Unknown error: ' . print_r($result) );
+						die('Unknown error: ' . print_r($result_create) );
 				   }
 				   
 				}
+				
 			    add_action('wp_ajax_cartopress_generate_table', 'process_generate_table');
+				
+				//checks existing tables to ensure correct columns are in place
+				function cartopress_cartopressify_table() {
+				   	
+				   // checks the referer to ensure authorized access
+				   if (!isset( $_POST['cartopress_cartopressify_nonce'] ) || !wp_verify_nonce($_POST['cartopress_cartopressify_nonce'], 'cartopress_cartopressify_nonce') )
+				   	die('Unauthorized access denied.');
+				   
+				   $apikey = $_POST['apikey'];
+				   $username = $_POST['username'];
+				   $tablename = $_POST['tablename'];
+				   $args = [
+				   		['name' => 'cp_post_id', 'type' => 'integer'], 
+				   		['name' => 'cp_post_title', 'type' => 'text'], 
+				   		['name' => 'cp_post_content', 'type' => 'text'],
+				   		['name' => 'cp_post_description', 'type' => 'text'],
+				   		['name' => 'cp_post_date', 'type' => 'date'],
+				   		['name' => 'cp_post_type', 'type' => 'text'],
+				   		['name' => 'cp_post_permalink', 'type' => 'text'],
+				   		['name' => 'cp_post_categories', 'type' => 'text'],
+				   		['name' => 'cp_post_tags', 'type' => 'text'],
+				   		['name' => 'cp_post_featuredimage_url', 'type' => 'text'],
+				   		['name' => 'cp_post_customfields', 'type' => 'text'],
+				   		['name' => 'cp_geo_streetnumber', 'type' => 'text'],
+				   		['name' => 'cp_geo_street', 'type' => 'text'],
+				   		['name' => 'cp_geo_adminlevel4_vill_neigh', 'type' => 'text'],
+				   		['name' => 'cp_geo_adminlevel3_city', 'type' => 'text'],
+				   		['name' => 'cp_geo_adminlevel2_county', 'type' => 'text'],
+				   		['name' => 'cp_geo_adminlevel1_st_prov_region', 'type' => 'text'],
+						['name' => 'cp_geo_adminlevel0_country', 'type' => 'text'],
+						['name' => 'cp_geo_postal', 'type' => 'text'],
+						['name' => 'cp_geo_lat', 'type' => 'float'],
+						['name' => 'cp_geo_long', 'type' => 'float'],
+						['name' => 'cp_geo_placeid', 'type' => 'integer'],
+						['name' => 'cp_geo_locationtype', 'type' => 'text'],
+						['name' => 'cp_geo_displayname', 'type' => 'text'],
+					];
+				   
+				   foreach ($args as $col) {
+				   		$col_name = $col['name'];
+					    $col_type = $col['type'];
+				   		
+				   		$cartopressify = "DO $$ BEGIN ALTER TABLE " . $tablename . " ADD COLUMN " . $col_name . " " . $col_type . "; RAISE NOTICE 'Column " . $col_name . " was created.'; UPDATE " . $tablename . " SET " . $col_name . " = " . $col_name . "; RAISE NOTICE 'Column name is set.'; EXCEPTION WHEN duplicate_column THEN RAISE NOTICE '" . $col_name . " text already exists in " . $tablename . ".'; END; $$";	
+				   		
+				   		$result = process_curl($ch, $cartopressify, $apikey, $username);
+				   }
+				   update_option('cartopress_cartodb_verified', 'verified');
+				   die("Success");  
+				   
+				   
+				}
+				add_action('wp_ajax_cartopressify_table', 'cartopress_cartopressify_table');
 				
 				function cartopress_admin_styles() {
 				   /*
@@ -164,7 +223,8 @@ if (!class_exists('cartopress')) {
 			    function cartopress_admin_scripts() {
 			    	wp_enqueue_script('admin-script');
 					wp_localize_script('admin-script','cartopress_admin_ajax', array(
-							"cartopress_admin_nonce" => wp_create_nonce('cartopress_admin_nonce')
+							"cartopress_admin_nonce" => wp_create_nonce('cartopress_admin_nonce'),
+							"cartopress_cartopressify_nonce" => wp_create_nonce('cartopress_cartopressify_nonce')
 						)
 					);
 			    } //end cartopress_admin_scripts
