@@ -1,0 +1,169 @@
+#cpdb-metabox-wrapper {
+	width:100%;
+	height:auto;
+	margin: 0 auto;
+}
+
+#cartopress_locator {
+	font-family: 'Helvetica Neue', 'Helvetica', 'Arial', san-serif;
+}
+
+#cartopress_locator h1, 
+#cartopress_locator h2,
+#cartopress_locator h3,
+#cartopress_locator h4,
+#cartopress_locator h5,
+#cartopress_locator h6 {
+	font-family: 'Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', san-serif;
+}
+
+#cartopress_locator h4 {
+	font-weight:400;
+	color:#0074a2;
+	margin-bottom:0;
+}
+
+#cartopress_locator .hndle {
+	background: rgba(250, 250, 250, 1);
+}
+
+#cartopress_locator	section {
+	box-sizing:border-box;
+	border-top:1px solid #C7C7C7; 
+	border-bottom:1px solid #C7C7C7;
+	padding:10px 0; 
+	margin:10px 0;
+}
+	
+#cartopress_locator #omnibar {
+	width: calc(100% - 85px);
+}
+
+#cpdb-search-button {
+	width:79px;
+}
+
+#cartopress_locator .cpdb-maincontent {
+	width:calc(68% - 20px);
+	margin:0 10px 0 0;
+	min-width:300px;
+	float:left;
+}
+
+#cartopress_locator #map {
+	display:block;
+	background:red;
+	width:100%;
+	height:300px;
+}
+
+#cartopress_locator #cpdb-geocode-values {
+	 box-sizing:border-box;
+	 background:rgba(250, 250, 250, 1);
+	 padding:10px;
+}
+
+#cartopress_locator #cpdb-geocode-values input {
+	 box-sizing:border-box;
+}
+
+#cartopress_locator #cpdb-geocode-values label {
+	 float:left;
+	 line-height:28px;
+	 font-weight:bold;
+	 color:#AAAAAA;
+}
+
+#cartopress_locator #cpdb-geocode-values span {
+	 display:block;
+	 overflow:hidden;
+     padding-right:5px;
+     padding-left:10px;
+	 margin-bottom:5px;
+}
+
+#cartopress_locator #cpdb-geocode-values span.smaller {
+	float:left; margin-right:5px;
+}
+
+#cartopress_locator #cpdb-geocode-values span > input{
+	width: 100%;
+	min-width:40px;
+}
+
+#cartopress_locator #cpdb-geocode-values #unlock_manual_edit ~ label {
+	float:none;
+	color:#666666;
+	margin-left:5px;
+	font-weight:normal;
+}
+
+/*span IDs----*/
+#cartopress_locator #cpdb-geocode-values span#span_cp_geo_lat {
+	width:35%;
+}
+
+#cartopress_locator #cpdb-geocode-values span#span_cp_geo_streetnumber {
+	width:10%;
+}
+
+#cartopress_locator #cpdb-geocode-values span#span_cp_geo_adminlevel3_city {
+	width:22%;
+}
+
+#cartopress_locator #cpdb-geocode-values span#span_cp_geo_adminlevel1_st_prov_region {
+	width:22%;
+}
+
+#cartopress_locator #cpdb-geocode-values span#span_cp_geo_postal {
+	width:10%;
+}
+
+#cartopress_locator #cpdb-geocode-values span#span_cp_geo_placeid {
+	width:10%;
+}
+
+#cartopress_locator #cp_post_description {
+	width:100%;
+	min-height:80px;
+	max-width:100%;
+}
+
+#cartopress_locator #results {
+	box-sizing:border-box;
+	display:block;
+	max-height:500px;
+	float:right;
+	width:32.5%;
+	min-width:300px;
+	padding:10px;
+}
+
+#cartopress_locator #results h4 {
+	margin-top:0;
+}
+
+#cartopress_locator #results h1 {
+	font-size:12px;
+	font-weight:normal;
+	margin:10px 0 0 0;
+}
+
+#cartopress_locator #results h1:first-child {
+	margin:0;
+}
+
+#cartopress_locator #results h2 {
+	font-size:10px;
+	margin:0 0 0 10px;
+}
+	
+#cartopress_locator	.cpdb-result-item:hover {
+	background:rgba(3,40,171,.3);
+}
+	
+#cartopress_locator	#comments {
+	clear:both;
+	display: block;
+	font-size: 10px;
+}
