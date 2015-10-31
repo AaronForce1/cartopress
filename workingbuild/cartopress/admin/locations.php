@@ -26,17 +26,18 @@ if (!class_exists('add_location_metabox')) {
 		 * Adds the meta box container.
 		 */
 		public function cartopress_add_meta_box( $post_type ) {
-				if (get_option( 'cartopress_admin_options', '' )['cartopress_collect_posts'] == 1) {
+				$cpoptions = get_option( 'cartopress_admin_options', '' );
+				if ($cpoptions['cartopress_collect_posts'] == 1) {
 					$posts = 'post';
 				} else {
 					$posts = null;
 				}
-				if (get_option( 'cartopress_admin_options', '' )['cartopress_collect_pages'] == 1) {
+				if ($cpoptions['cartopress_collect_pages'] == 1) {
 					$pages = 'page';
 				} else {
 					$pages = null;
 				}
-				if (get_option( 'cartopress_admin_options', '' )['cartopress_collect_media'] == 1) {
+				if ($cpoptions['cartopress_collect_media'] == 1) {
 					$media = 'attachment';
 				} else {
 					$media = null;

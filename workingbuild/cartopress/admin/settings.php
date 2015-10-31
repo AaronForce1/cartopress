@@ -78,35 +78,40 @@ if (!class_exists('cartopress_settings')) {
 		 */
 		public function cartopress_cartodb_categories_callback()
 		{
-			$theoption = esc_attr(get_option( 'cartopress_admin_options', '' )['cartopress_sync_categories']);
+			$cpoptions = get_option( 'cartopress_admin_options', '' );	
+			$theoption = esc_attr($cpoptions['cartopress_sync_categories']);
 			printf(
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_categories]" id="cartopress_sync_categories"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_categories" class="label">Categories</label>'
 			);
 		}
 		public function cartopress_cartodb_tags_callback()
 		{
-			$theoption = esc_attr(get_option( 'cartopress_admin_options', '' )['cartopress_sync_tags']);
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$theoption = esc_attr($cpoptions['cartopress_sync_tags']);
 			printf(
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_tags]" id="cartopress_sync_tags"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_tags" class="label">Tags</label>'
 			);
 		}
 		public function cartopress_cartodb_featuredimage_callback()
 		{
-			$theoption = esc_attr(get_option( 'cartopress_admin_options', '' )['cartopress_sync_featuredimage']);
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$theoption = esc_attr($cpoptions['cartopress_sync_featuredimage']);
 			printf(
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_featuredimage]" id="cartopress_sync_featuredimage"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_featuredimage" class="label">Featured Image</label>'
 			);
 		}
 		public function cartopress_cartodb_customfields_callback()
 		{
-			$theoption = esc_attr(get_option( 'cartopress_admin_options', '' )['cartopress_sync_customfields']);
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$theoption = esc_attr($cpoptions['cartopress_sync_customfields']);
 			printf(
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_customfields]" id="cartopress_sync_customfields"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_customfields" class="label">Custom Fields</label>'
 			);
 		}
 		public function cartopress_cartodb_posts_callback()
 		{
-			$theoption = esc_attr(get_option( 'cartopress_admin_options', '' )['cartopress_collect_posts']);
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$theoption = esc_attr($cpoptions['cartopress_collect_posts']);
 			printf(
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_collect_posts]" id="cartopress_collect_posts"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_collect_posts" class="label">Posts</label>'
 			);
@@ -114,7 +119,8 @@ if (!class_exists('cartopress_settings')) {
 		
 		public function cartopress_cartodb_pages_callback()
 		{
-			$theoption = esc_attr(get_option( 'cartopress_admin_options', '' )['cartopress_collect_pages']);
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$theoption = esc_attr($cpoptions['cartopress_collect_pages']);
 			printf(
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_collect_pages]" id="cartopress_collect_pages"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_collect_pages" class="label">Pages</label>'
 			);
@@ -122,7 +128,8 @@ if (!class_exists('cartopress_settings')) {
 		
 		public function cartopress_cartodb_media_callback()
 		{
-			$theoption = esc_attr(get_option( 'cartopress_admin_options', '' )['cartopress_collect_media']);
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$theoption = esc_attr($cpoptions['cartopress_collect_media']);
 			printf(
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_collect_media]" id="cartopress_collect_media"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_collect_media" class="label">Media</label>'
 			);
@@ -130,7 +137,8 @@ if (!class_exists('cartopress_settings')) {
 	
 		public function cartopress_cartodb_apikey_callback()
 		{
-			$str = esc_attr(get_option( 'cartopress_admin_options', '' )['cartopress_cartodb_apikey']);
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$str = esc_attr($cpoptions['cartopress_cartodb_apikey']);
 			printf(
 				'<input type="text" name="cartopress_admin_options[cartopress_cartodb_apikey]" id="cartopress_cartodb_apikey" placeholder="Enter CartoDB API Key" value="%s" />', $str
 			);
@@ -146,7 +154,8 @@ if (!class_exists('cartopress_settings')) {
 
 		public function cartopress_cartodb_username_callback()
 		{
-			$str = esc_attr(get_option( 'cartopress_admin_options', '' )['cartopress_cartodb_username']);
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$str = esc_attr($cpoptions['cartopress_cartodb_username']);
 			printf(
 				'<input type="text" name="cartopress_admin_options[cartopress_cartodb_username]" id="cartopress_cartodb_username" placeholder="Enter CartoDB Username" value="%s" />', $str
 			);
@@ -154,7 +163,8 @@ if (!class_exists('cartopress_settings')) {
 		
 		public function cartopress_cartodb_tablename_callback()
 		{
-			$str = esc_attr(get_option( 'cartopress_admin_options', '' )['cartopress_cartodb_tablename']);
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$str = esc_attr($cpoptions['cartopress_cartodb_tablename']);
 			printf(
 				'<p class="cpdb-specialinstruction">Please enter a table name. You may use an existing table from your CartoDB database, or if you use a unique table name, a new table will be created in your CartoDB account (recommended).</p>
 				<img src="' . admin_url('/images/yes.png') . '" id="cpbd_tableconnect_connected" /><input type="text" name="cartopress_admin_options[cartopress_cartodb_tablename]" id="cartopress_cartodb_tablename" placeholder="Enter A Unique Name for Your CartoDB Table" value="%s" />', $str

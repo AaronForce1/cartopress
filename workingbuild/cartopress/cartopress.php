@@ -49,16 +49,6 @@ if (!class_exists('cartopress')) {
 			define('cartopress_url', trim( plugin_dir_url( __FILE__ ), '/' ) );
 			define('cartopress_dir', dirname( cartopress_plugin_name ) );
 			define('cartopress_vers', '0.1.0');
-			
-			if (isset (get_option('cartopress_admin_options', '')['cartopress_cartodb_apikey'])) {
-				define('cartopress_key', get_option('cartopress_admin_options', '')['cartopress_cartodb_apikey']);
-			}
-			if (isset (get_option('cartopress_admin_options', '')['cartopress_cartodb_username'])) {
-				define('cartopress_user', get_option('cartopress_admin_options', '')['cartopress_cartodb_username']);
-			}
-			if (isset (get_option('cartopress_admin_options', '')['cartopress_cartodb_tablename'])) {
-				define('cartopress_table', get_option('cartopress_admin_options', '')['cartopress_cartodb_tablename']);
-			}
 		}
 		
 		// activation @since 0.1.0
@@ -234,30 +224,30 @@ if (!class_exists('cartopress')) {
 				   $apikey = $_POST['apikey'];
 				   $username = $_POST['username'];
 				   $tablename = $_POST['tablename'];
-				   $args = [
-				   		['name' => 'cp_post_id', 'type' => 'integer'], 
-				   		['name' => 'cp_post_title', 'type' => 'text'], 
-				   		['name' => 'cp_post_content', 'type' => 'text'],
-				   		['name' => 'cp_post_description', 'type' => 'text'],
-				   		['name' => 'cp_post_date', 'type' => 'date'],
-				   		['name' => 'cp_post_type', 'type' => 'text'],
-				   		['name' => 'cp_post_permalink', 'type' => 'text'],
-				   		['name' => 'cp_post_categories', 'type' => 'text'],
-				   		['name' => 'cp_post_tags', 'type' => 'text'],
-				   		['name' => 'cp_post_featuredimage_url', 'type' => 'text'],
-				   		['name' => 'cp_post_customfields', 'type' => 'text'],
-				   		['name' => 'cp_geo_streetnumber', 'type' => 'text'],
-				   		['name' => 'cp_geo_street', 'type' => 'text'],
-				   		['name' => 'cp_geo_adminlevel4_vill_neigh', 'type' => 'text'],
-				   		['name' => 'cp_geo_adminlevel3_city', 'type' => 'text'],
-				   		['name' => 'cp_geo_adminlevel2_county', 'type' => 'text'],
-				   		['name' => 'cp_geo_adminlevel1_st_prov_region', 'type' => 'text'],
-						['name' => 'cp_geo_adminlevel0_country', 'type' => 'text'],
-						['name' => 'cp_geo_postal', 'type' => 'text'],
-						['name' => 'cp_geo_lat', 'type' => 'float'],
-						['name' => 'cp_geo_long', 'type' => 'float'],
-						['name' => 'cp_geo_displayname', 'type' => 'text'],
-					];
+				   $args = array(
+				   		array('name' => 'cp_post_id', 'type' => 'integer'), 
+				   		array('name' => 'cp_post_title', 'type' => 'text'), 
+				   		array('name' => 'cp_post_content', 'type' => 'text'),
+				   		array('name' => 'cp_post_description', 'type' => 'text'),
+				   		array('name' => 'cp_post_date', 'type' => 'date'),
+				   		array('name' => 'cp_post_type', 'type' => 'text'),
+				   		array('name' => 'cp_post_permalink', 'type' => 'text'),
+				   		array('name' => 'cp_post_categories', 'type' => 'text'),
+				   		array('name' => 'cp_post_tags', 'type' => 'text'),
+				   		array('name' => 'cp_post_featuredimage_url', 'type' => 'text'),
+				   		array('name' => 'cp_post_customfields', 'type' => 'text'),
+				   		array('name' => 'cp_geo_streetnumber', 'type' => 'text'),
+				   		array('name' => 'cp_geo_street', 'type' => 'text'),
+				   		array('name' => 'cp_geo_adminlevel4_vill_neigh', 'type' => 'text'),
+				   		array('name' => 'cp_geo_adminlevel3_city', 'type' => 'text'),
+				   		array('name' => 'cp_geo_adminlevel2_county', 'type' => 'text'),
+				   		array('name' => 'cp_geo_adminlevel1_st_prov_region', 'type' => 'text'),
+						array('name' => 'cp_geo_adminlevel0_country', 'type' => 'text'),
+						array('name' => 'cp_geo_postal', 'type' => 'text'),
+						array('name' => 'cp_geo_lat', 'type' => 'float'),
+						array('name' => 'cp_geo_long', 'type' => 'float'),
+						array('name' => 'cp_geo_displayname', 'type' => 'text'),
+					);
 				   
 				   foreach ($args as $col) {
 				   		$col_name = $col['name'];
