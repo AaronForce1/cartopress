@@ -49,9 +49,12 @@ if (!class_exists('add_location_metabox')) {
 					   if( 'post.php' == $location || 'post-new.php' == $location ) {
 					     wp_enqueue_script('jquery2');
 						 wp_enqueue_style('google_fonts');
+						 wp_enqueue_style('leaflet');
+						 wp_enqueue_style('ionicons');
 					     wp_enqueue_script(array('cartopress-geocode-script'));
 						 wp_enqueue_script(array('cartopress-geocode-helper-script'));
-					     wp_enqueue_style(array('cartopress-geocode-styles', 'cartopress-leaflet-markers-styles'));
+						 wp_enqueue_script('ionicons');
+					     wp_enqueue_style(array('cartopress-geocode-styles', 'cartopress-leaflet-styles'));
 					  }
 					}
 					add_action( 'admin_enqueue_scripts', 'load_geocoder_dependencies' );
@@ -158,7 +161,7 @@ if (!class_exists('add_location_metabox')) {
 			// Display the metabox
 			echo '<p class="howto">Use the search bar to find lookup an address. Select the correct address from the results, or fill in the location fields manually. Note: Latitude and longitude cooridnates are required.</p>';
 			echo '<div id="cpdb-metabox-wrapper">
-					<h4>Choose a Location</h4>
+					<h4>Choose a Location</h4><input type="button" class="getCurrentPosition button" onclick="locateMe()"" value="Current Location"></input>
 			    	<section id="addressQuery">
 			            <form id="geo_search">
 			                <input id="omnibar" type="text" placeholder="Search Address (Neighborhood | City | State | Country)"/>

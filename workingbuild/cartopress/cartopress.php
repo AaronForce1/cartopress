@@ -79,15 +79,19 @@ if (!class_exists('cartopress')) {
 					wp_register_style( 'google_fonts', add_query_arg( $query_args, "//fonts.googleapis.com/css" ), array(), null );
 					wp_register_style( 'cartopress', cartopress_url . '/admin/css/cartopress-settings.css', array(), cartopress_vers );
 					wp_register_style( 'cartopress-geocode-styles', cartopress_url . '/admin/css/geocoder-styles.css', array(), cartopress_vers );
-					//wp_register_style( 'cartopress-leaflet-markers-styles', cartopress_url . '/admin/css/leaflet-awesome-markers.css', array(), cartopress_vers );
+					wp_register_style( 'leaflet', 'http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css');
+					wp_register_style( 'ionicons', 'http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css');
+					wp_register_style( 'cartopress-leaflet-styles', cartopress_url . '/admin/css/leaflet-awesome-markers.css', array(), cartopress_vers );
+
 				} // end get_admin_styles
 				
 				function get_admin_scripts() {
 					wp_register_script('jquery2.1.3', 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js');
 					wp_register_script('leaflet', 'http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js');
 					wp_register_script('cartodb', 'http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js');
+					wp_register_script('ionicons', plugin_dir_url( __FILE__ ) . 'admin/js/leaflet.awesome-markers.min.js', array(), cartopress_vers);
 					wp_register_script('admin-script', plugin_dir_url( __FILE__ ) . 'admin/js/admin.js', array('jquery'), cartopress_vers );
-					wp_register_script('cartopress-geocode-script', plugin_dir_url( __FILE__ ) . 'admin/js/geocoder.js', array('jquery2.1.3','leaflet', 'cartodb'), cartopress_vers );
+					wp_register_script('cartopress-geocode-script', plugin_dir_url( __FILE__ ) . 'admin/js/geocoder.js', array('jquery2.1.3','leaflet'/*, 'cartodb'*/), cartopress_vers );
 					wp_register_script('cartopress-geocode-helper-script', plugin_dir_url( __FILE__ ) . 'admin/js/geocoder-helper.js', array('jquery'), cartopress_vers );
 				} // end get_admin_scripts
 				

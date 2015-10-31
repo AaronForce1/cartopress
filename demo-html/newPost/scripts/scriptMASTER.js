@@ -35,7 +35,9 @@
 				maxzoom: 16
 			});
 			
-			L.tileLayer('https://a.tiles.mapbox.com/v4/masterbaideme.l6a67mkb/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFzdGVyYmFpZGVtZSIsImEiOiJHRmhQdE1nIn0.lO73x2dDKAt_aKLiI-P02g#4/40.74/-73.98', {}).addTo(map);
+			L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+    				attribution: '© <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors © <a href= \"http://cartodb.com/attributions\">CartoDB</a>'
+    			}).addTo(map);
 			
 			var layerUrl = 'http://troyhallisey.cartodb.com/api/v2/viz/4673bf8a-afe8-11e4-8a51-0e018d66dc29/viz.json';
 			
