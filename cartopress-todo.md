@@ -1,5 +1,5 @@
 # Stuff to fix
-~* fix custom data not saving when editing attachment~
+* ~~fix custom data not saving when editing attachment~~ **DONE**
 * change inputs to readonly when user selects a location
 * show/results when user searches address and updates page
 * populate all the fields when user selects an address, but only show display name, lat and long in the results
