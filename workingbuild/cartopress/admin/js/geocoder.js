@@ -125,7 +125,7 @@
 		// map.addLayer(markersLayer);
 		
 		for(x = 0; x<r.length; x++) {
-			var HTML = "<div class='cpdb-result-item' data-georef='id"+x+"' data-markerref='map"+x+"'><h1>Address: "+r[x].display_name+"</h1><h2>Latitude: "+r[x].lat+"</h2><h2>Longitude: "+r[x].lon+"</h2></div>"
+			var HTML = "<div class='cpdb-result-item' data-georef='id"+x+"' data-markerref='map"+x+"'><h1>"+r[x].display_name+"</h1><h2>Latitude: <span>"+r[x].lat+"</span></h2><h2>Longitude: <span>"+r[x].lon+"</span></h2></div>"
 			$('#results section').append(HTML);
 			
 			marker.res["id"+x] = [r[x].lat, r[x].lon, {title: r[x].display_name}];
