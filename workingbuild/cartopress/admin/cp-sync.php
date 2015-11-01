@@ -81,6 +81,9 @@ if (!class_exists('cartopress_sync')) {
 			
 			if ($cpoptions['cartopress_sync_format'] == 1) {
 				$cp_post_format = get_post_format( $post_id );
+				if ( false === $cp_post_format ) {
+					$cp_post_format = 'standard';
+				}
 			} else {
 				$cp_post_format = null;
 			}
@@ -159,7 +162,6 @@ if (!class_exists('cartopress_sync')) {
 					$sql_update = trim($sql_update, ' ');
 					$sql_update = trim($sql_update, ',');
 					$sql_update .= ' WHERE cp_post_id = ' . $post_id;
-					
 					cartopress::process_curl($ch, $sql_update, cartopress_apikey, cartopress_username, true);
 				}
 			} //end if
