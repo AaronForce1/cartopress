@@ -165,11 +165,12 @@ if (!class_exists('geocoder_metabox')) {
 			// Display the metabox
 			echo '<p class="howto">Use the search bar to find lookup an address. Select the correct address from the results, or fill in the location fields manually. Note: Latitude and longitude cooridnates are required.</p>';
 			echo '<div id="cpdb-metabox-wrapper">
-					<h4>Choose a Location</h4><input type="button" class="getCurrentPosition button" onclick="locateMe()"" value="Current Location"></input>
+					<h4>Choose a Location</h4>
 			    	<section id="addressQuery">
 			            <form id="geo_search">
 			                <input id="omnibar" type="text" placeholder="Search Address (Neighborhood | City | State | Country)"/>
-			                <input type="button" id="cpdb-search-button" class="button" onclick="doClick()" value="Search">
+			                <input type="button" class="getCurrentPosition button" onclick="locateMe()"" value="Current Location"></input>
+			                <input type="button" id="cpdb-search-button" class="button" onclick="doClick()" value="Search"></input>
 			            </form>
 			        </section>
 			        
@@ -178,9 +179,7 @@ if (!class_exists('geocoder_metabox')) {
 			        	<h4>Search Results</h4>
 				        <section>
 				        	<div class="cpdb-result-item">
-				        		<h1>Address:</h1>
-				                <h2>Latitude</h2>
-				                <h2>Longitude</h2>
+				        		
 				        	</div>
 				        </section>
 			        </div>
