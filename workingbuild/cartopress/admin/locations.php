@@ -1,31 +1,32 @@
 <?php
 /**
- * CartoPress Settings
+ * CartoPress Locations
  *
  * @package cartopress
  */
  
- /* add location meta box
+ /* add geocoder meta box
  *	@since 0.1.0
  */
 
-if (!class_exists('add_location_metabox')) {
+if (!class_exists('geocoder_metabox')) {
 
-	class add_location_metabox {
+	class geocoder_metabox {
 	
 		/**
 		 * Hook into the appropriate actions when the class is constructed.
 		 */
 		public function __construct() {
-			add_action( 'add_meta_boxes', array( $this, 'cartopress_add_meta_box' ) );
+			add_action( 'add_meta_boxes', array( $this, 'cartopress_add_geocoder' ) );
 			add_action( 'save_post', array( $this, 'save' ) );
+			require( cartopress_admin_dir . 'cp-sync.php' );
 		} // end __construct
 		
 		
 		/**
 		 * Adds the meta box container.
 		 */
-		public function cartopress_add_meta_box( $post_type ) {
+		public function cartopress_add_geocoder( $post_type ) {
 				$cpoptions = get_option( 'cartopress_admin_options', '' );
 				if ($cpoptions['cartopress_collect_posts'] == 1) {
 					$posts = 'post';
@@ -45,7 +46,7 @@ if (!class_exists('add_location_metabox')) {
 				$post_types = array($posts, $pages, $media);     //limit meta box to certain post types
 				if ( in_array( $post_type, $post_types )) {
 					
-					add_meta_box('cartopress_locator', __( 'CartoPress Geolocator', 'cartopress_textdomain' ), array( $this, 'cartopress_meta_box_content' ), $post_type, 'normal', 'high' );
+					add_meta_box('cartopress_locator', __( 'CartoPress Geolocator', 'cartopress_textdomain' ), array( $this, 'cartopress_geocoder_content' ), $post_type, 'normal', 'high' );
 					function load_geocoder_dependencies($location) {
 					   if( 'post.php' == $location || 'post-new.php' == $location ) {
 					     wp_enqueue_script('jquery2');
@@ -60,7 +61,7 @@ if (!class_exists('add_location_metabox')) {
 					}
 					add_action( 'admin_enqueue_scripts', 'load_geocoder_dependencies' );
 				} // end if
-		} // end cartopress_add_metabox
+		} // end cartopress_add_geocoder
 		
 		
 		
@@ -112,7 +113,7 @@ if (!class_exists('add_location_metabox')) {
 				'cp_geo_long'=>$_POST['cp_geo_long'],
 				'cp_geo_streetnumber'=>$_POST['cp_geo_streetnumber'],
 				'cp_geo_street'=>$_POST['cp_geo_street'],
-				'cp_gep_postal'=>$_POST['cp_gep_postal'],
+				'cp_geo_postal'=>$_POST['cp_geo_postal'],
 				'cp_geo_adminlevel4_vill_neigh'=>$_POST['cp_geo_adminlevel4_vill_neigh'],
 				'cp_geo_adminlevel3_city'=>$_POST['cp_geo_adminlevel3_city'],
 				'cp_geo_adminlevel2_county'=>$_POST['cp_geo_adminlevel2_county'],
@@ -129,7 +130,9 @@ if (!class_exists('add_location_metabox')) {
 			// Update the meta field.
 			update_post_meta( $post_id, '_cp_post_geo_data', $geodata );
 			update_post_meta( $post_id, '_cp_post_description', $description );
-		
+			
+			cartopress_sync::cartodb_sync($post_id);
+			
 		} //end save function
 		
 		
@@ -139,7 +142,7 @@ if (!class_exists('add_location_metabox')) {
 		 *
 		 * @param WP_Post $post The post object.
 		 */
-		public function cartopress_meta_box_content( $post ) {
+		public function cartopress_geocoder_content( $post ) {
 	
 			// Add an nonce field so we can check for it later.
 			wp_nonce_field( 'cartopress_inner_custom_box', 'cartopress_inner_custom_box_nonce' );
@@ -202,7 +205,7 @@ if (!class_exists('add_location_metabox')) {
 			        			<label for="cp_geo_adminlevel0_country">Country: </label><span><input type="text" id="cp_geo_adminlevel0_country" name="cp_geo_adminlevel0_country" value="' . esc_attr( $cp_geo_adminlevel0_country ) . '" placeholder="i.e. United States" disabled/></span>
 			        		</section>
 			        		<h4>Summary Description</h4>
-			        		<p class="howto">Add a custom summary description which will be available for display in the CartoDB infowindow. If you leave it blank, CartoPress will create a summary description from the post content.</p>
+			        		<p class="howto">Add a custom summary description which will be available for display in the CartoDB infowindow. If you leave it blank, CartoPress will attempt to use the post excerpt. If the excerpt is empty, CartoPress will create a summary description using the first 55 words of the post content.</p>
 			        		<section>
 			        			<textarea placeholder="Enter a Summary Description" name="cp_post_description" id="cp_post_description">' . esc_attr( $cp_post_description ) . '</textarea>
 			        		</section>
@@ -212,10 +215,10 @@ if (!class_exists('add_location_metabox')) {
 			 		<div id="comments"></div>
 			 </div>';
 		
-		} //end cartopress_meta_box_content
+		} //end cartopress_geocoder_content
 	
 	
-	} // end class add_location metabox
+	} // end class geocoder metabox
 	
 	// add instance  
 	

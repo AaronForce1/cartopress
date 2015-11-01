@@ -69,7 +69,7 @@ if (!class_exists('cartopress_settings')) {
 			add_settings_field('cartopress_collect_categories', null, array($this, 'cartopress_cartodb_categories_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_tags', null, array($this, 'cartopress_cartodb_tags_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_featuredimage', null, array($this, 'cartopress_cartodb_featuredimage_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
-			add_settings_field('cartopress_collect_customfields', null, array($this, 'cartopress_cartodb_customfields_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
+			add_settings_field('cartopress_collect_format', null, array($this, 'cartopress_cartodb_format_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 		}
 		
 		
@@ -100,12 +100,12 @@ if (!class_exists('cartopress_settings')) {
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_featuredimage]" id="cartopress_sync_featuredimage"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_featuredimage" class="label">Featured Image</label>'
 			);
 		}
-		public function cartopress_cartodb_customfields_callback()
+		public function cartopress_cartodb_format_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
-			$theoption = esc_attr($cpoptions['cartopress_sync_customfields']);
+			$theoption = esc_attr($cpoptions['cartopress_sync_format']);
 			printf(
-				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_customfields]" id="cartopress_sync_customfields"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_customfields" class="label">Custom Fields</label>'
+				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_format]" id="cartopress_sync_format"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_format" class="label">Post Format</label>'
 			);
 		}
 		public function cartopress_cartodb_posts_callback()

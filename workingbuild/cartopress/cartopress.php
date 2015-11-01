@@ -49,6 +49,17 @@ if (!class_exists('cartopress')) {
 			define('cartopress_url', trim( plugin_dir_url( __FILE__ ), '/' ) );
 			define('cartopress_dir', dirname( cartopress_plugin_name ) );
 			define('cartopress_vers', '0.1.0');
+			
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			if (isset($cpoptions['cartopress_cartodb_apikey'])) {
+				define('cartopress_apikey', $cpoptions['cartopress_cartodb_apikey'] );
+			}
+			if (isset($cpoptions['cartopress_cartodb_username'])) {
+				define('cartopress_username', $cpoptions['cartopress_cartodb_username'] );
+			}
+			if (isset($cpoptions['cartopress_cartodb_tablename'])) {
+				define('cartopress_table', $cpoptions['cartopress_cartodb_tablename'] );
+			}
 		}
 		
 		// activation @since 0.1.0
@@ -136,29 +147,34 @@ if (!class_exists('cartopress')) {
 		} // end load()
 		
 		/**
+		* perform cartodb queries
+		* @since 0.1.0
+		*/
+		public static function process_curl($ch, $sql, $apikey, $username, $return){
+			//curl init	
+			$ch = curl_init("https://".$username.".cartodb.com/api/v2/sql");
+			$query = http_build_query(array('q'=>$sql,'api_key'=>$apikey));
+			
+			//curl opts
+			curl_setopt($ch, CURLOPT_POST, TRUE);
+		   	curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+		   	curl_setopt($ch, CURLOPT_RETURNTRANSFER, $return);
+			
+			//process results
+			$result = curl_exec($ch);
+			curl_close($ch);
+			$result = json_decode($result);
+			
+			//return results
+			return $result;
+		} //end process_curl()
+			
+		/**
 		* ajax process functions
 		* @since 0.1.0
 		*/
 		private static function ajax_processes() {
 		// connecting to cartodb
-			function process_curl($ch, $sql, $apikey, $username){
-				//curl init	
-				$ch = curl_init("https://".$username.".cartodb.com/api/v2/sql");
-				$query = http_build_query(array('q'=>$sql,'api_key'=>$apikey));
-				
-				//curl opts
-				curl_setopt($ch, CURLOPT_POST, TRUE);
-			   	curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
-			   	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-				
-				//process results
-				$result = curl_exec($ch);
-				curl_close($ch);
-				$result = json_decode($result);
-				
-				//return results
-				return $result;
-			} //end process_curl()
 				
 			if (is_admin()) {
 				add_action('wp_ajax_cartopress_generate_table', 'process_generate_table');
@@ -176,10 +192,10 @@ if (!class_exists('cartopress')) {
 				   $tablename = $_POST['tablename'];
 				   
 				   //SQL create table statment
-				   $sql_create = "DO $$ BEGIN CREATE TABLE " . (string)$tablename . " (cp_post_id integer, cp_post_title text, cp_post_content text, cp_post_description text, cp_post_date date, cp_post_type text, cp_permalink_guid text, cp_post_categories text, cp_post_tags text, cp_post_featuredimage_url text, cp_post_customfields text, cp_geo_streetnumber text, cp_geo_street text, cp_geo_adminlevel4_vill_neigh text, cp_geo_adminlevel3_city text, cp_geo_adminlevel2_county text, cp_geo_adminlevel1_st_prov_region text, cp_geo_adminlevel0_country text, cp_geo_postal text, cp_geo_lat float, cp_geo_long float, cp_geo_displayname text); RAISE NOTICE 'Success'; END; $$";
+				   $sql_create = "DO $$ BEGIN CREATE TABLE " . (string)$tablename . " (cp_post_id integer, cp_post_title text, cp_post_content text, cp_post_description text, cp_post_date date, cp_post_type text, cp_post_permalink text, cp_post_categories text, cp_post_tags text, cp_post_featuredimage_url text, cp_post_format text, cp_geo_streetnumber text, cp_geo_street text, cp_geo_adminlevel4_vill_neigh text, cp_geo_adminlevel3_city text, cp_geo_adminlevel2_county text, cp_geo_adminlevel1_st_prov_region text, cp_geo_adminlevel0_country text, cp_geo_postal text, cp_geo_lat float, cp_geo_long float, cp_geo_displayname text); RAISE NOTICE 'Success'; END; $$";
 				   
 				   //process curl
-				   $result_create = process_curl($ch, $sql_create, $apikey, $username);
+				   $result_create = cartopress::process_curl($ch, $sql_create, $apikey, $username, true);
 				   
 				   //parse result
 				   $error = $result_create->error[0];
@@ -203,7 +219,7 @@ if (!class_exists('cartopress')) {
 				   
 				   } elseif ($success == 'Success')  {
 						$sql_select = "SELECT cdb_cartodbfytable('" . (string)$tablename . "');";
-						process_curl($ch, $sql_select, $apikey, $username);
+						cartopress::process_curl($ch, $sql_select, $apikey, $username, true);
 						update_option('cartopress_cartodb_verified', 'verified');
 						die('success');
 				   
@@ -235,7 +251,7 @@ if (!class_exists('cartopress')) {
 				   		array('name' => 'cp_post_categories', 'type' => 'text'),
 				   		array('name' => 'cp_post_tags', 'type' => 'text'),
 				   		array('name' => 'cp_post_featuredimage_url', 'type' => 'text'),
-				   		array('name' => 'cp_post_customfields', 'type' => 'text'),
+				   		array('name' => 'cp_post_format', 'type' => 'text'),
 				   		array('name' => 'cp_geo_streetnumber', 'type' => 'text'),
 				   		array('name' => 'cp_geo_street', 'type' => 'text'),
 				   		array('name' => 'cp_geo_adminlevel4_vill_neigh', 'type' => 'text'),
@@ -255,7 +271,7 @@ if (!class_exists('cartopress')) {
 				   		
 				   		$cartopressify = "DO $$ BEGIN ALTER TABLE " . $tablename . " ADD COLUMN " . $col_name . " " . $col_type . "; RAISE NOTICE 'Column " . $col_name . " was created.'; UPDATE " . $tablename . " SET " . $col_name . " = " . $col_name . "; RAISE NOTICE 'Column name is set.'; EXCEPTION WHEN duplicate_column THEN RAISE NOTICE '" . $col_name . " text already exists in " . $tablename . ".'; END; $$";	
 				   		
-				   		$result = process_curl($ch, $cartopressify, $apikey, $username);
+				   		$result = cartopress::process_curl($ch, $cartopressify, $apikey, $username, true);
 				   }
 				   update_option('cartopress_cartodb_verified', 'verified');
 				   die("Success");  
@@ -281,8 +297,8 @@ if (!class_exists('cartopress')) {
 				require( cartopress_admin_dir . 'locations.php' );
 				
 				function get_cartopress_geolocator() { // create instance
-					$add_location_metabox = new add_location_metabox();
-					$add_location_metbaox;
+					$geocoder_metabox = new geocoder_metabox();
+				
 				}
 				
 				add_action( 'load-post.php', 'get_cartopress_geolocator' );
