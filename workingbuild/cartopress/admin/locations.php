@@ -154,7 +154,7 @@ if (!class_exists('geocoder_metabox')) {
 			$cp_geo_long = $geodata['cp_geo_long'];
 			$cp_geo_streetnumber = $geodata['cp_geo_streetnumber'];
 			$cp_geo_street = $geodata['cp_geo_street'];
-			$cp_gep_postal = $geodata['cp_gep_postal'];
+			$cp_geo_postal = $geodata['cp_geo_postal'];
 			$cp_geo_adminlevel4_vill_neigh = $geodata['cp_geo_adminlevel4_vill_neigh'];
 			$cp_geo_adminlevel3_city = $geodata['cp_geo_adminlevel3_city'];
 			$cp_geo_adminlevel2_county = $geodata['cp_geo_adminlevel2_county'];
