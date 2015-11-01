@@ -1,6 +1,6 @@
 # Stuff to fix
 * ~~fix custom data not saving when editing attachment~~ **DONE**
-* change inputs to readonly when user selects a location
+* ~~change inputs to readonly when user selects a location~~ **DONE**
 * show/results when user searches address and updates page
 * populate all the fields when user selects an address, but only show display name, lat and long in the results
 * create a button to revert input fields to saved data if user changes their mind --- need to use wp_ajax call for this i think
@@ -8,9 +8,10 @@
 * add a readonly field for CartoDB ID (thinking floated right on the same level as the edit data checkbox)
 * display empty map with base layer only on edit page load if no geodata available
 * display map of location on edit page load if geodata is available
+* add the ability to move the point on the map to change the location
 * fix responsive css
-* change color of input when user selects address to better match the look
-remove color permanently when user checks the edit fields button (right now the color returns when user un-checked the box)
+* ~~change color of input when user selects address to better match the look~~ **DONE - just left a border and removed background color and font styling**
+* ~~remove color permanently when user checks the edit fields button (right now the color returns when user un-checked the box)~~ **DONE - removes the ent class when user unchecks the button**
 * ensure non-admin users can use geolocator (have to test, but i think its only available to admin users right now_
 * create documentation in github
 * create marketing page on github.io page with download button and tutorial/demo
