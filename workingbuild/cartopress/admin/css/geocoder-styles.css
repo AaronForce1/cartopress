@@ -40,7 +40,7 @@
 }
 	
 #cartopress_locator #omnibar {
-	width: calc(100% - 85px);
+	width: calc(100% - 208px);
 }
 
 #cpdb-search-button {
@@ -147,34 +147,63 @@
 #cartopress_locator #results {
 	box-sizing:border-box;
 	display:block;
-	max-height:500px;
+	height:100%;
 	float:right;
 	width:32.5%;
 	min-width:300px;
 	padding:10px;
+	overflow: scroll;
 }
 
 #cartopress_locator #results h4 {
 	margin-top:0;
 }
 
-#cartopress_locator #results h1 {
-	font-size:12px;
-	font-weight:normal;
-	margin:10px 0 0 0;
+#cartopress_locator	.cpdb-result-item {
+	background:rgba(0,116,162,0);
+	box-sizing: border-box;
+	padding:10px;
+	border-bottom: 1px solid #CFCFCF;
+	transition: all 0.2s;
+	-webkit-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	-ms-transition: all 0.2s;
 }
 
-#cartopress_locator #results h1:first-child {
+#cartopress_locator	.cpdb-result-item:last-of-type {
+	border-bottom: none;
+}
+
+#cartopress_locator	.cpdb-result-item h1 {
+	font-size:14px;
+	font-weight:normal;
+	margin:0 0 5px 0;
+	text-transform:uppercase;
+}
+
+#cartopress_locator	.cpdb-result-item h1:first-child {
 	margin:0;
 }
 
-#cartopress_locator #results h2 {
-	font-size:10px;
-	margin:0 0 0 10px;
+#cartopress_locator	.cpdb-result-item h2 {
+	font-size:12px;
+	margin:0;
+	padding:0;
+	line-height: normal;
 }
-	
+
+#cartopress_locator	.cpdb-result-item h2 span {
+	font-weight: 300;
+	font-style:italic;
+}
+
 #cartopress_locator	.cpdb-result-item:hover {
-	background:rgba(3,40,171,.3);
+	background:rgba(0,116,162,1);
+	cursor:pointer;
+}
+#cartopress_locator	.cpdb-result-item:hover * {
+	color:#FFFFFF;
 }
 
 #cartopress_locator .cpdb-result-item .selected {
