@@ -24,3 +24,5 @@
 * add support for custom fields (user should get a list of all custom fields and select which ones they would like to add)
 * create ability to save frequently used location data in a select field and use it
 * add ability to change base layer for both the post preview and in shortcode for viz publish
+* add support for more OSM features including language/translation, and sync of OSM place ids/types
+* add support for wp localization translations
