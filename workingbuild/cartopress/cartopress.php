@@ -92,7 +92,7 @@ if (!class_exists('cartopress')) {
 					wp_register_script('cartodb', 'http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js');
 					wp_register_script('ionicons', plugin_dir_url( __FILE__ ) . 'admin/js/leaflet.awesome-markers.min.js', array(), cartopress_vers);
 					wp_register_script('admin-script', plugin_dir_url( __FILE__ ) . 'admin/js/admin.js', array('jquery'), cartopress_vers );
-					wp_register_script('cartopress-geocode-script', plugin_dir_url( __FILE__ ) . 'admin/js/geocoder.js', array('jquery2.1.3','leaflet'/*, 'cartodb'*/), cartopress_vers );
+					wp_register_script('cartopress-geocode-script', plugin_dir_url( __FILE__ ) . 'admin/js/geocoder.js', array('jquery2.1.4','leaflet'/*, 'cartodb'*/), cartopress_vers );
 					wp_register_script('cartopress-geocode-helper-script', plugin_dir_url( __FILE__ ) . 'admin/js/geocoder-helper.js', array('jquery'), cartopress_vers );
 				} // end get_admin_scripts
 				
