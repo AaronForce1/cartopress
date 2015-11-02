@@ -20,6 +20,8 @@ if (!class_exists('geocoder_metabox')) {
 			add_action( 'add_meta_boxes', array( $this, 'cartopress_add_geocoder' ) );
 			add_action( 'save_post', array( $this, 'save' ) );
 			require( cartopress_admin_dir . 'cp-sync.php' );
+			// special action for attachment content type
+				add_action( 'edit_attachment', array ( $this, 'save'), 10, 1 );
 		} // end __construct
 		
 		
@@ -179,7 +181,7 @@ if (!class_exists('geocoder_metabox')) {
 			        	<h4>Search Results</h4>
 				        <section>
 				        	<div class="cpdb-result-item">
-				        		
+				        		<p class="howto">There are no results to show.</p>
 				        	</div>
 				        </section>
 			        </div>
@@ -191,17 +193,17 @@ if (!class_exists('geocoder_metabox')) {
 			        		<h4>Location</h4>
 			        		<input type="checkbox" id="unlock_manual_edit" name="unlock_manual_edit" /><label for="unlock_manual_edit">Allow Geo Data Editing</label>
 			        		<section>
-			        			<label for="cp_geo_displayname">Location Display Name: </label><span><input type="text" id="cp_geo_displayname" name="cp_geo_displayname" value="' . esc_attr( $cp_geo_displayname ) . '" placeholder="i.e. 200 North 7th Street, Brooklyn, NY" disabled /></span>
-			        			<label for="cp_geo_lat">Latitude: </label><span class="smaller" id="span_cp_geo_lat"><input type="text" id="cp_geo_lat" name="cp_geo_lat" value="' . esc_attr( $cp_geo_lat ) . '" placeholder="i.e. 40.7165" disabled/></span>
-			        			<label for="cp_geo_long">Longitude: </label><span><input type="text" id="cp_geo_long" name="cp_geo_long" value="' . esc_attr( $cp_geo_long ) . '" placeholder="i.e. -73.9553" disabled/></span>
-			        			<label for="cp_geo_streetnumber">Address Number: </label><span class="smaller" id="span_cp_geo_streetnumber"><input type="text" id="cp_geo_streetnumber" name="cp_geo_streetnumber" value="' . esc_attr( $cp_geo_streetnumber ) . '" placeholder="i.e. 200" disabled/></span>
-			        			<label for="cp_geo_street">Address Street: </label><span><input type="text" id="cp_geo_street" name="cp_geo_street" value="' . esc_attr( $cp_geo_street ) . '" placeholder="i.e. North 7th Street" disabled/></span>
-			        			<label for="cp_geo_postal">Postal Code: </label><span class="smaller" id="span_cp_geo_postal"><input type="text" id="cp_geo_postal" name="cp_geo_postal" value="' . esc_attr( $cp_geo_postal ) . '" placeholder="i.e. 11211" disabled/></span>
-			        			<label for="cp_geo_adminlevel4_vill_neigh">Village/Neighborhood: </label><span><input type="text" id="cp_geo_adminlevel4_vill_neigh" name="cp_geo_adminlevel4_vill_neigh" value="' . esc_attr( $cp_geo_adminlevel4_vill_neigh ) . '" placeholder="i.e. Williamsburg" disabled/></span>
-			        			<label for="cp_geo_adminlevel3_city">Town/City: </label><span class="smaller" id="span_cp_geo_adminlevel3_city"><input type="text" id="cp_geo_adminlevel3_city" name="cp_geo_adminlevel3_city" value="' . esc_attr( $cp_geo_adminlevel3_city ) . '" placeholder="i.e. Brooklyn" disabled/></span>
-			        			<label for="cp_geo_adminlevel2_county">County/District: </label><span><input type="text" id="cp_geo_adminlevel2_county" name="cp_geo_adminlevel2_county" value="' . esc_attr( $cp_geo_adminlevel2_county ) . '" placeholder="i.e. Kings" disabled/></span>
-			        			<label for="cp_geo_adminlevel1_st_prov_region">State/Province/Region: </label><span class="smaller" id="span_cp_geo_adminlevel1_st_prov_region"><input type="text" id="cp_geo_adminlevel1_st_prov_region" name="cp_geo_adminlevel1_st_prov_region" value="' . esc_attr( $cp_geo_adminlevel1_st_prov_region ) . '" placeholder="i.e. New York" disabled/></span>
-			        			<label for="cp_geo_adminlevel0_country">Country: </label><span><input type="text" id="cp_geo_adminlevel0_country" name="cp_geo_adminlevel0_country" value="' . esc_attr( $cp_geo_adminlevel0_country ) . '" placeholder="i.e. United States" disabled/></span>
+			        			<label for="cp_geo_displayname">Location Display Name: </label><span><input type="text" id="cp_geo_displayname" name="cp_geo_displayname" class="disabled" value="' . esc_attr( $cp_geo_displayname ) . '" placeholder="i.e. 200 North 7th Street, Brooklyn, NY" readonly="readonly" /></span>
+			        			<label for="cp_geo_lat">Latitude: </label><span class="smaller" id="span_cp_geo_lat"><input type="text" id="cp_geo_lat" name="cp_geo_lat" class="disabled" value="' . esc_attr( $cp_geo_lat ) . '" placeholder="i.e. 40.7165" readonly="readonly"/></span>
+			        			<label for="cp_geo_long">Longitude: </label><span><input type="text" id="cp_geo_long" name="cp_geo_long" class="disabled" value="' . esc_attr( $cp_geo_long ) . '" placeholder="i.e. -73.9553" readonly="readonly"/></span>
+			        			<label for="cp_geo_streetnumber">Address Number: </label><span class="smaller" id="span_cp_geo_streetnumber"><input type="text" id="cp_geo_streetnumber" name="cp_geo_streetnumber" class="disabled" value="' . esc_attr( $cp_geo_streetnumber ) . '" placeholder="i.e. 200" readonly="readonly"/></span>
+			        			<label for="cp_geo_street">Address Street: </label><span><input type="text" id="cp_geo_street" name="cp_geo_street" class="disabled" value="' . esc_attr( $cp_geo_street ) . '" placeholder="i.e. North 7th Street" readonly="readonly"/></span>
+			        			<label for="cp_geo_postal">Postal Code: </label><span class="smaller" id="span_cp_geo_postal"><input type="text" id="cp_geo_postal" name="cp_geo_postal" class="disabled" value="' . esc_attr( $cp_geo_postal ) . '" placeholder="i.e. 11211" readonly="readonly"/></span>
+			        			<label for="cp_geo_adminlevel4_vill_neigh">Village/Neighborhood: </label><span><input type="text" id="cp_geo_adminlevel4_vill_neigh" name="cp_geo_adminlevel4_vill_neigh" class="disabled" value="' . esc_attr( $cp_geo_adminlevel4_vill_neigh ) . '" placeholder="i.e. Williamsburg" readonly="readonly"/></span>
+			        			<label for="cp_geo_adminlevel3_city">Town/City: </label><span class="smaller" id="span_cp_geo_adminlevel3_city"><input type="text" id="cp_geo_adminlevel3_city" name="cp_geo_adminlevel3_city" class="disabled" value="' . esc_attr( $cp_geo_adminlevel3_city ) . '" placeholder="i.e. Brooklyn" readonly="readonly"/></span>
+			        			<label for="cp_geo_adminlevel2_county">County/District: </label><span><input type="text" id="cp_geo_adminlevel2_county" name="cp_geo_adminlevel2_county" class="disabled" value="' . esc_attr( $cp_geo_adminlevel2_county ) . '" placeholder="i.e. Kings" readonly="readonly"/></span>
+			        			<label for="cp_geo_adminlevel1_st_prov_region">State/Province/Region: </label><span class="smaller" id="span_cp_geo_adminlevel1_st_prov_region"><input type="text" id="cp_geo_adminlevel1_st_prov_region" name="cp_geo_adminlevel1_st_prov_region" class="disabled" value="' . esc_attr( $cp_geo_adminlevel1_st_prov_region ) . '" placeholder="i.e. New York" readonly="readonly"/></span>
+			        			<label for="cp_geo_adminlevel0_country">Country: </label><span><input type="text" id="cp_geo_adminlevel0_country" name="cp_geo_adminlevel0_country" class="disabled" value="' . esc_attr( $cp_geo_adminlevel0_country ) . '" placeholder="i.e. United States" readonly="readonly"/></span>
 			        		</section>
 			        		<h4>Summary Description</h4>
 			        		<p class="howto">Add a custom summary description which will be available for display in the CartoDB infowindow. If you leave it blank, CartoPress will attempt to use the post excerpt. If the excerpt is empty, CartoPress will create a summary description using the first 55 words of the post content.</p>
