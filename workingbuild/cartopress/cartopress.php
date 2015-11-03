@@ -33,7 +33,11 @@
 if (!class_exists('cartopress')) {
 
 	class cartopress {
-	
+		
+		/**
+		* cartopress start
+		* @since 0.1.0
+		*/
 		public static function start() {
 			cartopress::load_constants();
 			cartopress::load();
@@ -41,7 +45,10 @@ if (!class_exists('cartopress')) {
 			cartopress::add_geolocator();
 		}
 		
-		// add constants @since 0.1.0
+		/**
+		* add constants
+		* @since 0.1.0
+		*/
 		private static function load_constants() {
 			define('cartopress_plugin_name', plugin_basename(__FILE__));
 			define('cartopress_dir_path', dirname( __FILE__ ));
@@ -62,10 +69,12 @@ if (!class_exists('cartopress')) {
 			}
 		}
 		
-		// activation @since 0.1.0
+		/**
+		* load functions
+		* @since 0.1.0
+		*/
 		private static function load() {
 			
-			// hook in the settings page @since 0.1.0
 			if (is_admin()) {
 				
 				require( cartopress_admin_dir . 'settings.php' );

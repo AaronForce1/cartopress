@@ -167,11 +167,27 @@ if (!class_exists('cartopress_sync')) {
 			} //end if
 			
 			
-		} // end test
+		} // end cartodb sync
 		
+		public static function cartodb_delete($post_id) {
+			$sql_verifyupdate = 'SELECT COUNT(*) FROM ' . cartopress_table . ' WHERE cp_post_id = ' .$post_id;
+			$count = cartopress::process_curl($ch, $sql_verifyupdate, cartopress_apikey, cartopress_username, true);
+			$count = $count->rows[0]->count;
+			
+			if ($count == 0) {
+				return false;
+			} 
+			if ($count >= 2) {
+				wp_die('Multiple records exist for Post ID: ' . $post_id . '. Please check your CartoDB table and eliminate any duplicates.');
+			} 
+			if ($count == 1) {
+				$sql_delete = 'DELETE FROM ' . cartopress_table .  ' WHERE cp_post_id = ' . $post_id;
+				cartopress::process_curl($ch, $sql_delete, cartopress_apikey, cartopress_username, true);
+			}
+			
+		} //end cartodb delete
 		
-	
-	
+			
 	} // end class cartopress_sync
 		
 } //end if class exists

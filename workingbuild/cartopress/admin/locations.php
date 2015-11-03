@@ -21,7 +21,7 @@ if (!class_exists('geocoder_metabox')) {
 			add_action( 'save_post', array( $this, 'save' ) );
 			require( cartopress_admin_dir . 'cp-sync.php' );
 			// special action for attachment content type
-				add_action( 'edit_attachment', array ( $this, 'save'), 10, 1 );
+			add_action( 'edit_attachment', array ( $this, 'save'), 10, 1 );
 		} // end __construct
 		
 		
@@ -133,7 +133,11 @@ if (!class_exists('geocoder_metabox')) {
 			update_post_meta( $post_id, '_cp_post_geo_data', $geodata );
 			update_post_meta( $post_id, '_cp_post_description', $description );
 			
-			cartopress_sync::cartodb_sync($post_id);
+			if (get_post_status( $post_id ) != 'publish') {
+				cartopress_sync::cartodb_delete($post_id);
+			} else {
+				cartopress_sync::cartodb_sync($post_id);
+			}
 			
 		} //end save function
 		
