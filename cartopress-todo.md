@@ -3,7 +3,9 @@
 * ~~change inputs to readonly when user selects a location~~ **DONE**
 * show/results when user searches address and updates page
 * ~~delete from CartoDB when marks as private or reverts publish status to unpublished~~ **DONE**
-* delete from CartoDB when user moves to trash **NOT DONE - need to get the hook to work right**
+* delete from CartoDB when user moves to trash **DONE**
+* re-insert to CartoDB if user untrashes/restores
+* add support for bulk actions
 * hide results if open when user clicks Current Location button
 * populate all the fields when user selects an address, but only show display name, lat and long in the results
 * create a button to revert input fields to saved data if user changes their mind --- need to use wp_ajax call for this i think
