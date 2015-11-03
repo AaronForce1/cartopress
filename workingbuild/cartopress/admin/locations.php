@@ -22,6 +22,13 @@ if (!class_exists('geocoder_metabox')) {
 			require( cartopress_admin_dir . 'cp-sync.php' );
 			// special action for attachment content type
 			add_action( 'edit_attachment', array ( $this, 'save'), 10, 1 );
+			
+			add_action( 'wp_trash_post', 'cartopress_delete' );
+			
+			function cartopress_delete( $post_id ){
+				cartopress_sync::cartodb_delete($post_id);
+			}
+			
 		} // end __construct
 		
 		
