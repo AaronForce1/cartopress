@@ -1,12 +1,12 @@
 # Stuff to fix
 * ~~fix custom data not saving when editing attachment~~ **DONE**
 * ~~change inputs to readonly when user selects a location~~ **DONE**
-* show/results when user searches address and updates page
+* ~~show/results when user searches address and updates page~~ **DONE**
 * ~~delete from CartoDB when marks as private or reverts publish status to unpublished~~ **DONE**
 * ~~delete from CartoDB when user moves to trash~~ **DONE**
 * re-insert to CartoDB if user untrashes/restores
 * add support for bulk actions
-* hide results if open when user clicks Current Location button
+* ~~hide results if open when user clicks Current Location button~~ **DONE**
 * populate all the fields when user selects an address, but only show display name, lat and long in the results
 * create a button to revert input fields to saved data if user changes their mind --- need to use wp_ajax call for this i think
 * pull data from CartoDB instead of postmeta for geofields, create an alert to user prompting them to update the post of the geodata has been edited in cartodb manually and doesnt match the value saved in postmeta (only for geodata, post data should come from wp directly always meaning that all changes to post data in cartodb will always be lost on post update)
