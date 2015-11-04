@@ -1,7 +1,7 @@
 # Stuff to fix
 * ~~fix custom data not saving when editing attachment~~ **DONE**
 * ~~change inputs to readonly when user selects a location~~ **DONE**
-* ~~show/results when user searches address and updates page~~ **DONE need to test the updates page though**
+* ~~show/results when user searches address and updates page~~ **DONE update post not applicable as it defaults to hidden now**
 * ~~delete from CartoDB when marks as private or reverts publish status to unpublished~~ **DONE**
 * ~~delete from CartoDB when user moves to trash~~ **DONE**
 * re-insert to CartoDB if user untrashes/restores
