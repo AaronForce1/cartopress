@@ -189,6 +189,7 @@ if (!class_exists('geocoder_metabox')) {
 			        
 					
 			        <div id="results">
+			        	<a id="toggle-in-search" class="dashicons dashicons-dismiss cpdb-toggle-results"></a>
 			        	<h4>Search Results</h4>
 				        <section>
 				        	<div class="cpdb-result-item">
@@ -199,6 +200,7 @@ if (!class_exists('geocoder_metabox')) {
 					
 					
 			        <div class="cpdb-maincontent">
+			        	<a id="toggle-in-map" class="dashicons dashicons-dismiss cpdb-toggle-results"></a>
 			        	<div id="map"></div>
 			        	<div id="cpdb-geocode-values">
 			        		<h4>Location</h4>

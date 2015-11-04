@@ -23,10 +23,6 @@
 	margin-bottom:0;
 }
 
-#cartopress_locator .getCurrentPosition {
-	float: right;
-}
-
 #cartopress_locator .hndle {
 	background: rgba(250, 250, 250, 1);
 }
@@ -47,11 +43,15 @@
 	width:79px;
 }
 
+#cartopress_locator .getCurrentPosition {
+	float: right;
+}
+
 #cartopress_locator .cpdb-maincontent {
-	width:calc(68% - 20px);
+	width:100%;
 	margin:0 10px 0 0;
-	min-width:300px;
 	float:left;
+	position: relative;
 }
 
 #cartopress_locator #map {
@@ -131,9 +131,6 @@
 	width:10%;
 }
 
-#cartopress_locator #cpdb-geocode-values span#span_cp_geo_placeid {
-	width:10%;
-}
 
 #cartopress_locator #cp_post_description {
 	width:100%;
@@ -141,15 +138,45 @@
 	max-width:100%;
 }
 
+#toggle-in-search {
+	float:left;
+	margin-right:5px;
+}
+
+#toggle-in-map:before {
+	content: "\f502";
+}
+
+#toggle-in-map {
+	position:absolute;
+	right:5px;
+	top:7px;
+	z-index: 10;
+	display: block;
+}
+
+.cpdb-toggle-results {
+	width:20px;
+	height:20px;
+	display:block;
+	color:#666666;
+}
+
+.cpdb-toggle-results:hover {
+	cursor:pointer;
+	color:#0074a2;
+}
+
 #cartopress_locator #results {
 	box-sizing:border-box;
 	display:block;
 	height:100%;
 	float:right;
-	width:32.5%;
-	min-width:300px;
-	padding:10px;
+	width:0px;
+	padding:0px;
 	overflow: scroll;
+	position:relative;
+	opacity:0px;
 }
 
 #cartopress_locator #results h4 {
@@ -212,4 +239,40 @@
 	clear:both;
 	display: block;
 	font-size: 10px;
+}
+
+
+/*---------------RESPONSIVE----------------*/
+@media(max-width:1200px) {
+	#cartopress_locator .cpdb-maincontent {
+		width:100%;
+		float:none;
+	}
+	
+	#cartopress_locator #results {
+		height:0px;
+		max-height:300px;
+		float:none;
+		width:100%;
+		padding:0;
+		opacity:0;
+		margin-bottom:20px;
+		border-bottom:1px solid #EFEFEF;
+	}
+}
+
+@media(max-width:783px) {
+	#cartopress_locator #omnibar {
+		width: 100%;
+		margin-bottom:3px;
+	}
+	
+	#cpdb-search-button {
+		width:auto;
+	}
+	
+	#cartopress_locator .getCurrentPosition {
+		float: left;
+		margin-right:3px;
+	}	
 }
