@@ -69,6 +69,7 @@
 
 #cartopress_locator #cpdb-geocode-values input {
 	 box-sizing:border-box;
+	 font-size:smaller;
 }
 
 #cartopress_locator #cpdb-geocode-values input.disabled {
