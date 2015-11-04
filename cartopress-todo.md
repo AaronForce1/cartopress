@@ -1,7 +1,7 @@
 # Stuff to fix
 * ~~fix custom data not saving when editing attachment~~ **DONE**
 * ~~change inputs to readonly when user selects a location~~ **DONE**
-* ~~show/results when user searches address and updates page~~ **DONE**
+* ~~show/results when user searches address and updates page~~ **DONE need to test the updates page though**
 * ~~delete from CartoDB when marks as private or reverts publish status to unpublished~~ **DONE**
 * ~~delete from CartoDB when user moves to trash~~ **DONE**
 * re-insert to CartoDB if user untrashes/restores
@@ -14,7 +14,7 @@
 * display empty map with base layer only on edit page load if no geodata available
 * display map of location on edit page load if geodata is available
 * add the ability to move the point on the map to change the location
-* fix responsive css
+* ~~fix responsive css~~ **DONE but there might be a couple of bugs I didn't catch**
 * ~~change color of input when user selects address to better match the look~~ **DONE - just left a border and removed background color and font styling**
 * ~~remove color permanently when user checks the edit fields button (right now the color returns when user un-checked the box)~~ **DONE - removes the ent class when user unchecks the button**
 * ensure non-admin users can use geolocator (have to test, but i think its only available to admin users right now_
