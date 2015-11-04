@@ -44,7 +44,7 @@
 
 	function currentLOC(ID) {
 		pro.engage = new Object
-
+		hideResults();
 		$(pro.engage)
 		.queue(function(){
 			// CHECKS TO SEE IF MAP HAS ALREADY BEEN ACTIVATED
@@ -83,14 +83,13 @@
 	
 	function doClick() {console.log('DOCLICK');
 		pro.OpenStreetQUERY = new Object;
-		
+		showResults();
 		$(pro.OpenStreetQUERY)
 			.queue(function(){console.log('Checking Map...');
 				checkMap();	
 			})
 		
 			.queue(function(){console.log('OS Query 1');
-				// OPENMAPQUEST'S API ACCESS POINT WHICH USES OPEN STREETMAPS
 				var HOST_URL = "http://nominatim.openstreetmap.org/search?format=json&q=MY_LOC";
 				
 				var newLoc = $('#omnibar').val();
