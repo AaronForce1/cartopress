@@ -7,18 +7,20 @@
 * re-insert to CartoDB if user untrashes/restores **WORKING only when user selects Restore from the trash and from the Undo action**
 * add support for bulk actions
 * ~~hide results if open when user clicks Current Location button~~ **DONE**
-* populate all the fields when user selects an address, but only show display name, lat and long in the results
+* ~~populate all the fields when user selects an address, but only show display name, lat and long in the results~~
+* add the ability to select result from map pins, instead of results on right
 * create a button to revert input fields to saved data if user changes their mind --- need to use wp_ajax call for this i think
 * pull data from CartoDB instead of postmeta for geofields, create an alert to user prompting them to update the post of the geodata has been edited in cartodb manually and doesnt match the value saved in postmeta (only for geodata, post data should come from wp directly always meaning that all changes to post data in cartodb will always be lost on post update)
 * add a readonly field for CartoDB ID (thinking floated right on the same level as the edit data checkbox)
-* display empty map with base layer only on edit page load if no geodata available
+* ~~display empty map with base layer only on edit page load if no geodata available~~ **DONE**
 * display map of location on edit page load if geodata is available
 * add the ability to move the point on the map to change the location
+* set a checkbox to lock all pins on map or unlock them
 * ~~fix responsive css~~ **DONE but there might be a couple of bugs I didn't catch**
 * ~~change color of input when user selects address to better match the look~~ **DONE - just left a border and removed background color and font styling**
 * ~~remove color permanently when user checks the edit fields button (right now the color returns when user un-checked the box)~~ **DONE - removes the ent class when user unchecks the button**
 * ensure non-admin users can use geolocator (have to test, but i think its only available to admin users right now_
-* create documentation in github
+* create documentation in github **IN PROGRESS**
 * create marketing page on github.io page with download button and tutorial/demo
 
 
