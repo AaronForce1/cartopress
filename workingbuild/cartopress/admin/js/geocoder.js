@@ -1,277 +1,281 @@
+// VARIABLE CONTAINERS FOR FUNCTION SETTINGS!
 	var pro = {}
 	var assets = {}
 	var marker = {}
 	var inputs = {}
 
-	// INITIALIZATION OF DOM
-	$('document').ready(function(){
-		assets.AMap = 0;
+jQuery(document).ready(function($){
+	pro.InitializeGeocoder();
+});
 
-		inputs.display_name = $('#cp_geo_displayname');
-		inputs.lat = $('#cp_geo_lat');
-		inputs.lon = $('#cp_geo_long');
-		inputs.address = {
-			no : $('#cp_geo_streetnumber'),
-			street : $('#cp_geo_street')
-		};
-		inputs.zip = $('#cp_geo_postal');
-		inputs.L4 = $('#cp_geo_adminlevel4_vill_neigh');
-		inputs.city = $('#cp_geo_adminlevel3_city');
-		inputs.L2 = $('#cp_geo_adminlevel2_county');
-		inputs.L1 = $('#cp_geo_adminlevel1_st_prov_region');
-		inputs.country = $('#cp_geo_adminlevel0_country');
+pro.InitializeGeocoder = function() {
+	// DECLARATION OF ASSETS
+	//    Currently used for accessing variables from the DOM... May not be necessarily publicly available in future.
+	assets.AMap = false;
 
-		// CUSTOM MARKER STYLES
-		assets.alertMARK = L.AwesomeMarkers.icon({icon:'', markerColor: 'red'});
-		assets.primaryMARK = L.AwesomeMarkers.icon({icon:'', markerColor: 'blue'});
-		assets.selectedMARK = L.AwesomeMarkers.icon({icon:'', markerColor: 'green'});
-	})
+	inputs.display_name = $('#cp_geo_displayname');
+	inputs.lat = $('#cp_geo_lat');
+	inputs.lon = $('#cp_geo_long');
+	inputs.address = {
+		no : $('#cp_geo_streetnumber'),
+		street : $('#cp_geo_street')
+	};
+	inputs.zip = $('#cp_geo_postal');
+	inputs.L4 = $('#cp_geo_adminlevel4_vill_neigh');
+	inputs.city = $('#cp_geo_adminlevel3_city');
+	inputs.L2 = $('#cp_geo_adminlevel2_county');
+	inputs.L1 = $('#cp_geo_adminlevel1_st_prov_region');
+	inputs.country = $('#cp_geo_adminlevel0_country');
 
-	function locateMe() {
-		if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(showPosition);
-			} else {
-				$('#comments').innerHTML = "Geolocation is not supported by this browser.";
+	// CUSTOM MARKER STYLES
+	assets.alertMARK = L.AwesomeMarkers.icon({icon:'', markerColor: 'red'});
+	assets.primaryMARK = L.AwesomeMarkers.icon({icon:'', markerColor: 'blue'});
+	assets.selectedMARK = L.AwesomeMarkers.icon({icon:'', markerColor: 'green'});
+
+	// Load MAP TILES
+	pro.mapping.create("init");
+
+	// SETTING UP INTERFACE BINDINGS
+	$( window ).resize(function() {
+		$('#cartopress_locator #results[style], #cartopress_locator .cpdb-maincontent[style]').removeAttr('style');
+	});
+	
+	$('input#unlock_manual_edit').click(function() {
+	    if ($(this).is(':checked')) {
+			$('#cartopress_locator #cpdb-geocode-values span input, #cartopress_locator #cpdb-geocode-values span textarea').removeClass('disabled ent');
+			$('#cartopress_locator #cpdb-geocode-values span input, #cartopress_locator #cpdb-geocode-values span textarea').attr('readonly', false);
+			$('#cartopress_locator #cpdb-geocode-values label').css('color','#666666');
+	    } else {
+	    	$('#cartopress_locator #cpdb-geocode-values span input, #cartopress_locator #cpdb-geocode-values span textarea').addClass('disabled');
+	    	$('#cartopress_locator #cpdb-geocode-values span input, #cartopress_locator #cpdb-geocode-values span textarea').attr('readonly', true);
+	    	$('#cartopress_locator #cpdb-geocode-values label').css('color','#AAAAAA');
+	    }
+	});
+	
+	$('#toggle-in-map, #toggle-in-search').click(function() {
+		pro.results.toggle();
+	});
+}
+
+pro.results = new Object;
+	pro.results.hide = function() {
+		if ($(window).width() > 1200) {
+			$('#cartopress_locator #results').animate({'width':'0px','opacity':'0','padding':'0px'}, {duration: 100});
+			$('#cartopress_locator .cpdb-maincontent').animate({'width': '100%'}, {duration: 200});
+		} else {
+			$('#cartopress_locator #results').animate({'height':'0px','opacity':'0','padding':'0px'}, {duration: 100});
+		}
+		$('#toggle-in-map').css({'display':'block'});}
+	pro.results.show = function() {
+		if ($(window).width() > 1200) {
+			$('#cartopress_locator #results').animate({'width':'32.5%','opacity':'1','padding':'10px'}, {duration: 200});
+			$('#cartopress_locator .cpdb-maincontent').animate({'width': ($('#cpdb-metabox-wrapper').width() * .68) - 20 + 'px'}, {duration: 100});
+		} else {
+			$('#cartopress_locator #results').animate({'height':'100%','opacity':'1','padding':'10px'}, {duration: 200});
+		}
+		$('#toggle-in-map').css({'display':'none'});}
+	pro.results.toggle = function() {
+		if ($('#cartopress_locator #results').width() == 0 || $('#cartopress_locator #results').height() == 0) {
+			pro.results.show();
+		} else {
+			pro.results.hide();
+		}}
+
+pro.mapping = new Object;
+	pro.mapping.clean = function() {
+		if ( assets.AMap == true && $('div#results').hasClass('queried')) {
+			var resultsLength = $('.cpdb-result-item').length
+			for (x=resultsLength; x>=0; x--) {
+				if (x===0) {
+					$('div#results').removeClass('queried');
+					$('section .cpdb-result-item').remove();
+					delete marker.res;
+					$('#cpdb-geocode-values input, #cpdb-geocode-values textarea').val("").removeClass("ent")
+					$(pro.mapMe).dequeue();
+				}
+				else {
+					assets.map.removeLayer(marker.res["map"+(x-1)]);
+				}
 			}
-			
-			function showPosition(position) {
-				assets.currentPOS_lat = position.coords.latitude;
-				assets.currentPOS_lon = position.coords.longitude;
-
-				currentLOC(0)
-			}
+		}
+		else if (marker.current) {
+			assets.map.removeLayer(marker.current);
+			setTimeout(function(){delete marker.current;}, 200);
+			$('#cpdb-geocode-values input, #cpdb-geocode-values textarea').val("").removeClass("ent")
+			$(pro.mapMe).dequeue();
+		}
+		else {
+			$(pro.mapMe).dequeue();
+		}
 	}
-
-	function currentLOC(ID) {
-		pro.engage = new Object
-		hideResults();
-		$(pro.engage)
+	pro.mapping.create = function(type, geo) {
+		pro.mapMe = new Object;
+		$(pro.mapMe).queue(function(){
+			pro.mapping.clean();
+		})
 		.queue(function(){
-			// CHECKS TO SEE IF MAP HAS ALREADY BEEN ACTIVATED
-			// IF SO, WILL PROMPT TO CLEAR RESULTS.
-			if (assets.AMap === 1) {$(pro.engage).stop()}
-			else {
-				// DETERMINE CURRENT LOCATION COORDINATES
-				assets.AMap = 1;
+			switch (assets.AMap) {
+				case false:
+					if (type == "init") {geo = {lat : 38, lon : -08.10546875, zoom : 2};}
+					else {}
+					createMap();
+					break;
+				default:
+					pro.mapping.populate(type, geo);
+					break;
+			}
+
+			function createMap() {
 				assets.map = new L.Map('map', {
-					center: [assets.currentPOS_lat, assets.currentPOS_lon],
-					zoom: 6,
+					center: [geo.lat, geo.lon],
+					zoom: geo.zoom,
 					maxzoom: 16
 				});
 				
 				// INITIAL MAP LOAD
 				L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-    				attribution: '© <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors © <a href= \"http://cartodb.com/attributions\">CartoDB</a>'
-    			}).addTo(assets.map);
+					attribution: '© <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors © <a href= \"http://cartodb.com/attributions\">CartoDB</a>'
+				}).addTo(assets.map);
 
-				// ADDING CURRENT LOCATION MARKER TO THE MAP
-    			marker.current = L.marker([assets.currentPOS_lat, assets.currentPOS_lon], {icon:assets.primaryMARK}).addTo(assets.map);
-    			$(pro.engage).dequeue()
+				assets.AMap = true;
+
+				pro.mapping.populate(type, geo);
 			}
 		})
-		.queue(function(){
-				// PROPOGATE CURRENT LOCATION FIELDS
-				inputs.display_name.val("Current Location").addClass('ent')
-				inputs.lat.val(assets.currentPOS_lat).addClass('ent')
-				inputs.lon.val(assets.currentPOS_lon).addClass('ent')
-				$(pro.engage).dequeue();
-		});
-	}
-	res = new Array;
-	var newSQL;
-	
-	
-	function doClick() {console.log('DOCLICK');
-		pro.OpenStreetQUERY = new Object;
-		showResults();
-		$(pro.OpenStreetQUERY)
-			.queue(function(){console.log('Checking Map...');
-				checkMap();	
-			})
-		
-			.queue(function(){console.log('OS Query 1');
-				var HOST_URL = "http://nominatim.openstreetmap.org/search?format=json&q=MY_LOC";
-				
-				var newLoc = $('#omnibar').val();
-				var newURL = HOST_URL.replace('MY_LOC', newLoc);				
-				
-				$('div.cpdb-result-item').remove();
-				
-				$.ajax({
-					type: 'GET',
-					url: newURL,
-					dataType: 'jsonp',
-					jsonp: 'json_callback',
-					error: function(){console.log('ERROR')},
-					success: renderResults
-				});
-				
-				console.log(newLoc);
-				console.log(newURL);
-				
-			})
-			
-			.queue(function(){
-				bindMapItems();
-				completeQuery();
-			})
 		
 	}
-	
-	function renderResults(r) {console.log('    Render Results');
-		marker.res = {}
-		// -- var markersLayer = new L.LayerGroup();	//layer contain searched elements
-		// map.addLayer(markersLayer);
-		
-		for(x = 0; x<r.length; x++) {
-			var HTML = "<div class='cpdb-result-item' data-georef='id"+x+"' data-markerref='map"+x+"'><h1>"+r[x].display_name+"</h1><h2>Latitude: <span>"+r[x].lat+"</span></h2><h2>Longitude: <span>"+r[x].lon+"</span></h2></div>"
-			$('#results section').append(HTML);
-			
-			marker.res["id"+x] = [r[x].lat, r[x].lon, {title: r[x].display_name}];
-			
-			// -- L.marker(L.latLng(res[x].lat, res[x].lon), {title: res[x].display_name}).addTo( markersLayer );
-			
-			marker.res["map"+x] = L.marker([r[x].lat, r[x].lon], {
-				draggable: "true",
-				title: "Hover Text",
-				opacity: 0.8,
-				icon: assets.primaryMARK
-			}).addTo(assets.map);
-			assets.map.addLayer(marker.res["map"+x]);
+	pro.mapping.populate = function(type, geo) {
+		switch (type) {
+			case "current":
+				marker.current = L.marker([geo.lat, geo.lon], {icon:assets.primaryMARK}).addTo(assets.map);
+				assets.map.fitBounds([[geo.lat, geo.lon]], {maxzoom: geo.zoom});
+				pro.mapping.bind(type, geo);
+				break
+			case "query":
+				marker.res = {}
+				var r = geo;
 
-			if ( (x+1) == r.length ) {
-				// FIT MAP TO MARKERS
-				var length = r.length;
-				bounds = new Array;
-				
-				for (i = 0; i<r.length; i++) {bounds[i] = [r[i].lat, r[i].lon]}
-				assets.map.fitBounds(bounds, {maxzoom: 10});
-				
-				/*var list = new L.Control.ListMarkers({layer: markersLayer, itemIcon: null});
-					list.on('item-mouseover', function(e) {
-						e.layer.setIcon(L.icon({
-							iconUrl: '../images/select-marker.png'
-						}))
-					}).on('item-mouseout', function(e) {
-						e.layer.setIcon(L.icon({
-							iconUrl: L.Icon.Default.imagePath+'/marker-icon.png'
-						}))
-					});
-				
-				map.addControl( list );*/
-				
-				$(pro.OpenStreetQUERY).dequeue();
-				
-			}
-			else {}
-			
-		}
-		
-		function dequeue(){$(pro.OpenStreetQUERY).dequeue();}
-	}
-	
-	function checkMap() {
-		if ($('section#results').hasClass('queried')) {
-			for (x=resultsLength; x>=0; x--) {
-				if (x===0) {
-					$('section#results').removeClass('queried');
-					markersArray = {};
-					$(pro.OpenStreetQUERY).dequeue();
+				for(x = 0; x<r.length; x++) {
+					var HTML = "<div class='cpdb-result-item' data-georef='id"+x+"' data-markerref='map"+x+"'><h1>"+r[x].display_name+"</h1><h2>Latitude: <span>"+r[x].lat+"</span></h2><h2>Longitude: <span>"+r[x].lon+"</span></h2></div>"
+					$('#results section').append(HTML);
 					
-					console.log('    Map Reset');
-				}
-				
-				else {
-					map.removeLayer('markersArray.id'+x);
-					$('section#results>.result')[x-1].remove();
-				}
-				
-			}
-		}
+					marker.res["id"+x] = [r[x].lat, r[x].lon, {title: r[x].display_name, address: r[x].address}];
+					
+					marker.res["map"+x] = L.marker([r[x].lat, r[x].lon], {
+						draggable: "true",
+						title: "Hover Text",
+						opacity: 0.8,
+						icon: assets.primaryMARK
+					}).addTo(assets.map);
+					assets.map.addLayer(marker.res["map"+x]);
 
-		else if (assets.AMap == 0) {
-			assets.AMap = 1;
-			assets.map = new L.Map('map', {
-				zoom: 6,
-				maxzoom: 16
-			});
-			
-			// INITIAL MAP LOAD
-			L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-				attribution: '© <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors © <a href= \"http://cartodb.com/attributions\">CartoDB</a>'
-			}).addTo(assets.map);
-
-			$(pro.OpenStreetQUERY).dequeue(); console.log('Blank Map Engaged');
+					if ( (x+1) == r.length ) {
+						// FIT MAP TO MARKERS
+						var length = r.length;
+						bounds = new Array;
+						
+						for (i = 0; i<r.length; i++) {bounds[i] = [r[i].lat, r[i].lon]}
+						assets.map.fitBounds(bounds, {maxzoom: 10});
+						
+					}
+					else {}
+					
+				}
+				pro.mapping.bind(type, geo);
+				break;
+			case "init":
+				break;
+			default:
+				// Display ERROR
+				break;
 		}
-		
-		else{$(pro.OpenStreetQUERY).dequeue(); console.log('    Map Checked and Clean');}
 	}
-	
-	function bindMapItems() {
+	pro.mapping.bind = function(type, geo) {
+		switch (type) {
+			case "current":
+				inputs.display_name.val("Current Location").addClass('ent')
+				inputs.lat.val(geo.lat).addClass('ent')
+				inputs.lon.val(geo.lon).addClass('ent')
+				break;
 
-		var resultBox = $('.cpdb-result-item');
-		
-		resultBox.mouseenter(function(){
-				var i = this.dataset.markerref
-				marker.res[i].setIcon(assets.alertMARK)
-			}).mouseleave(function(){
-				var i = this.dataset.markerref
-				marker.res[i].setIcon(assets.primaryMARK)
-			});
-		resultBox.click(function(){
-			var i = this.dataset.markerref
-			for(x=0; x<resultBox.length; x++) {
-				if (("map"+x) === i) {
-					marker.res[i].setIcon(assets.selectedMARK)
-					marker.res[i].setZIndexOffset(1000)
-					$(this).unbind('mouseenter').unbind('mouseleave');
+			case "query":
+				var resultBox = $('.cpdb-result-item');
+				
+				resultBox.mouseenter(function(){
+						var i = this.dataset.markerref
+						marker.res[i].setIcon(assets.alertMARK)
+					}).mouseleave(function(){
+						var i = this.dataset.markerref
+						marker.res[i].setIcon(assets.primaryMARK)
+					});
+				resultBox.click(function(){
+					var i = this.dataset.markerref
+					for(x=0; x<resultBox.length; x++) {
+						if (("map"+x) === i) {
+							marker.res[i].setIcon(assets.selectedMARK)
+							marker.res[i].setZIndexOffset(1000)
+							$(this).unbind('mouseenter').unbind('mouseleave');
 
-					propogateResultData(x, resultBox);
+							propogateResultData(x, resultBox);
+						}
+						else {primaryBinding(x, resultBox);}
+					}
+				});
+
+				function primaryBinding(x, resultBox) {
+					$($(resultBox)[x]).removeClass('selected')
+
+					$($(resultBox)[x]).mouseenter(function(){
+						var i = this.dataset.markerref
+						marker.res[i].setIcon(assets.alertMARK)
+					}).mouseleave(function(){
+						var i = this.dataset.markerref
+						marker.res[i].setIcon(assets.primaryMARK)
+					});
+
+					var i = $(resultBox)[x].dataset.markerref
+					marker.res[i].setIcon(assets.primaryMARK)
+					marker.res[i].setZIndexOffset(0)
 				}
-				else {primaryBinding(x, resultBox);}
-			}
-			
-		});
 
-		function primaryBinding(x, resultBox) {
+				function propogateResultData(x, resultBox) {
+					$($(resultBox)[x]).addClass('selected')
 
-			$($(resultBox)[x]).removeClass('selected')
+					pro.MRpropo = new Object;
+					$(pro.MRpropo)
+						.queue(function(){sanitizeInput();})
+						.queue(function(){
+							// INITIAL DATA ENTRY
+							inputs.display_name.val(marker.res["id"+x][2].title).addClass('ent');
+							inputs.lat.val(marker.res["id"+x][0]).addClass('ent');
+							inputs.lon.val(marker.res["id"+x][1]).addClass('ent');
+							$(pro.MRpropo).dequeue();
+						})
+						.queue(function(){
+							var e = marker.res["id"+x][2].address;
+							// SPECIFIC DETAILS
+							if (e.house_number) {inputs.address.no.val(e.house_number).addClass('ent');} else {}
+							if (e.pedestrian) {inputs.address.street.val(e.pedestrian).addClass('ent');} else {}
+							if (e.postcode) {inputs.zip.val(e.postcode).addClass('ent');} else {}
+							if (e.neighbourhood) {inputs.L4.val(e.neighbourhood).addClass('ent');} else {}
+							if (e.city) {inputs.city.val(e.city).addClass('ent');} else {}
+							if (e.county) {inputs.L2.val(e.county).addClass('ent');} else {}
+							if (e.state) {inputs.L1.val(e.state).addClass('ent');} else {}
+							if (e.country) {inputs.country.val(e.country).addClass('ent');} else {}
 
-			$($(resultBox)[x]).mouseenter(function(){
-				var i = this.dataset.markerref
-				marker.res[i].setIcon(assets.alertMARK)
-			}).mouseleave(function(){
-				var i = this.dataset.markerref
-				marker.res[i].setIcon(assets.primaryMARK)
-			});
-
-			var i = $(resultBox)[x].dataset.markerref
-			marker.res[i].setIcon(assets.primaryMARK)
-			marker.res[i].setZIndexOffset(0)
+							$(pro.Mrpropo).dequeue();
+						})
+					function sanitizeInput() {
+						$('div#cpdb-geocode-values input').val("");
+						$(pro.MRpropo).dequeue();
+					}	
+				}
+				$('div#results').addClass('queried');
+				break;	
+			case "init":
+				break;
+			default:
+				// Display ERROR
+				break;
 		}
-
-		function propogateResultData(x, resultBox) {
-			$($(resultBox)[x]).addClass('selected')
-
-			pro.MRpropo = new Object;
-			$(pro.MRpropo)
-				.queue(function(){sanitizeInput();})
-				.queue(function(){
-					inputs.display_name.val(marker.res["id"+x][2].title).addClass('ent')
-					inputs.lat.val(marker.res["id"+x][0]).addClass('ent');
-					inputs.lon.val(marker.res["id"+x][1]).addClass('ent');
-				})
-
-			function sanitizeInput() {
-				$('div#cpdb-geocode-values input').val("");
-				$(pro.MRpropo).dequeue();
-			}
-
-			
-		}
-
-	}
-	
-	function completeQuery() {
-		$('section#results').addClass('queried');
 	}
