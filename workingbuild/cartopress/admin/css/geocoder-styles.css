@@ -69,11 +69,36 @@
 }
 
 #cartopress_locator #cpdb-geocode-values div.row {
-	width: 100%; display: block; float: left;
+	width: 100%;
+	display: block;
+	float: left;
 }
 
-div.row .col-12 {width: 100%; float: left;} div.row .col-6 {width: 49%; float: left; margin-left: 2%;} div.row .col-4 {width: 31.3333%; float: left; margin-left: 3%;}
-div.row>.col-6:first-child {margin-left: 0;} div.row>.col-4:first-child {margin-left: 0;}
+div.row .col-12 {
+	width: 100%;
+	float: left;
+}
+
+div.row .col-6 {
+	width: 49%;
+	float: left;
+	margin-left: 2%;
+}
+
+div.row .col-4 {
+	width: 31.3333%;
+	float: left;
+	margin-left: 3%;
+}
+
+div.row > .col-6:first-child {
+	margin-left: 0;
+}
+
+div.row > .col-4:first-child {
+	margin-left: 0;
+}
+
 
 #cartopress_locator #cpdb-geocode-values input, #cartopress_locator #cpdb-geocode-values textarea {
 	 box-sizing:border-box;
@@ -108,7 +133,9 @@ div.row>.col-6:first-child {margin-left: 0;} div.row>.col-4:first-child {margin-
 }
 
 #cartopress_locator #cpdb-geocode-values span.smaller {
-	float:left; padding: 0; positon: relative;
+	float:left;
+	padding: 0;
+	position: relative;
 }
 
 #cartopress_locator #cpdb-geocode-values span > input, #cartopress_locator #cpdb-geocode-values span > textarea{
@@ -199,11 +226,10 @@ div.row>.col-6:first-child {margin-left: 0;} div.row>.col-4:first-child {margin-
 }
 
 #cartopress_locator	.cpdb-result-item h1 {
-	font-size:11px;
-	font-weight:100;
-	margin:0 0 5px 0;
-	line-height: 1.4;
-	padding-top: 0;
+	font-size:12px;
+	font-weight:normal;
+	margin:0 0 10px 0;
+	line-height:1.2;
 }
 
 #cartopress_locator	.cpdb-result-item h1:first-child {
@@ -211,16 +237,19 @@ div.row>.col-6:first-child {margin-left: 0;} div.row>.col-4:first-child {margin-
 }
 
 #cartopress_locator	.cpdb-result-item h2 {
-	font-size:12px;
+	font-size:10px;
 	margin:0;
 	padding:0;
-	line-height: 1.2
+	line-height: normal;
+	text-indent:5px;
+	color:#666666;
 }
 
 #cartopress_locator	.cpdb-result-item h2 span {
 	font-weight: 300;
 	font-style:italic;
 }
+
 
 #cartopress_locator	.cpdb-result-item:hover {
 	background:rgba(0,116,162,1);

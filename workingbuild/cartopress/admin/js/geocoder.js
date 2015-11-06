@@ -38,6 +38,7 @@ pro.InitializeGeocoder = function() {
 	// SETTING UP INTERFACE BINDINGS
 	$( window ).resize(function() {
 		$('#cartopress_locator #results[style], #cartopress_locator .cpdb-maincontent[style]').removeAttr('style');
+		$('#toggle-in-map').css({'display':'block'});
 	});
 	
 	$('input#unlock_manual_edit').click(function() {
@@ -256,11 +257,19 @@ pro.mapping = new Object;
 							// SPECIFIC DETAILS
 							if (e.house_number) {inputs.address.no.val(e.house_number).addClass('ent');} else {}
 							if (e.pedestrian) {inputs.address.street.val(e.pedestrian).addClass('ent');} else {}
+							if (e.street) {inputs.address.street.val(e.street).addClass('ent');} else {}
+							if (e.road) {inputs.address.street.val(e.road).addClass('ent');} else {}
 							if (e.postcode) {inputs.zip.val(e.postcode).addClass('ent');} else {}
 							if (e.neighbourhood) {inputs.L4.val(e.neighbourhood).addClass('ent');} else {}
+							if (e.suburb) {inputs.L4.val(e.suburb).addClass('ent');} else {}
+							if (e.village) {inputs.L4.val(e.village).addClass('ent');} else {}
+							if (e.hamlet) {inputs.L4.val(e.hamlet).addClass('ent');} else {}
 							if (e.city) {inputs.city.val(e.city).addClass('ent');} else {}
+							if (e.town) {inputs.city.val(e.town).addClass('ent');} else {}
+							if (e.locality) {inputs.city.val(e.locality).addClass('ent');} else {}
 							if (e.county) {inputs.L2.val(e.county).addClass('ent');} else {}
 							if (e.state) {inputs.L1.val(e.state).addClass('ent');} else {}
+							if (e.province) {inputs.L1.val(e.province).addClass('ent');} else {}
 							if (e.country) {inputs.country.val(e.country).addClass('ent');} else {}
 
 							$(pro.Mrpropo).dequeue();
