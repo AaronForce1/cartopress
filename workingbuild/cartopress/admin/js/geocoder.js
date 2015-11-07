@@ -161,33 +161,38 @@ pro.mapping = new Object;
 			case "query":
 				marker.res = {}
 				var r = geo;
-
-				for(x = 0; x<r.length; x++) {
-					var HTML = "<div class='cpdb-result-item' data-georef='id"+x+"' data-markerref='map"+x+"'><h1>"+r[x].display_name+"</h1><h2>Latitude: <span>"+r[x].lat+"</span></h2><h2>Longitude: <span>"+r[x].lon+"</span></h2></div>"
-					$('#results section').append(HTML);
-					
-					marker.res["id"+x] = [r[x].lat, r[x].lon, {title: r[x].display_name, address: r[x].address}];
-					
-					marker.res["map"+x] = L.marker([r[x].lat, r[x].lon], {
-						draggable: "true",
-						title: "Hover Text",
-						opacity: 0.8,
-						icon: assets.primaryMARK
-					}).addTo(assets.map);
-					assets.map.addLayer(marker.res["map"+x]);
-
-					if ( (x+1) == r.length ) {
-						// FIT MAP TO MARKERS
-						var length = r.length;
-						bounds = new Array;
+				if (r.length != 0) {
+					for(x = 0; x<r.length; x++) {
+						var HTML = "<div class='cpdb-result-item' data-georef='id"+x+"' data-markerref='map"+x+"'><h1>"+r[x].display_name+"</h1><h2>Latitude: <span>"+r[x].lat+"</span></h2><h2>Longitude: <span>"+r[x].lon+"</span></h2></div>"
+						$('#results section').append(HTML);
 						
-						for (i = 0; i<r.length; i++) {bounds[i] = [r[i].lat, r[i].lon]}
-						assets.map.fitBounds(bounds, {maxzoom: 10});
+						marker.res["id"+x] = [r[x].lat, r[x].lon, {title: r[x].display_name, address: r[x].address}];
+						
+						marker.res["map"+x] = L.marker([r[x].lat, r[x].lon], {
+							draggable: "true",
+							title: "Hover Text",
+							opacity: 0.8,
+							icon: assets.primaryMARK
+						}).addTo(assets.map);
+						assets.map.addLayer(marker.res["map"+x]);
+	
+						if ( (x+1) == r.length ) {
+							// FIT MAP TO MARKERS
+							var length = r.length;
+							bounds = new Array;
+							
+							for (i = 0; i<r.length; i++) {bounds[i] = [r[i].lat, r[i].lon]}
+							assets.map.fitBounds(bounds, {maxzoom: 10});
+							
+						}
+						else {}
 						
 					}
-					else {}
-					
+				} else {
+					var HTML = "<div class='cpdb-result-item'><span class='howto'>There are no results. Please try a new search.</span></div>"
+					$('#results section').append(HTML);
 				}
+				
 				pro.mapping.bind(type, geo);
 				break;
 			case "init":
