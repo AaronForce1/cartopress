@@ -1,7 +1,7 @@
 # Stuff to fix
 
 * re-insert to CartoDB if user untrashes/restores **WORKING only when user selects Restore from the trash and from the Undo action**
-* add support for bulk actions
+* add support for bulk actions (move to trash, restore from trash, and edit) and quick edit
 * add the ability to select result from map pins, instead of results on right
 * create a button to revert input fields to saved data if user changes their mind --- need to use wp_ajax call for this i think
 * display map of location on edit page load if geodata is available
