@@ -16,6 +16,7 @@
 * display map of location on edit page load if geodata is available
 * add the ability to move the point on the map to change the location
 * set a checkbox to lock all pins on map or unlock them
+* clear green points if they exist on the map if user performs a new search. right now, they remain
 * ~~fix responsive css~~ **DONE but there might be a couple of bugs I didn't catch**
 * ~~change color of input when user selects address to better match the look~~ **DONE - just left a border and removed background color and font styling**
 * ~~remove color permanently when user checks the edit fields button (right now the color returns when user un-checked the box)~~ **DONE - removes the ent class when user unchecks the button**
