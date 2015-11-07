@@ -7,7 +7,7 @@
 * display map of location on edit page load if geodata is available
 * add the ability to move the point on the map to change the location
 * set a checkbox to lock all pins on map or unlock them
-* clear green points if they exist on the map if user performs a new search. right now, they remain
+* clear all points on map from old search when conducting a new search, right now they remain
 * perform general code cleanup for the PHP classes
 * create documentation in github **IN PROGRESS**
 * create marketing page on github.io page with download button and tutorial/demo
