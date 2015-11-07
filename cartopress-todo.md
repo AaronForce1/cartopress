@@ -19,7 +19,7 @@
 * ~~fix responsive css~~ **DONE but there might be a couple of bugs I didn't catch**
 * ~~change color of input when user selects address to better match the look~~ **DONE - just left a border and removed background color and font styling**
 * ~~remove color permanently when user checks the edit fields button (right now the color returns when user un-checked the box)~~ **DONE - removes the ent class when user unchecks the button**
-* ensure non-admin users can use geolocator (have to test, but i think its only available to admin users right now_
+* ~~ensure non-admin users can use geolocator (have to test, but i think its only available to admin users right now~~ **DONE this seems to be fine**
 * create documentation in github **IN PROGRESS**
 * create marketing page on github.io page with download button and tutorial/demo
 
