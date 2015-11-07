@@ -12,9 +12,24 @@
 if (!class_exists('cartopress_sync')) {
 
 	class cartopress_sync {
+		/**
+		 * Select row in CartoDB
+		 *
+		 * @since 0.1.0
+		 * @param $post_id The post id of the WP post.
+		 */
+		public function cartodb_select($post_id) {
+			$sql_select = 'SELECT * FROM ' . cartopress_table . ' WHERE cp_post_id = ' . $post_id;
+			$cp_post = cartopress::process_curl($ch, $sql_select, cartopress_apikey, cartopress_username, true);
+			return array($cp_post, true);
+		} // end CartoDB select
+	
 	
 		/**
-		 *  
+		 * Add to or Update CartoDB
+		 *
+		 * @since 0.1.0
+		 * @param $post_id The post id of the WP post.
 		 */
 		public function cartodb_sync($post_id) {
 			
@@ -169,6 +184,12 @@ if (!class_exists('cartopress_sync')) {
 			
 		} // end cartodb sync
 		
+		/**
+		 * Delete from CartoDB
+		 *
+		 * @since 0.1.0
+		 * @param $post_id The post id of the WP post.
+		 */
 		public static function cartodb_delete($post_id) {
 			$sql_verifyupdate = 'SELECT COUNT(*) FROM ' . cartopress_table . ' WHERE cp_post_id = ' .$post_id;
 			$count = cartopress::process_curl($ch, $sql_verifyupdate, cartopress_apikey, cartopress_username, true);

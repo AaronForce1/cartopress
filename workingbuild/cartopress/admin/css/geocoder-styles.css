@@ -38,6 +38,9 @@
 	
 #cartopress_locator #omnibar {
 	width: calc(100% - 208px);
+	font-size:12px;
+	padding-top:4px;
+	padding-bottom:4px;
 }
 
 #cpdb-search-button {
@@ -60,6 +63,18 @@
 	background:rgba(0,0,0,.4);
 	width:100%;
 	height:300px;
+}
+
+#cartopress_locator #cpdb-cartodb-id {
+	float:right;
+	margin:0;
+	font-style:italic;
+	font-weight:300;
+	font-size:10px;
+	color:#666666;
+}
+#cartopress_locator #cpdb-cartodb-id span#cartodb-id {
+	display:inline;
 }
 
 #cartopress_locator #cpdb-geocode-values {

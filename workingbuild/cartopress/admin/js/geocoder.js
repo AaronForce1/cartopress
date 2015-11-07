@@ -56,6 +56,12 @@ pro.InitializeGeocoder = function() {
 	$('#toggle-in-map, #toggle-in-search').click(function() {
 		pro.results.toggle();
 	});
+	
+	if ($('#cartodb-id').html() == '' || $('#cartodb-id').html() == null){
+		$('#cpdb-cartodb-id').css({'display':'none'});
+	} else {
+		$('#cpdb-cartodb-id').css({'display':'block'});
+	}
 }
 
 pro.results = new Object;
