@@ -147,11 +147,7 @@ if (!class_exists('cartopress')) {
 				add_filter("plugin_action_links_$plugin", 'cartopress_settings_link' );
 			
 			
-			} else {
-			
-			// else
-			
-			}
+			} // end if
 			
 		} // end load()
 		
@@ -312,10 +308,6 @@ if (!class_exists('cartopress')) {
 				
 				add_action( 'load-post.php', 'get_cartopress_geolocator' );
     			add_action( 'load-post-new.php', 'get_cartopress_geolocator' );
-				
-			} else {
-			
-				//else
 				
 			}
 		
