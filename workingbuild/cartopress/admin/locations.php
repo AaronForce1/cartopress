@@ -87,7 +87,7 @@ if (!class_exists('geocoder_metabox')) {
 			 * We need to verify this came from the our screen and with proper authorization,
 			 * because save_post can be triggered at other times.
 			 */
-
+			
 			// Check if our nonce is set.
 			if ( ! isset( $_POST['cartopress_inner_custom_box_nonce'] ) )
 				return $post_id;
