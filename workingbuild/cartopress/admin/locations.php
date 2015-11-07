@@ -22,14 +22,14 @@ if (!class_exists('geocoder_metabox')) {
 			require( cartopress_admin_dir . 'cp-sync.php' );
 			// special action for attachment content type
 			add_action( 'edit_attachment', array ( $this, 'save'), 10, 1 );
-			// delete from cartodb when user moves post to trash
-			add_action( 'wp_trash_post', 'cartopress_delete' );
-			function cartopress_delete( $post_id ){
-				cartopress_sync::cartodb_delete($post_id);
-			}
-			add_action( 'untrashed_post', 'cartopress_undelete' );
-			function cartopress_undelete($post_id) {
-				cartopress_sync::cartodb_sync($post_id);
+			add_action( 'transition_post_status', 'cp_sync', 10, 3 );
+			function cp_sync( $new_status, $old_status, $post ) {
+			    if ( $old_status == 'publish'  &&  $new_status != 'publish' ) {
+					cartopress_sync::cartodb_delete($post->ID);
+			    }
+				if ( $old_status != 'publish'  &&  $new_status == 'publish' ) {
+					cartopress_sync::cartodb_sync($post->ID);
+				}
 			}
 		} // end __construct
 		
@@ -150,8 +150,6 @@ if (!class_exists('geocoder_metabox')) {
 			
 		} //end save function
 		
-		
-		
 		/**
 		 * Render Meta Box content.
 		 *
@@ -164,18 +162,39 @@ if (!class_exists('geocoder_metabox')) {
 
 			// Use get_post_meta to retrieve an existing value from the database.
 			$geodata = get_post_meta( $post->ID, '_cp_post_geo_data', true );
-			$cp_geo_displayname = $geodata['cp_geo_displayname'];
-			$cp_geo_lat = $geodata['cp_geo_lat'];
-			$cp_geo_long = $geodata['cp_geo_long'];
-			$cp_geo_streetnumber = $geodata['cp_geo_streetnumber'];
-			$cp_geo_street = $geodata['cp_geo_street'];
-			$cp_geo_postal = $geodata['cp_geo_postal'];
-			$cp_geo_adminlevel4_vill_neigh = $geodata['cp_geo_adminlevel4_vill_neigh'];
-			$cp_geo_adminlevel3_city = $geodata['cp_geo_adminlevel3_city'];
-			$cp_geo_adminlevel2_county = $geodata['cp_geo_adminlevel2_county'];
-			$cp_geo_adminlevel1_st_prov_region = $geodata['cp_geo_adminlevel1_st_prov_region'];
-			$cp_geo_adminlevel0_country = $geodata['cp_geo_adminlevel0_country'];
-			$cp_post_description = get_post_meta( $post->ID, '_cp_post_description', true );
+			
+			//redefine $vars if cartodb values are true
+			$cp_post = cartopress_sync::cartodb_select($post->ID);
+			$cp_values = $cp_post[0]->rows[0];
+			if ($cp_post[1] == true) {
+				$cartodb_id = $cp_values->cartodb_id;
+				$cp_geo_displayname = $cp_values->cp_geo_displayname;
+				$cp_geo_lat = $cp_values->cp_geo_lat;
+				$cp_geo_long = $cp_values->cp_geo_long;
+				$cp_geo_streetnumber = $cp_values->cp_geo_streetnumber;
+				$cp_geo_street = $cp_values->cp_geo_street;
+				$cp_geo_postal = $cp_values->cp_geo_postal;
+				$cp_geo_adminlevel4_vill_neigh = $cp_values->cp_geo_adminlevel4_vill_neigh;
+				$cp_geo_adminlevel3_city = $cp_values->cp_geo_adminlevel3_city;
+				$cp_geo_adminlevel2_county = $cp_values->cp_geo_adminlevel2_county;
+				$cp_geo_adminlevel1_st_prov_region = $cp_values->cp_geo_adminlevel1_st_prov_region;
+				$cp_geo_adminlevel0_country = $cp_values->cp_geo_adminlevel0_country;
+				$cp_post_description = $cp_values->cp_post_description;
+			} else {
+				$cartodb_id = null;
+				$cp_geo_displayname = $geodata['cp_geo_displayname'];
+				$cp_geo_lat = $geodata['cp_geo_lat'];
+				$cp_geo_long = $geodata['cp_geo_long'];
+				$cp_geo_streetnumber = $geodata['cp_geo_streetnumber'];
+				$cp_geo_street = $geodata['cp_geo_street'];
+				$cp_geo_postal = $geodata['cp_geo_postal'];
+				$cp_geo_adminlevel4_vill_neigh = $geodata['cp_geo_adminlevel4_vill_neigh'];
+				$cp_geo_adminlevel3_city = $geodata['cp_geo_adminlevel3_city'];
+				$cp_geo_adminlevel2_county = $geodata['cp_geo_adminlevel2_county'];
+				$cp_geo_adminlevel1_st_prov_region = $geodata['cp_geo_adminlevel1_st_prov_region'];
+				$cp_geo_adminlevel0_country = $geodata['cp_geo_adminlevel0_country'];
+				$cp_post_description = get_post_meta( $post->ID, '_cp_post_description', true );
+			}
 
 			// Display the metabox
 			echo '<p class="howto">Use the search bar to find lookup an address. Select the correct address from the results, or fill in the location fields manually. Note: Latitude and longitude cooridnates are required.</p>';
@@ -206,6 +225,7 @@ if (!class_exists('geocoder_metabox')) {
 			        	<div id="map"></div>
 			        	<div id="cpdb-geocode-values">
 			        		<h4>Location</h4>
+			        		<p id="cpdb-cartodb-id">CartoDB ID: <span id="cartodb-id">'. $cartodb_id .'</span></p>
 			        		<input type="checkbox" id="unlock_manual_edit" name="unlock_manual_edit" /><label for="unlock_manual_edit">Allow Geo Data Editing</label>
 			        		<section>
 			        			<div class="row">
