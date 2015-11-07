@@ -197,7 +197,7 @@ if (!class_exists('cartopress')) {
 				   $tablename = $_POST['tablename'];
 				   
 				   //SQL create table statment
-				   $sql_create = "DO $$ BEGIN CREATE TABLE " . (string)$tablename . " (cp_post_id integer, cp_post_title text, cp_post_content text, cp_post_description text, cp_post_date date, cp_post_type text, cp_post_permalink text, cp_post_categories text, cp_post_tags text, cp_post_featuredimage_url text, cp_post_format text, cp_geo_streetnumber text, cp_geo_street text, cp_geo_adminlevel4_vill_neigh text, cp_geo_adminlevel3_city text, cp_geo_adminlevel2_county text, cp_geo_adminlevel1_st_prov_region text, cp_geo_adminlevel0_country text, cp_geo_postal text, cp_geo_lat float, cp_geo_long float, cp_geo_displayname text); RAISE NOTICE 'Success'; END; $$";
+				   $sql_create = "DO $$ BEGIN CREATE TABLE " . (string)$tablename . " (cp_post_id integer, cp_post_title text, cp_post_content text, cp_post_description text, cp_post_date date, cp_post_type text, cp_post_permalink text, cp_post_categories text, cp_post_tags text, cp_post_featuredimage_url text, cp_post_format text, cp_post_author text, cp_geo_streetnumber text, cp_geo_street text, cp_geo_adminlevel4_vill_neigh text, cp_geo_adminlevel3_city text, cp_geo_adminlevel2_county text, cp_geo_adminlevel1_st_prov_region text, cp_geo_adminlevel0_country text, cp_geo_postal text, cp_geo_lat float, cp_geo_long float, cp_geo_displayname text); RAISE NOTICE 'Success'; END; $$";
 				   
 				   //process curl
 				   $result_create = cartopress::process_curl($ch, $sql_create, $apikey, $username, true);
@@ -257,6 +257,7 @@ if (!class_exists('cartopress')) {
 				   		array('name' => 'cp_post_tags', 'type' => 'text'),
 				   		array('name' => 'cp_post_featuredimage_url', 'type' => 'text'),
 				   		array('name' => 'cp_post_format', 'type' => 'text'),
+				   		array('name' => 'cp_post_author', 'type' => 'text'),
 				   		array('name' => 'cp_geo_streetnumber', 'type' => 'text'),
 				   		array('name' => 'cp_geo_street', 'type' => 'text'),
 				   		array('name' => 'cp_geo_adminlevel4_vill_neigh', 'type' => 'text'),

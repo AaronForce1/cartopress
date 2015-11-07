@@ -101,7 +101,14 @@ if (!class_exists('cartopress_sync')) {
 				}
 			} else {
 				$cp_post_format = null;
-			}
+			} //end if
+			
+			if ($cpoptions['cartopress_sync_author'] == 1) {
+				$the_author_id = get_post_field( 'post_author', $post_id );
+				$cp_post_author = get_the_author_meta( 'display_name', $the_author_id );
+			} else {
+				$cp_post_author = null;
+			} //end if
 			
 			// defines the geodata objects to insert
 			$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -131,6 +138,7 @@ if (!class_exists('cartopress_sync')) {
 				'cp_post_tags' => $cp_post_tags,
 				'cp_post_featuredimage_url' => $cp_post_featuredimage_url,
 				'cp_post_format' => $cp_post_format,
+				'cp_post_author' => $cp_post_author,
 				'cp_geo_displayname' => $cp_geo_displayname,
 				'cp_geo_streetnumber' => $cp_geo_streetnumber,
 				'cp_geo_street' => $cp_geo_street,

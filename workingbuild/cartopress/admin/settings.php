@@ -70,6 +70,7 @@ if (!class_exists('cartopress_settings')) {
 			add_settings_field('cartopress_collect_tags', null, array($this, 'cartopress_cartodb_tags_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_featuredimage', null, array($this, 'cartopress_cartodb_featuredimage_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_format', null, array($this, 'cartopress_cartodb_format_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
+			add_settings_field('cartopress_collect_author', null, array($this, 'cartopress_cartodb_author_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 		}
 		
 		
@@ -98,6 +99,14 @@ if (!class_exists('cartopress_settings')) {
 			$theoption = esc_attr($cpoptions['cartopress_sync_featuredimage']);
 			printf(
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_featuredimage]" id="cartopress_sync_featuredimage"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_featuredimage" class="label">Featured Image</label>'
+			);
+		}
+		public function cartopress_cartodb_author_callback()
+		{
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$theoption = esc_attr($cpoptions['cartopress_sync_author']);
+			printf(
+				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_author]" id="cartopress_sync_author"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_author" class="label">Author</label>'
 			);
 		}
 		public function cartopress_cartodb_format_callback()
