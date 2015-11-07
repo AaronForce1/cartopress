@@ -10,8 +10,8 @@
 * ~~populate all the fields when user selects an address, but only show display name, lat and long in the results~~
 * add the ability to select result from map pins, instead of results on right
 * create a button to revert input fields to saved data if user changes their mind --- need to use wp_ajax call for this i think
-* pull data from CartoDB instead of postmeta for geofields, create an alert to user prompting them to update the post of the geodata has been edited in cartodb manually and doesnt match the value saved in postmeta (only for geodata, post data should come from wp directly always meaning that all changes to post data in cartodb will always be lost on post update)
-* add a readonly field for CartoDB ID (thinking floated right on the same level as the edit data checkbox)
+* ~~pull data from CartoDB instead of postmeta for geofields, create an alert to user prompting them to update the post of the geodata has been edited in cartodb manually and doesnt match the value saved in postmeta (only for geodata, post data should come from wp directly always meaning that all changes to post data in cartodb will always be lost on post update)~~ **DONE did not do the create alert because I dont think its necessary anymore **
+* ~~add a readonly field for CartoDB ID (thinking floated right on the same level as the edit data checkbox)~~ **DONE**
 * ~~display empty map with base layer only on edit page load if no geodata available~~ **DONE**
 * display map of location on edit page load if geodata is available
 * add the ability to move the point on the map to change the location
