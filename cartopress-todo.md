@@ -28,7 +28,7 @@
 * ~~change color of input when user selects address to better match the look~~ **DONE - just left a border and removed background color and font styling**
 * ~~remove color permanently when user checks the edit fields button (right now the color returns when user un-checked the box)~~ **DONE - removes the ent class when user unchecks the button**
 * ~~ensure non-admin users can use geolocator (have to test, but i think its only available to admin users right now~~ **DONE this seems to be fine**
-
+* ~~add support for author sync~~ **DONE (note: uses Author display name, and will not change if user changes in the WP Dashboard, but will be reflected in future additions/updates**
 ----
 ## Additional features to add in future:
 * wp shortcodes for quick viz/map publishing
