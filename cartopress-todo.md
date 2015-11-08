@@ -6,6 +6,7 @@
 * create a button to revert input fields to saved data if user changes their mind --- need to use wp_ajax call for this i think
 * display map of location on edit page load if geodata is available
 * add the ability to move the point on the map to change the location
+* when you hover over a point on the map, there is tool tip with the text "Hover Text" can we either get rid of that or add the display name/lat/long to it?
 * set a checkbox to lock all pins on map or unlock them
 * clear all points on map from old search when conducting a new search, right now they remain
 * perform general code cleanup for the PHP classes
