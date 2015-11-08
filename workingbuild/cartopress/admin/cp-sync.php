@@ -84,12 +84,17 @@ if (!class_exists('cartopress_sync')) {
 			} //end if
 			
 			if ($cpoptions['cartopress_sync_featuredimage'] == 1) {
-				if (has_post_thumbnail( $post_id )) {
-					$cp_post_featuredimage_url = wp_get_attachment_image_src( get_post_thumbnail_id( $post_id ), 'single-post-thumbnail' );
-					$cp_post_featuredimage_url = $cp_post_featuredimage_url[0];
+				$post_type = get_post_type($post_id);
+				if ('attachment' === $post_type) {
+					$cp_post_featuredimage_url = wp_get_attachment_url($post_id);
 				} else {
-					$cp_post_featuredimage_url = null;
-				} //end if
+					if (has_post_thumbnail( $post_id )) {
+						$cp_post_featuredimage_url = wp_get_attachment_image_src( get_post_thumbnail_id( $post_id ), 'single-post-thumbnail' );
+						$cp_post_featuredimage_url = $cp_post_featuredimage_url[0];
+					} else {
+						$cp_post_featuredimage_url = null;
+					} //end if
+				} // end if
 			} else {
 				$cp_post_featuredimage_url = null;
 			} //end if
