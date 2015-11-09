@@ -1,4 +1,6 @@
 jQuery(document).ready(function($){
+	
+	// show checkmark when account settings are situated
 	function show_verified() {
 		if ($('#cartopress_cartodb_verified').val() == 'verified') {
 			$('#cpbd_tableconnect_connected').show();
@@ -21,6 +23,8 @@ jQuery(document).ready(function($){
 		
 	}
 	show_verified();
+	
+	// ajax used in the ConnectED to CartoDB process
 	$('#generate_table').click(function(){
 		$('#cpbd_tableconnect_loading').show();
 		$(this).attr('disabled', true);
@@ -82,5 +86,32 @@ jQuery(document).ready(function($){
 				alert("Unknown error: " + response);
 			}
 		});
+	}); // end Connect to CartoDB ajax
+	
+	// show/hide custom fields selector when option is checked
+	var customfields_visible = {"height":"100%","opacity":"1", "margin-top":"10px", "padding":"20px 20px", "border-top-width":"1px", "border-bottom-width":"1px"};
+	var customfields_hidden = {"height":"0px","opacity":"0", "margin-top":"0px", "padding":"0px 20px", "border-top-width":"0px", "border-bottom-width":"0px"};
+	if ($('#cartopress_sync_customfields').is(':checked')) { //shows the customfield select if the option is already checked on page load
+		$('#cpdb-customfields-select').css(customfields_visible);
+	} else {
+		$('#cpdb-customfields-select').css(customfields_hidden);
+	}
+	function show_customfield_selector(){
+		$('#cpdb-customfields-select').animate(customfields_visible, {duration: 200});
+	}
+	function hide_customfield_selector(){
+		$('#cpdb-customfields-select').animate(customfields_hidden, {duration: 200});
+	}
+	$('#cartopress_sync_customfields').click(function(){
+		if ($(this).is(':checked')) {
+			show_customfield_selector();
+		} else {
+			hide_customfield_selector();
+		}
+	}); // end show/hide custom fields
+	
+	$('#add_column').click(function() {
+		alert($('#cpdb-customfield-select-menu').val());
 	});
-});
+	
+}); //end document ready

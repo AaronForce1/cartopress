@@ -47,11 +47,33 @@
 			<?php                 
                 do_settings_fields( 'cartopress-settings', 'cartopress_sync_info' );
         	?>
+        	<div id="cpdb-customfields-select">
+				<h5>Custom Field Selection</h5>
+				<p>Please select a custom field from the drop down menu and press the Add Custom Field button to start syncing that custom field to CartoDB. Uncheck the box to right of the added field to stop syncing that custom field. Deleting the custom field will remove all data for that field from your CartoDB table.</p>
+				<select id="cpdb-customfield-select-menu">
+					<option value="" disabled selected>Select a Custom Field</option>
+			<?php
+				$meta_keys = cartopress_settings::generate_metakeys();
+				if ($meta_keys == null) {
+					echo '<option value="" disabled>You have no custom fields</option>';
+				} else {
+					foreach ($meta_keys as $value) {
+						$column = cartopress::create_column_name($value);
+						echo '<option value="cp_post_customfield_' . $column . '" id="cp_post_customfield_' . $column . '">' . $value . '</option>
+						';
+					}
+			    } // end if else
+			?>
+				</select>
+				<input type="button" class="button" id="add_column" name="add_column" value="Add Custom Field" />
+			</div>
 			<p style="margin-top:10px;">Checking these boxes will add these features to sync so they can be featured and styled in the CartoDB infobox. <em>Note: Unchecking will not remove existing data from your CartoDB table, any new data, however, will not sync.</em> </p>
+			
 			<?php
             	submit_button(); 
         	?>
+        	
 		</form>
-		<p class="cpdb-attribution">CartoPress makes use of CartoDB's public and private API's. It is not developed by, or a product of CartoDB.</p>
+		<p class="cpdb-attribution">CartoPress is not developed by, or a product of CartoDB.</p>
     </div>
 </div>

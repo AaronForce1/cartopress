@@ -118,6 +118,39 @@ label {
 	font-style:italic;
 }
 
+
+#cpdb-customfields-select {
+	opacity:0;
+	height:0px;
+	margin-top:0px;
+	padding:0px 20px;
+	border-top-color: rgb(220,220,220);
+	border-top-style: solid;
+	border-bottom-color: rgb(220,220,220);
+	border-bottom-style: solid;
+	
+}
+
+#cpdb-customfields-select h5 {
+	margin:0 0 5px 0;
+	font-weight:900;
+}
+#cpdb-customfields-select select {
+	width:100%;
+	max-width:300px;
+}
+
+#cpdb-customfields-select select option[disabled]{
+	color:rgb(200,200,200);
+	font-style:italic;
+}
+#cpdb-form-settings #add_column {
+	margin:0;
+	position: relative;
+	width:auto;
+	padding-left:10px;
+	padding-right:10px;	
+}
 /*type*/
 p {
 	margin-top:0;

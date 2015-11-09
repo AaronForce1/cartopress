@@ -71,6 +71,7 @@ if (!class_exists('cartopress_settings')) {
 			add_settings_field('cartopress_collect_featuredimage', null, array($this, 'cartopress_cartodb_featuredimage_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_format', null, array($this, 'cartopress_cartodb_format_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_author', null, array($this, 'cartopress_cartodb_author_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
+			add_settings_field('cartopress_collect_customfields', null, array($this, 'cartopress_cartodb_customfields_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 		}
 		
 		
@@ -99,6 +100,14 @@ if (!class_exists('cartopress_settings')) {
 			$theoption = esc_attr($cpoptions['cartopress_sync_featuredimage']);
 			printf(
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_featuredimage]" id="cartopress_sync_featuredimage"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_featuredimage" class="label">Featured Image</label>'
+			);
+		}
+		public function cartopress_cartodb_customfields_callback()
+		{
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			$theoption = esc_attr($cpoptions['cartopress_sync_customfields']);
+			printf(
+				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_customfields]" id="cartopress_sync_customfields"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_customfields" class="label">Custom Fields</label>'
 			);
 		}
 		public function cartopress_cartodb_author_callback()
@@ -180,6 +189,24 @@ if (!class_exists('cartopress_settings')) {
 			);
 		}
 		
+		// generate array of all non-hidden metakeys
+		public function generate_metakeys(){
+		    global $wpdb;
+		    $query = "
+		        SELECT DISTINCT($wpdb->postmeta.meta_key) 
+		        FROM $wpdb->posts 
+		        LEFT JOIN $wpdb->postmeta 
+		        ON $wpdb->posts.ID = $wpdb->postmeta.post_id 
+		        WHERE $wpdb->postmeta.meta_key != '' 
+		        AND $wpdb->postmeta.meta_key NOT RegExp '(^[_0-9].+$)' 
+		        AND $wpdb->postmeta.meta_key NOT RegExp '(^[0-9]+$)'
+		        ORDER BY $wpdb->postmeta.meta_key ASC
+		    ";
+		    $meta_keys = $wpdb->get_col($wpdb->prepare($query));
+		    //set_transient('all_meta_keys', $meta_keys, 60*60*24); (maybe use this in the future)
+		    return $meta_keys;
+		} //end generate_metakeys()
+
 	
 	}
 	

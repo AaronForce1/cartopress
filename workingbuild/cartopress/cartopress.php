@@ -291,6 +291,18 @@ if (!class_exists('cartopress')) {
 			
 		} //process_ajax functions
 		
+		/**
+		* helper method to create column names
+		* @since 0.1.0
+		*/
+		public static function create_column_name($string) {
+		    $string = strtolower($string);
+		    $string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
+		    $string = preg_replace("/[\s-]+/", " ", $string);
+		    //Convert whitespaces and underscore to dash
+		    $string = preg_replace("/[\s_]/", "_", $string);
+		    return $string;
+		} //end create_column_name()
 		
 		/**
 		* add geolocator
