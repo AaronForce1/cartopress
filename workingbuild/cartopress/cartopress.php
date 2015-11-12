@@ -132,7 +132,7 @@ if (!class_exists('cartopress')) {
 							"cartopress_admin_nonce" => wp_create_nonce('cartopress_admin_nonce'),
 							"cartopress_cartopressify_nonce" => wp_create_nonce('cartopress_cartopressify_nonce'),
 							"cartopress_create_column_nonce" => wp_create_nonce('cartopress_create_column_nonce'),
-							"cartopress_delete_column_nonce" => wp_create_nonce('cartopress_delete_column_nonce')
+							"cartopress_delete_column_nonce" => wp_create_nonce('cartopress_delete_column_nonce'),
 						)
 					);
 			    } //end cartopress_admin_scripts
@@ -190,6 +190,7 @@ if (!class_exists('cartopress')) {
 				add_action('wp_ajax_cartopressify_table', 'cartopress_cartopressify_table');
 				add_action('wp_ajax_cartopress_create_column', 'cartopress_create_column');
 				add_action('wp_ajax_cartopress_delete_column', 'cartopress_delete_column');
+				
 				
 				/**
 				* create table in CartoDB
@@ -388,6 +389,8 @@ if (!class_exists('cartopress')) {
 				   die();
 				} //end cartopress_delete_column()
 				
+				
+				
 			} // end if
 			
 		} //process_ajax functions
@@ -425,7 +428,18 @@ if (!class_exists('cartopress')) {
 				
 				add_action( 'load-post.php', 'get_cartopress_geolocator' );
     			add_action( 'load-post-new.php', 'get_cartopress_geolocator' );
+				add_action('wp_ajax_cartopress_delete_row', 'cartopress_delete_row');
 				
+				function cartopress_delete_row() {
+				   // checks the referer to ensure authorized access
+				   if (!isset( $_POST['cartopress_delete_row_nonce'] ) || !wp_verify_nonce($_POST['cartopress_delete_row_nonce'], 'cartopress_delete_row_nonce') )
+				   	die('Unauthorized access denied.');
+				   $post_id = $_POST['post_id'];
+				   $sql_delete = 'DELETE FROM ' . cartopress_table .  ' WHERE cp_post_id = ' . $post_id;
+				   $results = cartopress::process_curl($ch, $sql_delete, cartopress_apikey, cartopress_username, true);
+				   delete_post_meta($post_id, '_cp_post_geo_data');
+				   die(print_r($results, true));
+				} //end cartopress_delete_row()
 			}
 		
 		} //end add_geolocator

@@ -65,6 +65,16 @@
 	height:300px;
 }
 
+#cartopress_locator #cpdb-geocode-values span#cpdb-admin-toggle {
+	width:15px;
+	height:15px;
+	font-size:15px;
+	line-height:15px;
+	background-size:contain;
+	float:right;
+	margin-left:10px;
+}
+
 #cartopress_locator #cpdb-cartodb-id {
 	float:right;
 	margin:0;
@@ -75,6 +85,34 @@
 }
 #cartopress_locator #cpdb-cartodb-id span#cartodb-id {
 	display:inline;
+}
+
+#cpdb-admin-panel {
+	height:0px;
+	opacity:0;
+	border-top-width:0px;
+	border-bottom:none;
+	display:none;
+}
+#cpdb-admin-panel .button {
+	float:right;
+	margin-left:5px;
+	box-shadow:none;
+	
+}
+#cpdb-admin-panel #cpdb-delete-button {
+	background-color:#dd3d36;
+	color:#FFFFFF;
+	border-color:#bb2a24;
+}
+#cpdb-admin-panel #cpdb-delete-button:hover {
+	background-color:#bb2a24;
+}
+
+#cpdb-admin-panel #cpdb-delete-button:after {
+	content:'';
+	display:block;
+	clear:both;
 }
 
 #cartopress_locator #cpdb-geocode-values {
@@ -203,7 +241,7 @@ div.row > .col-4:first-child {
 	color:#666666;
 }
 
-.cpdb-toggle-results:hover {
+.cpdb-toggle-results:hover, #cpdb-admin-toggle:hover {
 	cursor:pointer;
 	color:#0074a2;
 }
