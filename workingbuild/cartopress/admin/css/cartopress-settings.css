@@ -151,6 +151,76 @@ label {
 	padding-left:10px;
 	padding-right:10px;	
 }
+#cpdb-customfield-display {
+	width:100%;
+	background:rgba(250, 250, 250, 1);
+	box-sizing:border-box;
+	padding:20px;
+	margin-top:20px;
+}
+
+#cpdb-customfield-display table {
+	width:100%;
+	border-collapse: collapse;
+}
+
+#cpdb-customfield-display thead {
+	background:#0074a2;
+	color:rgb(255,255,255);
+	font-family:Montserrat, 'Helvetica Neue', Helvetica, Arial, san-serif;
+	font-weight:500;
+	margin-bottom:5px;
+	height:40px;
+}
+#cpdb-customfield-display td {
+	padding:5px;
+	width:42.5%;
+}
+#cpdb-customfield-display tbody td {
+	border-bottom:1px solid rgb(220,220,220);
+}
+#cpdb-customfield-display td:first-of-type {
+	width:5%;
+	min-width:45px;
+}
+#cpdb-customfield-display td:last-of-type {
+	width:10%;
+	min-width:100px;
+}
+#cpdb-customfield-display tbody tr {
+	background:rgb(255,255,255);
+}
+#cpdb-customfield-display .deletebutton {
+	width:100%;
+	text-align:center;
+}
+#cpdb-customfield-display input[type='text'] {
+	cursor: default;
+	box-shadow: none;
+	border:none;
+	padding:0;
+}
+
+#cpdb-comment {
+	margin:20px 0 0 0;
+	padding:8px 12px;
+	background:#FFFFFF;
+	border-left:4px solid #0074a2;
+	border-top:1px solid rgb(220,220,220);
+	font-style:italic;
+	box-shadow: 0 0 3px rgba(0,0,0,.1);
+	display:none;
+}
+#cpdb-comment.success {
+	border-left-color:#7AD03A;
+}
+#cpdb-comment.error {
+	border-left-color:#dd3d36;
+}
+#cpdb-comment.warning {
+	border-left-color:#ffba00;
+}
+
 /*type*/
 p {
 	margin-top:0;

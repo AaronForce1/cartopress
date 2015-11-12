@@ -130,7 +130,9 @@ if (!class_exists('cartopress')) {
 			    	wp_enqueue_script('admin-script');
 					wp_localize_script('admin-script','cartopress_admin_ajax', array(
 							"cartopress_admin_nonce" => wp_create_nonce('cartopress_admin_nonce'),
-							"cartopress_cartopressify_nonce" => wp_create_nonce('cartopress_cartopressify_nonce')
+							"cartopress_cartopressify_nonce" => wp_create_nonce('cartopress_cartopressify_nonce'),
+							"cartopress_create_column_nonce" => wp_create_nonce('cartopress_create_column_nonce'),
+							"cartopress_delete_column_nonce" => wp_create_nonce('cartopress_delete_column_nonce')
 						)
 					);
 			    } //end cartopress_admin_scripts
@@ -154,6 +156,8 @@ if (!class_exists('cartopress')) {
 		/**
 		* perform cartodb queries
 		* @since 0.1.0
+		* 
+		* @param $ch, accepts curl_init('url'); $sql, the sql query; $username, CartoDB username; $apikey, CartoDB API key; $return, return transfer boolean
 		*/
 		public static function process_curl($ch, $sql, $apikey, $username, $return){
 			//curl init	
@@ -184,7 +188,14 @@ if (!class_exists('cartopress')) {
 			if (is_admin()) {
 				add_action('wp_ajax_cartopress_generate_table', 'process_generate_table');
 				add_action('wp_ajax_cartopressify_table', 'cartopress_cartopressify_table');
-				//process ajax
+				add_action('wp_ajax_cartopress_create_column', 'cartopress_create_column');
+				add_action('wp_ajax_cartopress_delete_column', 'cartopress_delete_column');
+				
+				/**
+				* create table in CartoDB
+				* @since 0.1.0
+				* returns string
+				*/
 				function process_generate_table() {
 				   	
 				   // checks the referer to ensure authorized access
@@ -235,7 +246,11 @@ if (!class_exists('cartopress')) {
 				} //end process_generate__table()
 				
 				
-				//checks existing tables to ensure correct columns are in place
+				/**
+				* checks for and adds necessary columns to CartoDB table
+				* @since 0.1.0
+				* returns string
+				*/
 				function cartopress_cartopressify_table() {
 				   	
 				   // checks the referer to ensure authorized access
@@ -284,16 +299,105 @@ if (!class_exists('cartopress')) {
 				   
 				} //end cartopressify()
 				
-			} // end is admin
-			else {
-				// non-admin functions
-			}
+				/**
+				* update custom field settings
+				* @since 0.1.0
+				* 
+				* @param $custom_field, the custom field name; $cartodb_column, the corresponding CartoDB column name; $action, string for action to perform ('set' or 'unset')
+				* returns true
+				*/
+				function update_customfield_settings($custom_field, $cartodb_column, $action) {
+					$option = get_option('cartopress_custom_fields');
+					if ('set' === $action) {
+				    	$option[$cartodb_column] = array('sync'=>1,'custom_field'=>$custom_field,'cartodb_column'=>$cartodb_column);
+					} elseif ('unset' === $action) {
+						unset($option[$cartodb_column]);
+					}
+				    update_option('cartopress_custom_fields', $option);
+					return true;
+				}
+				
+				/**
+				* create column in cartodb and save the settings
+				* @since 0.1.0
+				* returns encoded json containing a user message, option_status boolean, cartodb status boolean
+				*/
+				function cartopress_create_column() {
+				   	
+				   // checks the referer to ensure authorized access
+				   if (!isset( $_POST['cartopress_create_column_nonce'] ) || !wp_verify_nonce($_POST['cartopress_create_column_nonce'], 'cartopress_create_column_nonce') )
+				   	die('Unauthorized access denied.');
+				   
+				   $apikey = $_POST['apikey'];
+				   $username = $_POST['username'];
+				   $tablename = $_POST['tablename'];
+				   $cartodb_column = $_POST['cartodb_column'];
+				   $custom_field = $_POST['custom_field'];
+				   
+				   $sql_add_custom_col = "DO $$ BEGIN ALTER TABLE " . $tablename . " ADD COLUMN " . $cartodb_column . " text; RAISE NOTICE 'Column Created'; UPDATE " . $tablename . " SET " . $cartodb_column . " = " . $cartodb_column . "; RAISE NOTICE 'Column name is set.'; EXCEPTION WHEN duplicate_column THEN RAISE NOTICE 'Column Exists'; END; $$";	
+				   $result = cartopress::process_curl($ch, $sql_add_custom_col, $apikey, $username, true);
+				   $notice = $result->notices[0];
+				   
+				   if ($notice == "Column Exists") {
+				   		$message = "CartoPress will resume syncing Custom Field \"" . $custom_field . "\" with CartoDB column \"" . $cartodb_column . "\"";
+				  		$option = update_customfield_settings($custom_field, $cartodb_column, 'set');
+						$cdb_status = true;
+				   } elseif ($notice == "Column Created") {
+					   	$message = "The column \"" . $cartodb_column . "\" has been created in your CartoDB table. Custom Field \"" . $custom_field . "\" will sync to it.";
+				   		$option = update_customfield_settings($custom_field, $cartodb_column, 'set');
+				   		$cdb_status = true;
+				   } else {
+				   		$message = "An error occurred connecting to your CartoDB table and the column could not be created.";
+				   		$option = false;
+						$cdb_status = false;
+				   }
+				   $return = array('message'=>$message, 'option_status'=>$option, 'cdb_status'=>$cdb_status);
+				   return print_r(json_encode($return));
+				   die();
+				} //end cartopress_create_column()
+				
+				/**
+				* delete column in cartodb and save the settings
+				* @since 0.1.0
+				* returns encoded json containing a user message, option_status boolean, cartodb status boolean
+				*/
+				function cartopress_delete_column() {
+				   	
+				   // checks the referer to ensure authorized access
+				   if (!isset( $_POST['cartopress_delete_column_nonce'] ) || !wp_verify_nonce($_POST['cartopress_delete_column_nonce'], 'cartopress_delete_column_nonce') )
+				   	die('Unauthorized access denied.');
+				   
+				   $apikey = $_POST['apikey'];
+				   $username = $_POST['username'];
+				   $tablename = $_POST['tablename'];
+				   $cartodb_column = $_POST['cartodb_column'];
+				   $custom_field = $_POST['custom_field'];
+				   
+				   $sql_delete_custom_col = "DO $$ BEGIN ALTER TABLE " . $tablename . " DROP COLUMN " . $cartodb_column . "; RAISE NOTICE 'Column Dropped'; END; $$";	
+				   $result = cartopress::process_curl($ch, $sql_delete_custom_col, $apikey, $username, true);
+				   $notice = $result->notices[0];
+				   
+				   if ($notice == "Column Dropped") {
+				   		$message = "The CartoDB column " . $cartodb_column . " has been deleted";
+				  		$option = update_customfield_settings(null, $cartodb_column, 'unset');
+				   } else {
+				   		$message = "An error occurred and your column could not be deleted. Your settings have not been changed.";
+				   }
+				   $return = array('message'=>$message, 'option_status'=>$option);
+				   return print_r(json_encode($return));
+				   die();
+				} //end cartopress_delete_column()
+				
+			} // end if
 			
 		} //process_ajax functions
 		
 		/**
 		* helper method to create column names
 		* @since 0.1.0
+		* 
+		* @param $string, the string to convert to column name
+		* returns string with spaces and special chars replaced with underscores
 		*/
 		public static function create_column_name($string) {
 		    $string = strtolower($string);

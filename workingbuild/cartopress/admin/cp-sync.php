@@ -115,6 +115,17 @@ if (!class_exists('cartopress_sync')) {
 				$cp_post_author = null;
 			} //end if
 			
+			if ($cpoptions['cartopress_sync_customfields'] == 1) {
+				$customfield_options = get_option('cartopress_custom_fields');
+				$fields = array();
+				foreach ($customfield_options as $key=>$value) {
+					if ($value['sync'] == 1) {
+						$adds = array($key => get_post_meta($post_id, $value['custom_field'], true));
+						$fields = array_merge($fields, $adds);
+					}
+				}
+			}
+			
 			// defines the geodata objects to insert
 			$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 			
@@ -156,6 +167,8 @@ if (!class_exists('cartopress_sync')) {
 				'cp_geo_lat' => $cp_geo_lat,
 				'cp_geo_long' => $cp_geo_long
 				);
+			
+			$args = array_merge($args, $fields);
 			
 			// removes null fields
 			foreach($args as $key=>$value) {

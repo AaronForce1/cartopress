@@ -21,7 +21,7 @@
 		<p>CartoPress requires a CartoDB account. Please visit <a href="https://cartodb.com/signup" target="_blank"><span class="button">cartodb.com/signup</span></a> to create an account.</p>
 		<form id="cpdb-form-settings" action="options.php" method="post">
 			<?php
-                settings_fields( 'cartopress-settings-group' );   
+                settings_fields( 'cartopress-settings');   
                 do_settings_sections( 'cartopress-settings-group' );
 			?>
 			<h3>Required CartoDB Account Information</h3>
@@ -43,15 +43,15 @@
                 do_settings_fields( 'cartopress-settings', 'cartopress_collect_info' );
         	?>
         	<h4>Data Sync Options</h4>
-			<p>CartoPress will automatically sync data for Name, Content, Description, Permalink, Date, and Geo Data to your CartoDB account. Please select from the following additional options:</p> 
+			<p>CartoPress will automatically sync data for Name, Content, Description, Permalink, Date, and Geo Data to your CartoDB account. Please select from the following additional options. Checking these boxes will add these features to sync so they can be featured and styled in the CartoDB infobox. <em>Note: Unchecking will not remove existing data from your CartoDB table, any new data, however, will not sync.</em> </p> 
 			<?php                 
                 do_settings_fields( 'cartopress-settings', 'cartopress_sync_info' );
         	?>
         	<div id="cpdb-customfields-select">
 				<h5>Custom Field Selection</h5>
-				<p>Please select a custom field from the drop down menu and press the Add Custom Field button to start syncing that custom field to CartoDB. Uncheck the box to right of the added field to stop syncing that custom field. Deleting the custom field will remove all data for that field from your CartoDB table.</p>
+				<p>Please select a custom field from the drop down menu and press the Add Custom Field button to start syncing that custom field to CartoDB. Unchecking the box under the &ldquo;Syncing&rdquo; heading will stop syncing to for that field. Clicking &ldquo;Remove&rdquo; will remove the column (and all of its data) from CartoDB.</p>
 				<select id="cpdb-customfield-select-menu">
-					<option value="" disabled selected>Select a Custom Field</option>
+					<option value="" disabled selected id="placeholder">Select a Custom Field</option>
 			<?php
 				$meta_keys = cartopress_settings::generate_metakeys();
 				if ($meta_keys == null) {
@@ -66,8 +66,21 @@
 			?>
 				</select>
 				<input type="button" class="button" id="add_column" name="add_column" value="Add Custom Field" />
+				<div id="cpdb-customfield-display">
+					<table>
+						<thead>
+							<tr>
+								<td align="center">Syncing</td>
+								<td>Custom Field Name</td>
+								<td>CartoDB Column</td>
+								<td align="center">Remove</td>
+							</tr>
+						</thead>
+						<tbody><?php do_settings_sections( 'cartopress-customfields-group' ); ?></tbody>
+					</table>
+					<p id="cpdb-comment"></p>
+				</div>
 			</div>
-			<p style="margin-top:10px;">Checking these boxes will add these features to sync so they can be featured and styled in the CartoDB infobox. <em>Note: Unchecking will not remove existing data from your CartoDB table, any new data, however, will not sync.</em> </p>
 			
 			<?php
             	submit_button(); 

@@ -14,12 +14,6 @@ if (!class_exists('cartopress_settings')) {
 	class cartopress_settings
 	{
 		/**
-		 * Holds the values to be used in the fields callbacks
-		 */
-		private $options;
-		
-	
-		/**
 		 * Start up
 		 */
 		public function __construct() {
@@ -30,10 +24,12 @@ if (!class_exists('cartopress_settings')) {
 		 * Register and add settings
 		 */
 		public function initialize_settings() {        
-			register_setting( 'cartopress-settings-group', 'cartopress_admin_options', array( $this, 'sanitize' ) );
+			register_setting( 'cartopress-settings', 'cartopress_admin_options', array( $this, 'sanitize' ) );
+			register_setting( 'cartopress-settings', 'cartopress_custom_fields');
 			add_settings_section( 'cartopress_required_info', null, array($this, 'cartopress_required_info'), 'cartopress-settings-group' );
 			add_settings_section( 'cartopress_collect_info', null, array($this, 'cartopress_collect_info'), 'cartopress-settings-group' );
 			add_settings_section( 'cartopress_sync_info', null, array($this, 'cartopress_sync_info'), 'cartopress-settings-group' );
+			add_settings_section( 'cartopress_sync_customfields', null, array($this, 'cartopress_sync_customfields'), 'cartopress-customfields-group' );
 		}
 	
 		/**
@@ -52,6 +48,19 @@ if (!class_exists('cartopress_settings')) {
 		/** 
 		 * Print the Section text
 		 */
+		public function cartopress_sync_customfields() {
+			$customfield_options = get_option('cartopress_custom_fields');
+			foreach ($customfield_options as $key=>$value) {
+				echo '<tr id="cpdb_rowfor_' . $value['cartodb_column'] . '">
+						<td align="center"><input type="checkbox" name="cartopress_custom_fields[' . $value['cartodb_column'] . '][sync]" id="cartopress_custom_fields_sync_'.$value['cartodb_column'].'"  value="1"' . checked( 1, $value['sync'], false ) . '/></td>
+						<td><input type="text" name="cartopress_custom_fields[' . $value['cartodb_column'] . '][custom_field]" id="cartopress_custom_fields_fieldname_'.$value['cartodb_column'].'" value="'.esc_attr($value['custom_field']).'" class="disabled" readonly/></td>
+						<td><input type="text" name="cartopress_custom_fields[' . $value['cartodb_column'] . '][cartodb_column]" id="cartopress_custom_fields_cartodbcol_'.$value['cartodb_column'].'" value="'.esc_attr($value['cartodb_column']).'" class="disabled" readonly/></td>
+						<td><div class="deletebutton button" id="delete_' . $value['cartodb_column'] . '">Remove</div></td>
+					  </tr>';
+				
+			}
+		}
+		
 		public function cartopress_required_info() {
 			add_settings_field( 'cartopress_cartodb_apikey', 'API Key:', array( $this, 'cartopress_cartodb_apikey_callback' ), 'cartopress-settings', 'cartopress_required_info', array( 'label_for' => 'cartopress_cartodb_apikey', 'type' => 'text') );      
 			add_settings_field( 'cartopress_cartodb_username', 'Username:', array( $this, 'cartopress_cartodb_username_callback' ), 'cartopress-settings', 'cartopress_required_info', array( 'label_for' => 'cartopress_cartodb_username', 'type' => 'text') );      
