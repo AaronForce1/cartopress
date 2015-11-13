@@ -13,7 +13,7 @@
 * create a checkbox in the new admin panel that can choose to not sync that particular post
 * perform general code cleanup for the PHP classes
 
-### Javsscript
+### JS
 * add the ability to select result from map pins, instead of results on right
 * integrate the new document.ready code for the admin panel from geocoder-helper.js into geocoder.js
 * display map of location on edit page load if geodata is available
