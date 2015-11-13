@@ -1,7 +1,7 @@
 # Stuff to fix
 
 ### Bugs to fix
-* verify account settings bug: When you change info in the fields, the checkbox goes away, but comes back if you update the settings even without re-verifying. Need to rework the verify setting so that it updates after table creation
+* verify account settings bug: When you change info in the fields, the green checkmark goes away, but comes back if you update the settings even without re-verifying. Need to rework the verify setting so that it updates after table creation
 * cartodb sync bug: posts that have apostrophes in the tags, catergories, etc. do not sync because of an error
 * when there is no cartodb data present, but there is geodata in postmeta, the fields are not populating with the postmeta data
 
