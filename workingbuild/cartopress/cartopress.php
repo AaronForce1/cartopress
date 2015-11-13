@@ -437,8 +437,13 @@ if (!class_exists('cartopress')) {
 				   $post_id = $_POST['post_id'];
 				   $sql_delete = 'DELETE FROM ' . cartopress_table .  ' WHERE cp_post_id = ' . $post_id;
 				   $results = cartopress::process_curl($ch, $sql_delete, cartopress_apikey, cartopress_username, true);
+				   if ($results->total_rows == 1) {
+				   	$message = "success";
+				   } else {
+				   	$message = "An unknown error occured: " . $results;
+				   }
 				   delete_post_meta($post_id, '_cp_post_geo_data');
-				   die(print_r($results, true));
+				   die(print_r($message, true));
 				} //end cartopress_delete_row()
 			}
 		

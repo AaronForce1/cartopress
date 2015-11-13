@@ -318,11 +318,28 @@ div.row > .col-4:first-child {
 }
 	
 #cartopress_locator	#comments {
-	clear:both;
 	display: block;
 	font-size: 10px;
 }
 
+#cartopress_locator	#comments p {
+	margin:20px 0 20px 0;
+	padding:8px 12px;
+	background:#FFFFFF;
+	border-left:4px solid #0074a2;
+	border-top:1px solid rgb(220,220,220);
+	font-style:italic;
+	box-shadow: 0 0 3px rgba(0,0,0,.1);
+}
+#cartopress_locator	#comments p.success {
+	border-left-color:#7AD03A;
+}
+#cartopress_locator	#comments p.error {
+	border-left-color:#dd3d36;
+}
+#cartopress_locator	#comments p.warning {
+	border-left-color:#ffba00;
+}
 
 /*---------------RESPONSIVE----------------*/
 @media(max-width:1200px) {

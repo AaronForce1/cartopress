@@ -207,8 +207,8 @@ if (!class_exists('geocoder_metabox')) {
 			    	<section id="addressQuery">
 			            <form id="geo_search">
 			                <input id="omnibar" type="text" placeholder="Search Address (Neighborhood | City | State | Country)"/>
-			                <input type="button" class="getCurrentPosition button" onclick="locateMe()"" value="Current Location"></input>
-			                <input type="button" id="cpdb-search-button" class="button" onclick="doClick()" value="Search"></input>
+			                <input type="button" class="getCurrentPosition button" onclick="locateMe()" value="Current Location"/>
+			                <input type="button" id="cpdb-search-button" class="button" onclick="doClick()" value="Search"/>
 			            </form>
 			        </section>
 			        
@@ -233,12 +233,12 @@ if (!class_exists('geocoder_metabox')) {
 			        		<p id="cpdb-cartodb-id">CartoDB ID: <span id="cartodb-id">'. $cartodb_id .'</span></p>
 			        		<input type="checkbox" id="unlock_manual_edit" name="unlock_manual_edit" /><label for="unlock_manual_edit">Allow Geo Data Editing</label>
 			        		<section id="cpdb-admin-panel">
-			        			<input type="button" id="cpdb-reset-button" class="button" data-post_id="' . $post->ID . '" value="Revert to Saved Data"></input>
-			        			<input type="button" id="cpdb-delete-button" class="button" data-post_id="' . $post->ID . '" value="Delete Geo Data"></input>
+			        			<input type="button" id="cpdb-reset-button" class="button" data-post_id="' . $post->ID . '" value="Revert to Saved Data"/>
+			        			<input type="button" id="cpdb-delete-button" class="button" data-post_id="' . $post->ID . '" value="Delete Geo Data"/>
 			        		</section>
 			        		<section>
 			        			<div class="row">
-			        				<div class="col-12"><label for="cp_geo_displayname">Location Display Name: </label><span><textarea rows="3"id="cp_geo_displayname" name="cp_geo_displayname" class="disabled" value="' . esc_attr( $cp_geo_displayname ) . '" placeholder="i.e. 200 North 7th Street, Brooklyn, NY" readonly="readonly">' . esc_attr( $cp_geo_displayname ) . '</textarea></span></div>
+			        				<div class="col-12"><label for="cp_geo_displayname">Location Display Name: </label><span><textarea rows="3" id="cp_geo_displayname" name="cp_geo_displayname" class="disabled" value="' . esc_attr( $cp_geo_displayname ) . '" placeholder="i.e. 200 North 7th Street, Brooklyn, NY" readonly="readonly">' . esc_attr( $cp_geo_displayname ) . '</textarea></span></div>
 			        			</div>
 			        			<div class="row">
 			        				<div class="col-6"><label for="cp_geo_lat">Latitude: </label><span class="smaller" id="span_cp_geo_lat"><input type="text" id="cp_geo_lat" name="cp_geo_lat" class="disabled" value="' . esc_attr( $cp_geo_lat ) . '" placeholder="i.e. 40.7165" readonly="readonly"/></span></div>
@@ -264,10 +264,10 @@ if (!class_exists('geocoder_metabox')) {
 			        		<section>
 			        			<textarea placeholder="Enter a Summary Description" name="cp_post_description" id="cp_post_description">' . esc_attr( $cp_post_description ) . '</textarea>
 			        		</section>
+			        		<div id="comments"></div>
 			        	</div>
 			        </div>
-			        
-			 		<div id="comments"></div>
+			        <div style="clear:both;"></div>
 			 </div>';
 		
 		} //end cartopress_geocoder_content
