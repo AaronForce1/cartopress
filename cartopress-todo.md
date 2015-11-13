@@ -1,20 +1,33 @@
 # Stuff to fix
 
+### Bugs to fix
+* verify account settings bug: When you change info in the fields, the checkbox goes away, but comes back if you update the settings even without re-verifying. Need to rework the verify setting so that it updates after table creation
+* cartodb sync bug: posts that have apostrophes in the tags, catergories, etc. do not sync because of an error
+* when there is no cartodb data present, but there is geodata in postmeta, the fields are not populating with the postmeta data
+
+### PHP
 * re-insert to CartoDB if user untrashes/restores **WORKING only when user selects Restore from the trash and not from the Undo action**
 * add support for bulk actions (move to trash, restore from trash, and edit) and quick edit
+* create a button to revert input fields to saved data if user changes their mind
+* create a checkbox in the new admin panel that can choose to not sync that particular post
+* perform general code cleanup for the PHP classes
+
+### Javsscript
 * add the ability to select result from map pins, instead of results on right
-* create a button to revert input fields to saved data if user changes their mind --- need to use wp_ajax call for this i think
+* integrate the new document.ready code for the admin panel from geocoder-helper.js into geocoder.js
 * display map of location on edit page load if geodata is available
 * add the ability to move the point on the map to change the location
 * when you hover over a point on the map, there is tool tip with the text "Hover Text" can we either get rid of that or add the display name/lat/long to it?
 * set a checkbox to lock all pins on map or unlock them
 * clear all points on map from old search when conducting a new search, right now they remain
-* perform general code cleanup for the PHP classes
+
+### General/Marketing
 * create documentation in github **IN PROGRESS**
 * create marketing page on github.io page with download button and tutorial/demo
 
 ----
 ## Stuff that is done
+* ~~added admin panel to geolocator to display the delete and reset buttons. Delete button is working, still need to get the reset button working~~ **DONE**
 * ~~fix custom data not saving when editing attachment~~ **DONE**
 * ~~change inputs to readonly when user selects a location~~ **DONE**
 * ~~show/results when user searches address and updates page~~ **DONE update post not applicable as it defaults to hidden now**
