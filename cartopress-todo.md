@@ -1,4 +1,4 @@
-# Stuff to fix
+# Stuff to fix before release
 
 ### Bugs to fix
 * verify account settings bug: When you change info in the fields, the green checkmark goes away, but comes back if you update the settings even without re-verifying. Need to rework the verify setting so that it updates after table creation
