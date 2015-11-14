@@ -170,10 +170,12 @@ if (!class_exists('cartopress_sync')) {
 			// merge in custom fields
 			$args = array_merge($args, $fields);
 			
-			// removes null fields
+			// removes null fields and creates array for inserting null values
+			$args_remove = array();
 			foreach($args as $key=>$value) {
 				if(is_null($value) || $value == '') {
 			        unset($args[$key]);
+					$args_remove[$key] = 'null';
 				}
 			}
 			
@@ -199,6 +201,9 @@ if (!class_exists('cartopress_sync')) {
 					      $sql_update .= $key . " = " . $value . ", "; 
 					   else
 					      $sql_update .= $key . " = " . "'" . $value . "'" . ", "; 
+					}
+					foreach($args_remove as $key=>$value) {
+					   $sql_update .= $key . " = NULLIF(" . $value . ", 'null'), "; //inserts null values
 					}
 					$sql_update = trim($sql_update, ' ');
 					$sql_update = trim($sql_update, ',');
