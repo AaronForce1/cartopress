@@ -170,7 +170,7 @@ pro.mapping = new Object;
 						
 						marker.res["map"+x] = L.marker([r[x].lat, r[x].lon], {
 							draggable: "true",
-							title: "Hover Text",
+							title: r[x].display_name,
 							opacity: 0.8,
 							icon: assets.primaryMARK
 						}).addTo(assets.map);
