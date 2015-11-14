@@ -143,9 +143,13 @@ if (!class_exists('geocoder_metabox')) {
 			
 			$description = sanitize_text_field( $_POST['cp_post_description'] );
 			
-			// Update the meta field.
-			update_post_meta( $post_id, '_cp_post_geo_data', $geodata );
-			update_post_meta( $post_id, '_cp_post_description', $description );
+			// Update the meta fields.
+			if (count(array_unique($geodata)) === 1 && end($geodata) === '') { // update geodata only if one of the fields is not empty
+				update_post_meta( $post_id, '_cp_post_description', $description );
+			} else {
+				update_post_meta( $post_id, '_cp_post_geo_data', $geodata );
+				update_post_meta( $post_id, '_cp_post_description', $description );
+			}
 			
 			if (get_post_status( $post_id ) != 'publish') {
 				cartopress_sync::cartodb_delete($post_id);
@@ -264,9 +268,17 @@ if (!class_exists('geocoder_metabox')) {
 			        		<p class="howto">Add a custom summary description which will be available for display in the CartoDB infowindow. If you leave it blank, CartoPress will attempt to use the post excerpt. If the excerpt is empty, CartoPress will create a summary description using the first 55 words of the post content.</p>
 			        		<section>
 			        			<textarea placeholder="Enter a Summary Description" name="cp_post_description" id="cp_post_description">' . esc_attr( $cp_post_description ) . '</textarea>
-			        		</section>
-			        		<div id="comments"></div>
-			        	</div>
+			        		</section>';
+							
+							if (empty($geodata)) {
+								echo '<div id="comments"></div>';
+							} elseif (!empty($geodata) && $cp_post[1] == false) {
+								echo '<div id="comments"><p class="warning">Geo data is not synced with CartoDB. Update the post to sync.</p></div>';
+							} elseif (!empty($geodata) && $cp_post[1] == true) {
+								echo '<div id="comments"><p class="success">Geo data is synced with CartoDB.</p></div>';
+							}
+			        		
+			        	echo '</div>
 			        </div>
 			        <div style="clear:both;"></div>
 			 </div>';

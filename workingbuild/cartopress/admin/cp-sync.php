@@ -21,8 +21,14 @@ if (!class_exists('cartopress_sync')) {
 		public function cartodb_select($post_id) {
 			$sql_select = 'SELECT * FROM ' . cartopress_table . ' WHERE cp_post_id = ' . $post_id;
 			$cp_post = cartopress::process_curl($ch, $sql_select, cartopress_apikey, cartopress_username, true);
-			return array($cp_post, true);
+			if ($cp_post->total_rows == 1) {
+				$status = true;
+			} else {
+				$status = false;
+			}
+			return array($cp_post, $status);
 		} // end CartoDB select
+	
 	
 	
 		/**
