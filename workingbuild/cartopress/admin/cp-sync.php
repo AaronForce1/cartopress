@@ -149,14 +149,14 @@ if (!class_exists('cartopress_sync')) {
 			// set up the fields
 			$args = array(
 				'cp_post_id' => $cp_post_id,
-				'cp_post_title' => $cp_post_title,
+				'cp_post_title' => esc_html($cp_post_title),
 				'cp_post_content' => esc_html($cp_post_content),
 				'cp_post_description' => esc_html($cp_post_description),
 				'cp_post_date' => $cp_post_date,
 				'cp_post_type' => $cp_post_type,
 				'cp_post_permalink' => $cp_post_permalink,
-				'cp_post_categories' => $cp_post_categories, 
-				'cp_post_tags' => $cp_post_tags,
+				'cp_post_categories' => esc_html($cp_post_categories), 
+				'cp_post_tags' => esc_html($cp_post_tags),
 				'cp_post_featuredimage_url' => $cp_post_featuredimage_url,
 				'cp_post_format' => $cp_post_format,
 				'cp_post_author' => $cp_post_author,
