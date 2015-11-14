@@ -4,12 +4,12 @@
 * verify account settings bug: When you change info in the fields, the green checkmark goes away, but comes back if you update the settings even without re-verifying. Need to rework the verify setting so that it updates after table creation
 * cartodb sync bug: posts that have apostrophes in the tags, catergories, etc. do not sync because of an error
 * when there is no cartodb data present, but there is geodata in postmeta, the fields are not populating with the postmeta data
-* admin panel button shrink if the admin panel is open when a user performa a search and selecs an entry. It is because the button input values are clearing with the other inputs as a results of the geocoder.js process
+* ~~admin panel button shrink if the admin panel is open when a user performa a search and selecs an entry. It is because the button input values are clearing with the other inputs as a results of the geocoder.js process~~ **FIXED - changed the jQuery input selector from grandparent #cp-geo-values to parent #cp-geo-fields and it no longer interferes with the admin panel**
 
 ### PHP
 * re-insert to CartoDB if user untrashes/restores **WORKING only when user selects Restore from the trash and not from the Undo action**
 * add support for bulk actions (move to trash, restore from trash, and edit) and quick edit
-* create a button to revert input fields to saved data if user changes their mind
+* ~~create a button to revert input fields to saved data if user changes their mind~~ **DONE**
 * create a checkbox in the new admin panel that can choose to not sync that particular post
 * perform general code cleanup for the PHP classes
 
