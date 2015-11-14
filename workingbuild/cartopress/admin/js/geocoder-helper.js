@@ -55,6 +55,23 @@
 		});
 	}
 	
+	// delete record ajax
+	function resetRecord() {
+		var post_id = $('#cpdb-reset-button').attr('data-post_id');
+		var data = {
+			action: 'cartopress_reset_record',
+			post_id: post_id,
+			cartopress_resetrecord_nonce: cartopress_geocoder_ajax.cartopress_resetrecord_nonce
+		};
+		$.post(ajaxurl, data, function(r){
+			r = $.parseJSON(r.toString());
+			$.each(r,function(k,v) {
+				$('#'+k).val(v);
+			});
+			$('#comments').html('<p class="success">The geo data fields have been reverted to the most recent WordPress saved data.</p>');
+		});
+	}
+	
 	$(document).ready(function(){
 		var visible = {"height":"100%","opacity":"1", "border-top-width":"1px", "border-bottom-width":"0px"};
 		var hidden = {"height":"0px","opacity":"0", "border-top-width":"0px"};
@@ -79,17 +96,7 @@
 		// function to clear the geo field inputs
 		function clear_geo_fields(){
 			$('#cpdb-cartodb-id').remove();
-			$('#cp_geo_displayname').val('');
-			$('#cp_geo_lat').val('');
-			$('#cp_geo_long').val('');
-			$('#cp_geo_streetnumber').val('');
-			$('#cp_geo_street').val('');
-			$('#cp_geo_postal').val('');
-			$('#cp_geo_adminlevel4_vill_neigh').val('');
-			$('#cp_geo_adminlevel3_city').val('');
-			$('#cp_geo_adminlevel2_county').val('');
-			$('#cp_geo_adminlevel1_st_prov_region').val('');
-			$('#cp_geo_adminlevel0_country').val('');
+			$('#cpdb-geocode-fields input, #cpdb-geocode-fields textarea').val('');
 		}
 		
 		// function to disable the delte button
@@ -121,4 +128,9 @@
 			}
 		}); // end geo data delete button action
 		
+		// geo data reset button action
+		$('#cpdb-reset-button').click(function(){
+			$('#cpdb-geocode-fields input, #cpdb-geocode-fields textarea').removeClass('ent');
+			resetRecord();
+		}); //end geo data reset button action
 	});

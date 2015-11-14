@@ -71,7 +71,6 @@ if (!class_exists('cartopress_sync')) {
 			if ($cpoptions['cartopress_sync_tags'] == 1) {
 				$tags = array();
 				foreach(wp_get_post_tags($post_id) as $tag) {
-					//$tag = $t);
 					array_push($tags,$tag->name);
 					if(sizeOf($tags)>0) {
 						$cp_post_tags = implode(', ',$tags);
@@ -168,6 +167,7 @@ if (!class_exists('cartopress_sync')) {
 				'cp_geo_long' => $cp_geo_long
 				);
 			
+			// merge in custom fields
 			$args = array_merge($args, $fields);
 			
 			// removes null fields

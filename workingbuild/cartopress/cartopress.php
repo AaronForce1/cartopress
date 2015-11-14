@@ -429,6 +429,7 @@ if (!class_exists('cartopress')) {
 				add_action( 'load-post.php', 'get_cartopress_geolocator' );
     			add_action( 'load-post-new.php', 'get_cartopress_geolocator' );
 				add_action('wp_ajax_cartopress_delete_row', 'cartopress_delete_row');
+				add_action('wp_ajax_cartopress_reset_record', 'cartopress_reset_record');
 				
 				function cartopress_delete_row() {
 				   // checks the referer to ensure authorized access
@@ -444,6 +445,28 @@ if (!class_exists('cartopress')) {
 				   }
 				   delete_post_meta($post_id, '_cp_post_geo_data');
 				   die(print_r($message, true));
+				} //end cartopress_delete_row()
+				
+				function cartopress_reset_record() {
+				   // checks the referer to ensure authorized access
+				   if (!isset( $_POST['cartopress_resetrecord_nonce'] ) || !wp_verify_nonce($_POST['cartopress_resetrecord_nonce'], 'cartopress_resetrecord_nonce') )
+				   	die('Unauthorized access denied.');
+				   $post_id = $_POST['post_id'];
+				   $geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
+				   $geofields = array(
+					   'cp_geo_displayname' => $geodata['cp_geo_displayname'],
+					   'cp_geo_lat' => $geodata['cp_geo_lat'],
+					   'cp_geo_long' => $geodata['cp_geo_long'],
+					   'cp_geo_streetnumber' => $geodata['cp_geo_streetnumber'],
+					   'cp_geo_street' => $geodata['cp_geo_street'],
+					   'cp_geo_postal' => $geodata['cp_geo_postal'],
+					   'cp_geo_adminlevel4_vill_neigh' => $geodata['cp_geo_adminlevel4_vill_neigh'],
+					   'cp_geo_adminlevel3_city' => $geodata['cp_geo_adminlevel3_city'],
+					   'cp_geo_adminlevel2_county' => $geodata['cp_geo_adminlevel2_county'],
+					   'cp_geo_adminlevel1_st_prov_region' => $geodata['cp_geo_adminlevel1_st_prov_region'],
+					   'cp_geo_adminlevel0_country' => $geodata['cp_geo_adminlevel0_country']
+				   );
+				   die(print_r(json_encode($geofields), true));
 				} //end cartopress_delete_row()
 			}
 		
