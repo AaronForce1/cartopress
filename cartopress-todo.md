@@ -25,6 +25,7 @@
 ### General/Marketing
 * create documentation in github **IN PROGRESS**
 * create marketing page on github.io page with download button and tutorial/demo
+* Update plugin and github readmes
 
 ----
 ## Stuff that is done
