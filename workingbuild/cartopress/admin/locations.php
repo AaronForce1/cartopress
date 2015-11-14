@@ -72,7 +72,8 @@ if (!class_exists('geocoder_metabox')) {
 					}
 					add_action( 'admin_enqueue_scripts', 'load_geocoder_dependencies' );
 					wp_localize_script('cartopress-geocode-helper-script','cartopress_geocoder_ajax', array(
-							"cartopress_delete_row_nonce" => wp_create_nonce('cartopress_delete_row_nonce')
+							"cartopress_delete_row_nonce" => wp_create_nonce('cartopress_delete_row_nonce'),
+							"cartopress_resetrecord_nonce" => wp_create_nonce('cartopress_resetrecord_nonce')
 						)
 					);
 				} // end if
@@ -236,7 +237,7 @@ if (!class_exists('geocoder_metabox')) {
 			        			<input type="button" id="cpdb-reset-button" class="button" data-post_id="' . $post->ID . '" value="Revert to Saved Data"/>
 			        			<input type="button" id="cpdb-delete-button" class="button" data-post_id="' . $post->ID . '" value="Delete Geo Data"/>
 			        		</section>
-			        		<section>
+			        		<section id="cpdb-geocode-fields">
 			        			<div class="row">
 			        				<div class="col-12"><label for="cp_geo_displayname">Location Display Name: </label><span><textarea rows="3" id="cp_geo_displayname" name="cp_geo_displayname" class="disabled" value="' . esc_attr( $cp_geo_displayname ) . '" placeholder="i.e. 200 North 7th Street, Brooklyn, NY" readonly="readonly">' . esc_attr( $cp_geo_displayname ) . '</textarea></span></div>
 			        			</div>
