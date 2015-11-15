@@ -142,6 +142,12 @@ if (!class_exists('geocoder_metabox')) {
 			}
 			
 			$description = sanitize_text_field( $_POST['cp_post_description'] );
+			if ($_POST['cpdb-donotsync'] == 1) {
+				$donotsync = 1;
+			} else {
+				$donotsync = 0;
+			}
+			
 			
 			// Update the meta fields.
 			if (count(array_unique($geodata)) === 1 && end($geodata) === '') { // update geodata only if one of the fields is not empty
@@ -149,13 +155,22 @@ if (!class_exists('geocoder_metabox')) {
 			} else {
 				update_post_meta( $post_id, '_cp_post_geo_data', $geodata );
 				update_post_meta( $post_id, '_cp_post_description', $description );
+				if ($donotsync == 1) {
+					update_post_meta( $post_id, '_cp_post_donotsync', $donotsync );
+				} else {
+					delete_post_meta($post_id, '_cp_post_donotsync');
+				}
 			}
 			
-			if (get_post_status( $post_id ) != 'publish') {
-				cartopress_sync::cartodb_delete($post_id);
+			if (get_post_meta($post_id, '_cp_post_donotsync', true) == 1) {
+				return;
 			} else {
-				cartopress_sync::cartodb_sync($post_id);
-			}
+				if (get_post_status( $post_id ) != 'publish') {
+					cartopress_sync::cartodb_delete($post_id);
+				} else {
+					cartopress_sync::cartodb_sync($post_id);
+				} // end if
+			} // end if
 			
 		} //end save function
 		
@@ -171,11 +186,12 @@ if (!class_exists('geocoder_metabox')) {
 
 			// Use get_post_meta to retrieve an existing value from the database.
 			$geodata = get_post_meta( $post->ID, '_cp_post_geo_data', true );
+			$donotsync_value = get_post_meta( $post->ID, '_cp_post_donotsync', true );
 			
 			//redefine $vars if cartodb values are true
 			$cp_post = cartopress_sync::cartodb_select($post->ID);
 			$cp_values = $cp_post[0]->rows[0];
-			if ($cp_post[1] == true) {
+			if ($cp_post[1] == true && $donotsync_value != 1) {
 				$cartodb_id = $cp_values->cartodb_id;
 				$cp_geo_displayname = $cp_values->cp_geo_displayname;
 				$cp_geo_lat = $cp_values->cp_geo_lat;
@@ -238,7 +254,8 @@ if (!class_exists('geocoder_metabox')) {
 			        		<p id="cpdb-cartodb-id">CartoDB ID: <span id="cartodb-id">'. $cartodb_id .'</span></p>
 			        		<input type="checkbox" id="unlock_manual_edit" name="unlock_manual_edit" /><label for="unlock_manual_edit">Allow Geo Data Editing</label>
 			        		<section id="cpdb-admin-panel">
-			        			<input type="button" id="cpdb-reset-button" class="button" data-post_id="' . $post->ID . '" value="Revert to Saved Data"/>
+			        			<input type="checkbox" id="cpdb-donotsync" name="cpdb-donotsync" value="1" '. checked( 1, $donotsync_value, false ) .'/><label for="cpdb-donotsync" id="cpdb-donotsync-label">Do Not Sync</label>';
+			        			echo '<input type="button" id="cpdb-reset-button" class="button" data-post_id="' . $post->ID . '" value="Revert to Saved Data"/>
 			        			<input type="button" id="cpdb-delete-button" class="button" data-post_id="' . $post->ID . '" value="Delete Geo Data"/>
 			        		</section>
 			        		<section id="cpdb-geocode-fields">
@@ -272,10 +289,12 @@ if (!class_exists('geocoder_metabox')) {
 							
 							if (empty($geodata)) {
 								echo '<div id="comments"></div>';
-							} elseif (!empty($geodata) && $cp_post[1] == false) {
+							} elseif (!empty($geodata) && $cp_post[1] == false && $donotsync_value != 1) {
 								echo '<div id="comments"><p class="warning">Geo data is not synced with CartoDB. Update the post to sync.</p></div>';
-							} elseif (!empty($geodata) && $cp_post[1] == true) {
+							} elseif (!empty($geodata) && $cp_post[1] == true && $donotsync_value != 1) {
 								echo '<div id="comments"><p class="success">Geo data is synced with CartoDB.</p></div>';
+							} elseif ($donotsync_value == 1) {
+								echo '<div id="comments"><p class="warning">"Do Not Sync" is currently set to True. Data is not being synced to CartoDB.</p></div>';
 							}
 			        		
 			        	echo '</div>

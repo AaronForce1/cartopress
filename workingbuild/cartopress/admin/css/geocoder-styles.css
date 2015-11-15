@@ -94,6 +94,14 @@
 	border-bottom:none;
 	display:none;
 }
+
+#cartopress_locator #cpdb-geocode-values label#cpdb-donotsync-label {
+	float:none;
+	color:#666666;
+	margin-left:5px;
+	font-weight:normal;
+}
+
 #cpdb-admin-panel .button {
 	float:right;
 	margin-left:5px;
