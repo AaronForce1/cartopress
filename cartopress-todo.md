@@ -11,7 +11,7 @@
 * re-insert to CartoDB if user untrashes/restores **WORKING only when user selects Restore from the trash and not from the Undo action**
 * add support for bulk actions (move to trash, restore from trash, and edit) and quick edit
 * ~~create a button to revert input fields to saved data if user changes their mind~~ **DONE**
-* create a checkbox in the new admin panel that can choose to not sync that particular post
+* ~~create a checkbox in the new admin panel that can choose to not sync that particular post~~ **DONE**
 * perform general code cleanup for the PHP classes
 
 ### JS
