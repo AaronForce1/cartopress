@@ -2,16 +2,13 @@
 
 ### Bugs to fix
 * verify account settings bug: When you change info in the fields, the green checkmark goes away, but comes back if you update the settings even without re-verifying. Need to rework the verify setting so that it updates after table creation
+* Bulk edit bug: When a user modifies post data (exception being post status) using bulk edit the data will not sync until the post is updated again. I suspect because the sync function is run before the update function so the old data is being synced.
 * ~~cartodb sync bug: posts that have apostrophes in the tags, catergories, etc. do not sync because of an error~~ **FIXED added character escaping for more options**
 * ~~when there is no cartodb data present, but there is geodata in postmeta, the fields are not populating with the postmeta data~~ **FIXED**
 * ~~cartodb fields are not clearing if a user updates the location to a new location that does not make use of all of the fields. i.e. if old address is 227 N 7 St, Williamsburg, New York, NY, United States, and simply picks Geneva Switzerland as the new location. The postmeta is correct, however the CartoDB fields would show 227 N 7 St, Williamsburg, Geneva, Geneva, Switzerland. This is because null fields are being removed from the update query. Should create a more complex verify script that checks to see if the value has been changed from the previous and clears out the fields in CartoDB if necessary~~ **FIXED**
 * ~~admin panel button shrink if the admin panel is open when a user performa a search and selecs an entry. It is because the button input values are clearing with the other inputs as a results of the geocoder.js process~~ **FIXED - changed the jQuery input selector from grandparent #cp-geo-values to parent #cp-geo-fields and it no longer interferes with the admin panel**
 
 ### PHP
-* re-insert to CartoDB if user untrashes/restores **WORKING only when user selects Restore from the trash and not from the Undo action**
-* add support for bulk actions (move to trash, restore from trash, and edit) and quick edit
-* ~~create a button to revert input fields to saved data if user changes their mind~~ **DONE**
-* ~~create a checkbox in the new admin panel that can choose to not sync that particular post~~ **DONE**
 * perform general code cleanup for the PHP classes
 
 ### JS
@@ -30,6 +27,10 @@
 
 ----
 ## Stuff that is done
+* ~~re-insert to CartoDB if user untrashes/restores~~ **FIXED DONE**
+* ~~add support for bulk actions (move to trash, restore from trash, and edit) and quick edit~~ **DONE note bug above**
+* ~~create a button to revert input fields to saved data if user changes their mind~~ **DONE**
+* ~~create a checkbox in the new admin panel that can choose to not sync that particular post~~ **DONE**
 * ~~added admin panel to geolocator to display the delete and reset buttons. Delete button is working, still need to get the reset button working~~ **DONE**
 * ~~fix custom data not saving when editing attachment~~ **DONE**
 * ~~change inputs to readonly when user selects a location~~ **DONE**
