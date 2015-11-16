@@ -40,9 +40,33 @@ if (!class_exists('cartopress')) {
 		*/
 		public static function start() {
 			cartopress::load_constants();
-			cartopress::load();
+			cartopress::load_admin();
 			cartopress::ajax_processes();
 			cartopress::add_geolocator();
+			cartopress::add_bulkactions();
+			require( cartopress_admin_dir . 'cp-sync.php' );
+			add_action( 'save_post', 'savethepost', 2000);
+			add_action( 'transition_post_status', 'cp_sync', 10);
+			function cp_sync( $new_status, $old_status, $post ) {
+			    if ( $old_status == 'publish'  &&  $new_status != 'publish' ) {
+					cartopress_sync::cartodb_delete($post->ID);
+			    }
+				if ( $old_status != 'publish'  &&  $new_status == 'publish' ) {
+					cartopress_sync::cartodb_sync($post->ID);
+				}
+			}
+			function savethepost($post_id) {
+				if (get_post_meta($post_id, '_cp_post_donotsync', true) == 1) {
+					return;
+				} else {
+					if (get_post_status( $post_id ) != 'publish') {
+						cartopress_sync::cartodb_delete($post_id);
+					} else {
+						cartopress_sync::cartodb_sync($post_id);
+					} // end if
+				} // end if
+			}
+			
 		}
 		
 		/**
@@ -73,7 +97,7 @@ if (!class_exists('cartopress')) {
 		* load functions
 		* @since 0.1.0
 		*/
-		private static function load() {
+		private static function load_admin() {
 			
 			if (is_admin()) {
 				
@@ -99,10 +123,10 @@ if (!class_exists('cartopress')) {
 					wp_register_script('jquery2.1.4', 'https://code.jquery.com/jquery-2.1.4.min.js');
 					wp_register_script('leaflet', 'http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js');
 					wp_register_script('cartodb', 'http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js');
-					wp_register_script('ionicons', plugin_dir_url( __FILE__ ) . 'admin/js/leaflet.awesome-markers.min.js', array(), cartopress_vers);
-					wp_register_script('admin-script', plugin_dir_url( __FILE__ ) . 'admin/js/admin.js', array('jquery'), cartopress_vers );
-					wp_register_script('cartopress-geocode-script', plugin_dir_url( __FILE__ ) . 'admin/js/geocoder.js', array('jquery2.1.4','leaflet'/*, 'cartodb'*/), cartopress_vers );
-					wp_register_script('cartopress-geocode-helper-script', plugin_dir_url( __FILE__ ) . 'admin/js/geocoder-helper.js', array('jquery'), cartopress_vers );
+					wp_register_script('ionicons', cartopress_url . '/admin/js/leaflet.awesome-markers.min.js', array(), cartopress_vers);
+					wp_register_script('admin-script', cartopress_url . '/admin/js/admin.js', array('jquery'), cartopress_vers );
+					wp_register_script('cartopress-geocode-script', cartopress_url . '/admin/js/geocoder.js', array('jquery2.1.4','leaflet'), cartopress_vers );
+					wp_register_script('cartopress-geocode-helper-script', cartopress_url . '/admin/js/geocoder-helper.js', array('jquery'), cartopress_vers );
 				} // end get_admin_scripts
 				
 				function cartopress_options_menu() {
@@ -151,7 +175,7 @@ if (!class_exists('cartopress')) {
 			
 			} // end if
 			
-		} // end load()
+		} // end load_admin()
 		
 		/**
 		* perform cartodb queries
@@ -209,7 +233,7 @@ if (!class_exists('cartopress')) {
 				   $tablename = $_POST['tablename'];
 				   
 				   //SQL create table statment
-				   $sql_create = "DO $$ BEGIN CREATE TABLE " . (string)$tablename . " (cp_post_id integer, cp_post_title text, cp_post_content text, cp_post_description text, cp_post_date date, cp_post_type text, cp_post_permalink text, cp_post_categories text, cp_post_tags text, cp_post_featuredimage_url text, cp_post_format text, cp_post_author text, cp_geo_streetnumber text, cp_geo_street text, cp_geo_adminlevel4_vill_neigh text, cp_geo_adminlevel3_city text, cp_geo_adminlevel2_county text, cp_geo_adminlevel1_st_prov_region text, cp_geo_adminlevel0_country text, cp_geo_postal text, cp_geo_lat float, cp_geo_long float, cp_geo_displayname text); RAISE NOTICE 'Success'; END; $$";
+				   $sql_create = "DO $$ BEGIN CREATE TABLE " . $tablename . " (cp_post_id integer, cp_post_title text, cp_post_content text, cp_post_description text, cp_post_date date, cp_post_type text, cp_post_permalink text, cp_post_categories text, cp_post_tags text, cp_post_featuredimage_url text, cp_post_format text, cp_post_author text, cp_geo_streetnumber text, cp_geo_street text, cp_geo_adminlevel4_vill_neigh text, cp_geo_adminlevel3_city text, cp_geo_adminlevel2_county text, cp_geo_adminlevel1_st_prov_region text, cp_geo_adminlevel0_country text, cp_geo_postal text, cp_geo_lat float, cp_geo_long float, cp_geo_displayname text); RAISE NOTICE 'Success'; END; $$";
 				   
 				   //process curl
 				   $result_create = cartopress::process_curl($ch, $sql_create, $apikey, $username, true);
@@ -471,6 +495,19 @@ if (!class_exists('cartopress')) {
 			}
 		
 		} //end add_geolocator
+		
+		/**
+		* add bulk actions
+		* @since 0.1.0
+		*/
+		private static function add_bulkactions() {
+		
+			if (is_admin()) {
+				require( cartopress_admin_dir . 'bulkactions.php' );
+				new cartopress_bulkactions();
+			}
+		
+		} //end add_bulkactions
 
 	} //end class cartopress
 	

@@ -22,15 +22,7 @@ if (!class_exists('geocoder_metabox')) {
 			require( cartopress_admin_dir . 'cp-sync.php' );
 			// special action for attachment content type
 			add_action( 'edit_attachment', array ( $this, 'save'), 10, 1 );
-			add_action( 'transition_post_status', 'cp_sync', 10, 3 );
-			function cp_sync( $new_status, $old_status, $post ) {
-			    if ( $old_status == 'publish'  &&  $new_status != 'publish' ) {
-					cartopress_sync::cartodb_delete($post->ID);
-			    }
-				if ( $old_status != 'publish'  &&  $new_status == 'publish' ) {
-					cartopress_sync::cartodb_sync($post->ID);
-				}
-			}
+			
 		} // end __construct
 		
 		
