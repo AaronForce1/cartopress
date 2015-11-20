@@ -65,7 +65,7 @@ if (!class_exists('geocoder_metabox')) {
 					add_action( 'admin_enqueue_scripts', 'load_geocoder_dependencies' );
 					wp_localize_script('cartopress-geocode-helper-script','cartopress_geocoder_ajax', array(
 							"cartopress_delete_row_nonce" => wp_create_nonce('cartopress_delete_row_nonce'),
-							"cartopress_resetrecord_nonce" => wp_create_nonce('cartopress_resetrecord_nonce')
+							"cartopress_resetrecord_nonce" => wp_create_nonce('cartopress_resetrecord_nonce'),
 						)
 					);
 				} // end if
@@ -78,7 +78,7 @@ if (!class_exists('geocoder_metabox')) {
 		 *
 		 * @param int $post_id The ID of the post being saved.
 		 */
-		public function save( $post_id ) {
+		public static function save( $post_id ) {
 	
 			/*
 			 * We need to verify this came from the our screen and with proper authorization,
