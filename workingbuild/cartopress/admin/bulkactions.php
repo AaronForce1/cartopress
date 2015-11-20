@@ -110,7 +110,7 @@ if (!class_exists('cartopress_bulkactions')) {
 						//if ( !current_user_can($post_type_object->cap->export_post, $post_id) )
 						//	wp_die( __('You are not allowed to export this post.') );
 						$sql_distinct = 'SELECT DISTINCT cp_post_id FROM ' . cartopress_table;
-						$cartopress_ids = cartopress::process_curl($ch, $sql_distinct, cartopress_apikey, cartopress_username, true);
+						$cartopress_ids = cartopress::process_curl($sql_distinct, cartopress_apikey, cartopress_username, true);
 						$cartopress_ids = $cartopress_ids->rows;
 						$temp = array();
 						foreach ($cartopress_ids as $key=>$value) {
@@ -189,7 +189,7 @@ if (!class_exists('cartopress_bulkactions')) {
 						//if ( !current_user_can($post_type_object->cap->export_post, $post_id) )
 						//	wp_die( __('You are not allowed to export this post.') );
 						$sql_distinct = 'SELECT DISTINCT cp_post_id FROM ' . cartopress_table;
-						$cartopress_ids = cartopress::process_curl($ch, $sql_distinct, cartopress_apikey, cartopress_username, true);
+						$cartopress_ids = cartopress::process_curl($sql_distinct, cartopress_apikey, cartopress_username, true);
 						$cartopress_ids = $cartopress_ids->rows;
 						$temp = array();
 						foreach ($cartopress_ids as $key=>$value) {
