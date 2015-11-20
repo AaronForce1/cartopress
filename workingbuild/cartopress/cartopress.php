@@ -46,15 +46,6 @@ if (!class_exists('cartopress')) {
 			cartopress::add_bulkactions();
 			require( cartopress_admin_dir . 'cp-sync.php' );
 			add_action( 'save_post', 'savethepost', 2000);
-			add_action( 'transition_post_status', 'cp_sync', 10);
-			function cp_sync( $new_status, $old_status, $post ) {
-			    if ( $old_status == 'publish'  &&  $new_status != 'publish' ) {
-					cartopress_sync::cartodb_delete($post->ID);
-			    }
-				if ( $old_status != 'publish'  &&  $new_status == 'publish' ) {
-					cartopress_sync::cartodb_sync($post->ID);
-				}
-			}
 			function savethepost($post_id) {
 				if (get_post_meta($post_id, '_cp_post_donotsync', true) == 1) {
 					return;
@@ -62,10 +53,14 @@ if (!class_exists('cartopress')) {
 					if (get_post_status( $post_id ) != 'publish') {
 						cartopress_sync::cartodb_delete($post_id);
 					} else {
+						if ( isset( $_REQUEST['post_format'] ) && $_REQUEST['post_format'] != -1 ) {
+							set_post_format($post_id, $_REQUEST['post_format']);
+						}
 						cartopress_sync::cartodb_sync($post_id);
 					} // end if
 				} // end if
 			}
+
 			
 		}
 		
@@ -181,9 +176,9 @@ if (!class_exists('cartopress')) {
 		* perform cartodb queries
 		* @since 0.1.0
 		* 
-		* @param $ch, accepts curl_init('url'); $sql, the sql query; $username, CartoDB username; $apikey, CartoDB API key; $return, return transfer boolean
+		* @param $sql, the sql query; $username, CartoDB username; $apikey, CartoDB API key; $return, return transfer boolean
 		*/
-		public static function process_curl($ch, $sql, $apikey, $username, $return){
+		public static function process_curl($sql, $apikey, $username, $return){
 			//curl init	
 			$ch = curl_init("https://".$username.".cartodb.com/api/v2/sql");
 			$query = http_build_query(array('q'=>$sql,'api_key'=>$apikey));
@@ -236,7 +231,7 @@ if (!class_exists('cartopress')) {
 				   $sql_create = "DO $$ BEGIN CREATE TABLE " . $tablename . " (cp_post_id integer, cp_post_title text, cp_post_content text, cp_post_description text, cp_post_date date, cp_post_type text, cp_post_permalink text, cp_post_categories text, cp_post_tags text, cp_post_featuredimage_url text, cp_post_format text, cp_post_author text, cp_geo_streetnumber text, cp_geo_street text, cp_geo_adminlevel4_vill_neigh text, cp_geo_adminlevel3_city text, cp_geo_adminlevel2_county text, cp_geo_adminlevel1_st_prov_region text, cp_geo_adminlevel0_country text, cp_geo_postal text, cp_geo_lat float, cp_geo_long float, cp_geo_displayname text); RAISE NOTICE 'Success'; END; $$";
 				   
 				   //process curl
-				   $result_create = cartopress::process_curl($ch, $sql_create, $apikey, $username, true);
+				   $result_create = cartopress::process_curl($sql_create, $apikey, $username, true);
 				   
 				   //parse result
 				   $error = $result_create->error[0];
@@ -260,7 +255,7 @@ if (!class_exists('cartopress')) {
 				   
 				   } elseif ($success == 'Success')  {
 						$sql_select = "SELECT cdb_cartodbfytable('" . (string)$tablename . "');";
-						cartopress::process_curl($ch, $sql_select, $apikey, $username, true);
+						cartopress::process_curl($sql_select, $apikey, $username, true);
 						update_option('cartopress_cartodb_verified', 'verified');
 						die('success');
 				   
@@ -317,7 +312,7 @@ if (!class_exists('cartopress')) {
 				   		
 				   		$cartopressify = "DO $$ BEGIN ALTER TABLE " . $tablename . " ADD COLUMN " . $col_name . " " . $col_type . "; RAISE NOTICE 'Column " . $col_name . " was created.'; UPDATE " . $tablename . " SET " . $col_name . " = " . $col_name . "; RAISE NOTICE 'Column name is set.'; EXCEPTION WHEN duplicate_column THEN RAISE NOTICE '" . $col_name . " text already exists in " . $tablename . ".'; END; $$";	
 				   		
-				   		$result = cartopress::process_curl($ch, $cartopressify, $apikey, $username, true);
+				   		$result = cartopress::process_curl($cartopressify, $apikey, $username, true);
 				   }
 				   update_option('cartopress_cartodb_verified', 'verified');
 				   die("Success");  
@@ -360,7 +355,7 @@ if (!class_exists('cartopress')) {
 				   $custom_field = $_POST['custom_field'];
 				   
 				   $sql_add_custom_col = "DO $$ BEGIN ALTER TABLE " . $tablename . " ADD COLUMN " . $cartodb_column . " text; RAISE NOTICE 'Column Created'; UPDATE " . $tablename . " SET " . $cartodb_column . " = " . $cartodb_column . "; RAISE NOTICE 'Column name is set.'; EXCEPTION WHEN duplicate_column THEN RAISE NOTICE 'Column Exists'; END; $$";	
-				   $result = cartopress::process_curl($ch, $sql_add_custom_col, $apikey, $username, true);
+				   $result = cartopress::process_curl($sql_add_custom_col, $apikey, $username, true);
 				   $notice = $result->notices[0];
 				   
 				   if ($notice == "Column Exists") {
@@ -399,7 +394,7 @@ if (!class_exists('cartopress')) {
 				   $custom_field = $_POST['custom_field'];
 				   
 				   $sql_delete_custom_col = "DO $$ BEGIN ALTER TABLE " . $tablename . " DROP COLUMN " . $cartodb_column . "; RAISE NOTICE 'Column Dropped'; END; $$";	
-				   $result = cartopress::process_curl($ch, $sql_delete_custom_col, $apikey, $username, true);
+				   $result = cartopress::process_curl($sql_delete_custom_col, $apikey, $username, true);
 				   $notice = $result->notices[0];
 				   
 				   if ($notice == "Column Dropped") {
@@ -461,7 +456,7 @@ if (!class_exists('cartopress')) {
 				   	die('Unauthorized access denied.');
 				   $post_id = $_POST['post_id'];
 				   $sql_delete = 'DELETE FROM ' . cartopress_table .  ' WHERE cp_post_id = ' . $post_id;
-				   $results = cartopress::process_curl($ch, $sql_delete, cartopress_apikey, cartopress_username, true);
+				   $results = cartopress::process_curl($sql_delete, cartopress_apikey, cartopress_username, true);
 				   if ($results->total_rows == 1) {
 				   	$message = "success";
 				   } else {
