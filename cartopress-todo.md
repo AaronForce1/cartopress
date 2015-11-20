@@ -2,7 +2,8 @@
 
 ### Bugs to fix
 * verify account settings bug: When you change info in the fields, the green checkmark goes away, but comes back if you update the settings even without re-verifying. Need to rework the verify setting so that it updates after table creation
-* Bulk edit bug: When a user modifies post data (exception being post status) using bulk edit the data will not sync until the post is updated again. I suspect because the sync function is run before the update function so the old data is being synced.
+* noticed there are a bunch of undefined variable warnings that need to be debugged before releasing
+* ~~Bulk edit bug: When a user modifies post data (exception being post status) using bulk edit the data will not sync until the post is updated again. I suspect because the sync function is run before the update function so the old data is being synced.~~ **FIXED problem was that post-format was being set after the save_post callback ran. fixed to manually set the post-format before the callback runs**
 * ~~cartodb sync bug: posts that have apostrophes in the tags, catergories, etc. do not sync because of an error~~ **FIXED added character escaping for more options**
 * ~~when there is no cartodb data present, but there is geodata in postmeta, the fields are not populating with the postmeta data~~ **FIXED**
 * ~~cartodb fields are not clearing if a user updates the location to a new location that does not make use of all of the fields. i.e. if old address is 227 N 7 St, Williamsburg, New York, NY, United States, and simply picks Geneva Switzerland as the new location. The postmeta is correct, however the CartoDB fields would show 227 N 7 St, Williamsburg, Geneva, Geneva, Switzerland. This is because null fields are being removed from the update query. Should create a more complex verify script that checks to see if the value has been changed from the previous and clears out the fields in CartoDB if necessary~~ **FIXED**
