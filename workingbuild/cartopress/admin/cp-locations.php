@@ -15,19 +15,26 @@ if (!class_exists('geocoder_metabox')) {
 	
 		/**
 		 * Hook into the appropriate actions when the class is constructed.
+		 * 
+		 * @since 0.1.0
 		 */
 		public function __construct() {
+						
+			// add the metabox	
 			add_action( 'add_meta_boxes', array( $this, 'cartopress_add_geocoder' ) );
-			add_action( 'save_post', array( $this, 'save' ) );
-			require( cartopress_admin_dir . 'cp-sync.php' );
-			// special action for attachment content type
-			add_action( 'edit_attachment', array ( $this, 'save'), 10, 1 );
 			
+			// hook the save function
+			add_action( 'save_post', array( $this, 'save_geodata' ) );
+			add_action( 'edit_attachment', array ( $this, 'save_geodata'), 10, 1 );
+	
 		} // end __construct
 		
 		
 		/**
-		 * Adds the meta box container.
+		 * Adds the geolocator according to post type.
+		 *
+		 * @since 0.1.0
+		 * @param string $post_type The post type of the post being saved.
 		 */
 		public function cartopress_add_geocoder( $post_type ) {
 				$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -46,10 +53,14 @@ if (!class_exists('geocoder_metabox')) {
 				} else {
 					$media = null;
 				}
-				$post_types = array($posts, $pages, $media);     //limit meta box to certain post types
+				
+				//limit meta box to certain post types
+				$post_types = array($posts, $pages, $media);
 				if ( in_array( $post_type, $post_types )) {
 					
 					add_meta_box('cartopress_locator', __( 'CartoPress Geolocator', 'cartopress_textdomain' ), array( $this, 'cartopress_geocoder_content' ), $post_type, 'normal', 'high' );
+					
+					//enqueue dependencies only if geolocator is present
 					function load_geocoder_dependencies($location) {
 					   if( 'post.php' == $location || 'post-new.php' == $location ) {
 					     wp_enqueue_script('jquery2');
@@ -62,59 +73,56 @@ if (!class_exists('geocoder_metabox')) {
 					     wp_enqueue_style(array('cartopress-geocode-styles', 'cartopress-leaflet-styles'));
 					  }
 					}
+					
 					add_action( 'admin_enqueue_scripts', 'load_geocoder_dependencies' );
 					wp_localize_script('cartopress-geocode-helper-script','cartopress_geocoder_ajax', array(
 							"cartopress_delete_row_nonce" => wp_create_nonce('cartopress_delete_row_nonce'),
 							"cartopress_resetrecord_nonce" => wp_create_nonce('cartopress_resetrecord_nonce'),
 						)
 					);
+					
 				} // end if
+				
 		} // end cartopress_add_geocoder
 		
 		
 		
 		/**
-		 * Save the meta when the post is saved.
+		 * Save the geodata when the post is saved.
 		 *
+		 * @since 0.1.0
 		 * @param int $post_id The ID of the post being saved.
 		 */
-		public static function save( $post_id ) {
+		public static function save_geodata( $post_id ) {
 	
-			/*
-			 * We need to verify this came from the our screen and with proper authorization,
-			 * because save_post can be triggered at other times.
-			 */
-			
-			// Check if our nonce is set.
-			if ( ! isset( $_POST['cartopress_inner_custom_box_nonce'] ) )
+			// Check if the nonce is set.
+			if ( ! isset( $_POST['cartopress_inner_custom_box_nonce'] ) ) {
 				return $post_id;
-
-			$nonce = $_POST['cartopress_inner_custom_box_nonce'];
-
-			// Verify that the nonce is valid.
-			if ( ! wp_verify_nonce( $nonce, 'cartopress_inner_custom_box' ) )
-				return $post_id;
-
-			// If this is an autosave, our form has not been submitted,
-					//     so we don't want to do anything.
-			if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
-				return $post_id;
-
-			// Check the user's permissions.
-			if ( 'page' == $_POST['post_type'] ) {
-
-				if ( ! current_user_can( 'edit_page', $post_id ) )
-					return $post_id;
-	
-			} else {
-
-				if ( ! current_user_can( 'edit_post', $post_id ) )
-					return $post_id;
 			}
 
-			/* OK, its safe for us to save the data now. */
+			// Verify that the nonce is valid.
+			$nonce = $_POST['cartopress_inner_custom_box_nonce'];
+			if ( ! wp_verify_nonce( $nonce, 'cartopress_inner_custom_box' ) ) {
+				return $post_id;
+			}
+			
+			// If this is an autosave, the form has not been submitted so we don't want to do anything.
+			if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+				return $post_id;
+			}
+			
+			// Check the user's permissions.
+			if ( 'page' == $_POST['post_type'] ) {
+				if ( ! current_user_can( 'edit_page', $post_id ) ) {
+					return $post_id;
+				}
+			} else {
+				if ( ! current_user_can( 'edit_post', $post_id ) ) {
+					return $post_id;
+				}
+			} //end if
 
-			// Sanitize the user input.
+			// Sanitize the geo data.
 			$geodata = array(
 				'cp_geo_displayname'=>$_POST['cp_geo_displayname'],
 				'cp_geo_lat'=>$_POST['cp_geo_lat'],
@@ -133,15 +141,17 @@ if (!class_exists('geocoder_metabox')) {
 				$field = sanitize_text_field( $field );
 			}
 			
+			// Sanitize the description field
 			$description = sanitize_text_field( $_POST['cp_post_description'] );
+			
+			// Set the "Do Not Sync" status
 			if ($_POST['cpdb-donotsync'] == 1) {
 				$donotsync = 1;
 			} else {
 				$donotsync = 0;
 			}
 			
-			
-			// Update the meta fields.
+			// Update the postmeta fields.
 			if (count(array_unique($geodata)) === 1 && end($geodata) === '') { // update geodata only if one of the fields is not empty
 				update_post_meta( $post_id, '_cp_post_description', $description );
 			} else {
@@ -154,21 +164,12 @@ if (!class_exists('geocoder_metabox')) {
 				}
 			}
 			
-			if (get_post_meta($post_id, '_cp_post_donotsync', true) == 1) {
-				return;
-			} else {
-				if (get_post_status( $post_id ) != 'publish') {
-					cartopress_sync::cartodb_delete($post_id);
-				} else {
-					cartopress_sync::cartodb_sync($post_id);
-				} // end if
-			} // end if
-			
 		} //end save function
 		
 		/**
-		 * Render Meta Box content.
+		 * Display the Geolocator.
 		 *
+		 * @since 0.1.0
 		 * @param WP_Post $post The post object.
 		 */
 		public function cartopress_geocoder_content( $post ) {
@@ -177,13 +178,13 @@ if (!class_exists('geocoder_metabox')) {
 			wp_nonce_field( 'cartopress_inner_custom_box', 'cartopress_inner_custom_box_nonce' );
 
 			// Use get_post_meta to retrieve an existing value from the database.
-			$geodata = get_post_meta( $post->ID, '_cp_post_geo_data', true );
 			$donotsync_value = get_post_meta( $post->ID, '_cp_post_donotsync', true );
 			
 			//redefine $vars if cartodb values are true
 			$cp_post = cartopress_sync::cartodb_select($post->ID);
-			$cp_values = $cp_post[0]->rows[0];
+			
 			if ($cp_post[1] == true && $donotsync_value != 1) {
+				$cp_values = $cp_post[0]->rows[0];
 				$cartodb_id = $cp_values->cartodb_id;
 				$cp_geo_displayname = $cp_values->cp_geo_displayname;
 				$cp_geo_lat = $cp_values->cp_geo_lat;
@@ -198,19 +199,39 @@ if (!class_exists('geocoder_metabox')) {
 				$cp_geo_adminlevel0_country = $cp_values->cp_geo_adminlevel0_country;
 				$cp_post_description = $cp_values->cp_post_description;
 			} else {
-				$cartodb_id = null;
-				$cp_geo_displayname = $geodata['cp_geo_displayname'];
-				$cp_geo_lat = $geodata['cp_geo_lat'];
-				$cp_geo_long = $geodata['cp_geo_long'];
-				$cp_geo_streetnumber = $geodata['cp_geo_streetnumber'];
-				$cp_geo_street = $geodata['cp_geo_street'];
-				$cp_geo_postal = $geodata['cp_geo_postal'];
-				$cp_geo_adminlevel4_vill_neigh = $geodata['cp_geo_adminlevel4_vill_neigh'];
-				$cp_geo_adminlevel3_city = $geodata['cp_geo_adminlevel3_city'];
-				$cp_geo_adminlevel2_county = $geodata['cp_geo_adminlevel2_county'];
-				$cp_geo_adminlevel1_st_prov_region = $geodata['cp_geo_adminlevel1_st_prov_region'];
-				$cp_geo_adminlevel0_country = $geodata['cp_geo_adminlevel0_country'];
-				$cp_post_description = get_post_meta( $post->ID, '_cp_post_description', true );
+				$geodata = get_post_meta( $post->ID, '_cp_post_geo_data', true );
+				
+				if ( $geodata != null) {
+					$cartodb_id = null;
+					$cp_geo_displayname = $geodata['cp_geo_displayname'];
+					$cp_geo_lat = $geodata['cp_geo_lat'];
+					$cp_geo_long = $geodata['cp_geo_long'];
+					$cp_geo_streetnumber = $geodata['cp_geo_streetnumber'];
+					$cp_geo_street = $geodata['cp_geo_street'];
+					$cp_geo_postal = $geodata['cp_geo_postal'];
+					$cp_geo_adminlevel4_vill_neigh = $geodata['cp_geo_adminlevel4_vill_neigh'];
+					$cp_geo_adminlevel3_city = $geodata['cp_geo_adminlevel3_city'];
+					$cp_geo_adminlevel2_county = $geodata['cp_geo_adminlevel2_county'];
+					$cp_geo_adminlevel1_st_prov_region = $geodata['cp_geo_adminlevel1_st_prov_region'];
+					$cp_geo_adminlevel0_country = $geodata['cp_geo_adminlevel0_country'];
+					$cp_post_description = get_post_meta( $post->ID, '_cp_post_description', true );
+				} else {
+					//default values
+					$cartodb_id = null;
+					$cp_geo_displayname = '';
+					$cp_geo_lat = '';
+					$cp_geo_long = '';
+					$cp_geo_streetnumber = '';
+					$cp_geo_street = '';
+					$cp_geo_postal = '';
+					$cp_geo_adminlevel4_vill_neigh = '';
+					$cp_geo_adminlevel3_city = '';
+					$cp_geo_adminlevel2_county = '';
+					$cp_geo_adminlevel1_st_prov_region = '';
+					$cp_geo_adminlevel0_country = '';
+					$cp_post_description = '';
+				}
+				
 			}
 
 			// Display the metabox
@@ -295,11 +316,8 @@ if (!class_exists('geocoder_metabox')) {
 			 </div>';
 		
 		} //end cartopress_geocoder_content
-	
-	
+		
 	} // end class geocoder metabox
-	
-	// add instance  
-	
+		
 } //end if class exists
 ?>

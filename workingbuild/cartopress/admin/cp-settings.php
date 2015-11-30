@@ -17,8 +17,49 @@ if (!class_exists('cartopress_settings')) {
 		 * Start up
 		 */
 		public function __construct() {
+			
+			// add settings menu
+			add_action( 'admin_menu', 'cartopress_add_settings_menu' );
+			function cartopress_add_settings_menu() {
+				$admin_page = add_options_page( 'CartoPress Settings', 'CartoPress', 'manage_options', 'cartopress-settings', array('cartopress_settings', 'cartopress_get_settings_page') );
+				add_action( 'admin_print_styles-' . $admin_page, array('cartopress_settings', 'cartopress_get_admin_styles') );
+				add_action( 'admin_print_scripts-' . $admin_page, array('cartopress_settings', 'cartopress_get_admin_scripts') );
+			} // end cartopress_options_menu
+			
+			// initialize settings
 			add_action( 'admin_init', array( $this, 'initialize_settings' ) );
-		}
+			
+			// add ajax calls
+			add_action('wp_ajax_cartopress_generate_table', array('cartopress_sync','cartopress_generate_table') );
+			add_action('wp_ajax_cartopressify_table', array('cartopress_sync','cartopress_cartopressify_table') );
+			add_action('wp_ajax_cartopress_create_column', array('cartopress_sync','cartopress_create_column') );
+			add_action('wp_ajax_cartopress_delete_column', array('cartopress_sync','cartopress_delete_column') );
+			
+		} //end __construct
+		
+		public static function cartopress_get_settings_page() {
+			if ( !current_user_can( 'manage_options' ) )  {
+				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+			}
+			require( cartopress_admin_dir . 'cp-options.php' );
+		} // end cartopress_options
+		
+		public static function cartopress_get_admin_styles() {
+		   wp_enqueue_style( 'cartopress' );
+		   wp_enqueue_style ( 'google_fonts');
+	    } // end cartopress_admin_styles
+	    
+	    public static function cartopress_get_admin_scripts() {
+	    	wp_enqueue_script('admin-script');
+			wp_localize_script('admin-script','cartopress_admin_ajax', array(
+					"cartopress_admin_nonce" => wp_create_nonce('cartopress_admin_nonce'),
+					"cartopress_cartopressify_nonce" => wp_create_nonce('cartopress_cartopressify_nonce'),
+					"cartopress_create_column_nonce" => wp_create_nonce('cartopress_create_column_nonce'),
+					"cartopress_delete_column_nonce" => wp_create_nonce('cartopress_delete_column_nonce')
+				)
+			);
+	    } //end cartopress_admin_scripts
+		    
 	
 		/**
 		 * Register and add settings
@@ -31,11 +72,78 @@ if (!class_exists('cartopress_settings')) {
 			add_settings_section( 'cartopress_sync_info', null, array($this, 'cartopress_sync_info'), 'cartopress-settings-group' );
 			add_settings_section( 'cartopress_sync_customfields', null, array($this, 'cartopress_sync_customfields'), 'cartopress-customfields-group' );
 		}
+		
+		/**
+		* Update custom field settings
+		* @since 0.1.0
+		* 
+		* @param $custom_field, the custom field name; $cartodb_column, the corresponding CartoDB column name; $action, string for action to perform ('set' or 'unset')
+		* returns true
+		*/
+		public static function update_customfield_settings($custom_field, $cartodb_column, $action) {
+			$option = get_option('cartopress_custom_fields');
+			if ('set' === $action) {
+		    	$option[$cartodb_column] = array('sync'=>1,'custom_field'=>$custom_field,'cartodb_column'=>$cartodb_column);
+			} elseif ('unset' === $action) {
+				unset($option[$cartodb_column]);
+			}
+		    update_option('cartopress_custom_fields', $option);
+			return true;
+		}
+		
+		/**
+		* helper method to create column names
+		* @since 0.1.0
+		* 
+		* @param $string, the string to convert to column name
+		* returns string with spaces and special chars replaced with underscores
+		*/
+		public static function create_column_name($string) {
+		    $string = strtolower($string);
+		    $string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
+		    $string = preg_replace("/[\s-]+/", " ", $string);
+		    //Convert whitespaces and underscore to dash
+		    $string = preg_replace("/[\s_]/", "_", $string);
+		    return $string;
+		} //end create_column_name()
+		
+		// generate array of all non-hidden metakeys
+		public static function generate_metakeys(){
+		    global $wpdb;
+		    $query = "
+		        SELECT DISTINCT($wpdb->postmeta.meta_key) 
+		        FROM $wpdb->posts 
+		        LEFT JOIN $wpdb->postmeta 
+		        ON $wpdb->posts.ID = $wpdb->postmeta.post_id 
+		        WHERE $wpdb->postmeta.meta_key != '' 
+		        AND $wpdb->postmeta.meta_key NOT RegExp '(^[_0-9].+$)' 
+		        AND $wpdb->postmeta.meta_key NOT RegExp '(^[0-9]+$)'
+		        ORDER BY $wpdb->postmeta.meta_key ASC
+		    ";
+		    $meta_keys = $wpdb->get_col($query);
+		    //set_transient('all_meta_keys', $meta_keys, 60*60*24); (maybe use this in the future)
+		    return $meta_keys;
+		} //end generate_metakeys()
+		
+		//get metakeys
+		public static function get_metakey_menu() {
+			$meta_keys = cartopress_settings::generate_metakeys();
+			if ($meta_keys == null) {
+				echo '<option value="" disabled>You have no custom fields</option>';
+			} else {
+				foreach ($meta_keys as $value) {
+					$column = cartopress_settings::create_column_name($value);
+					echo '<option value="cp_post_customfield_' . $column . '" id="cp_post_customfield_' . $column . '">' . $value . '</option>
+					';
+				}
+		    } // end if else
+		} // end get_metakeys()
 	
 		/**
 		 * Sanitize each setting field as needed
-		 *
+		 * @since 0.1.0
 		 * @param array $input Contains all settings fields as array keys
+		 * @return mixed - returns sanitized inputs
 		 */
 		public function sanitize( $input ) {
 			$new_input = array();
@@ -197,31 +305,8 @@ if (!class_exists('cartopress_settings')) {
 				<img src="' . admin_url('/images/yes.png') . '" id="cpbd_tableconnect_connected" /><input type="text" name="cartopress_admin_options[cartopress_cartodb_tablename]" id="cartopress_cartodb_tablename" placeholder="Enter A Unique Name for Your CartoDB Table" value="%s" />', $str
 			);
 		}
-		
-		// generate array of all non-hidden metakeys
-		public function generate_metakeys(){
-		    global $wpdb;
-		    $query = "
-		        SELECT DISTINCT($wpdb->postmeta.meta_key) 
-		        FROM $wpdb->posts 
-		        LEFT JOIN $wpdb->postmeta 
-		        ON $wpdb->posts.ID = $wpdb->postmeta.post_id 
-		        WHERE $wpdb->postmeta.meta_key != '' 
-		        AND $wpdb->postmeta.meta_key NOT RegExp '(^[_0-9].+$)' 
-		        AND $wpdb->postmeta.meta_key NOT RegExp '(^[0-9]+$)'
-		        ORDER BY $wpdb->postmeta.meta_key ASC
-		    ";
-		    $meta_keys = $wpdb->get_col($wpdb->prepare($query));
-		    //set_transient('all_meta_keys', $meta_keys, 60*60*24); (maybe use this in the future)
-		    return $meta_keys;
-		} //end generate_metakeys()
-
 	
 	}
-	
-	
-	if( is_admin() )
-		$cartopress_settings = new cartopress_settings();
     
 } //end if class exists
 ?>
