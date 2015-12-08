@@ -96,6 +96,7 @@ function get_cp_description($post_id, $esc = true) {
 		if (!empty(get_the_excerpt($post_id))) {
 			$cp_post_description = get_the_excerpt($post_id);
 		} else {
+			$cp_post_content = get_cp_postcontent($post_id, $esc = true);
 			$cp_post_description = wp_trim_words( $cp_post_content, 55, '...' );
 		} //end if
 	} //end if
@@ -131,9 +132,19 @@ function get_cp_categories($post_id, $esc = true) {
 		$cp_post_categories = null;
 	} //end if
 	if ($esc == false) {
-		return $cp_post_categories;
+		if (!empty($cp_post_categories)) {
+			return $cp_post_categories;
+		}
+		else {
+			return null;
+		}
 	} else {
-		return esc_html($cp_post_categories);
+		if (!empty($cp_post_categories)) {
+			return esc_html($cp_post_categories);
+		}
+		else {
+			return null;
+		}
 	}
 }			
 
@@ -160,9 +171,19 @@ function get_cp_tags($post_id, $esc = true) {
 		$cp_post_tags = null;
 	} //end if
 	if ($esc == false) {
-		return $cp_post_tags;
+		if (!empty($cp_post_tags)) {
+			return $cp_post_tags;
+		}
+		else {
+			return null;
+		}
 	} else {
-		return esc_html($cp_post_tags);
+		if (!empty($cp_post_tags)) {
+			return esc_html($cp_post_tags);
+		}
+		else {
+			return null;
+		}
 	}
 }		
 
@@ -441,6 +462,20 @@ function update_row($post_id) {
 			cartopress_sync::cartodb_sync($post_id);
 		} // end if
 	} // end if
+}
+
+/**
+ * Delete function for attachment post type
+ * @since 0.1.0
+ * @param $post_id The global post id.
+ */	
+function delete_attachment($post_id) {
+	$post_type = get_post_type($post_id);
+	if ('attachment' === $post_type) {
+		cartopress_sync::cartodb_delete($post_id);
+	} else {
+		return;
+	}
 }
 
 ?>

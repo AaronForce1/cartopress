@@ -73,7 +73,8 @@ if (!class_exists('cartopress')) {
 			} // end get_admin_scripts
 				
 			add_action( 'save_post', 'update_row', 2000);
-			
+			add_action( 'edit_attachment', 'update_row', 2000);
+			add_action( 'delete_post', 'delete_attachment' );
 
 		} // initialize()
 		

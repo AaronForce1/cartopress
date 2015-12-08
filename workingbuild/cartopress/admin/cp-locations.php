@@ -145,7 +145,7 @@ if (!class_exists('geocoder_metabox')) {
 			$description = sanitize_text_field( $_POST['cp_post_description'] );
 			
 			// Set the "Do Not Sync" status
-			if ($_POST['cpdb-donotsync'] == 1) {
+			if (isset($_POST['cpdb-donotsync']) && $_POST['cpdb-donotsync'] == 1) {
 				$donotsync = 1;
 			} else {
 				$donotsync = 0;
@@ -163,6 +163,7 @@ if (!class_exists('geocoder_metabox')) {
 					delete_post_meta($post_id, '_cp_post_donotsync');
 				}
 			}
+
 			
 		} //end save function
 		
