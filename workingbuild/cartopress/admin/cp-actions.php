@@ -93,11 +93,21 @@ function get_cp_description($post_id, $esc = true) {
 	if (!empty(get_post_meta( $post_id, '_cp_post_description', true ))) {
 		$cp_post_description = get_post_meta( $post_id, '_cp_post_description', true );
 	} else {
-		if (!empty(get_the_excerpt($post_id))) {
-			$cp_post_description = get_the_excerpt($post_id);
+		$post_type= get_post_type($post_id);
+		if ('attachment' === $post_type) {
+			if (!empty(get_post_field('post_excerpt', $post_id))) {
+				$cp_post_description = get_post_field('post_excerpt', $post_id);
+			} else {
+				$cp_post_content = get_cp_postcontent($post_id, $esc = true);
+				$cp_post_description = wp_trim_words( $cp_post_content, 55, '...' );
+			}
 		} else {
-			$cp_post_content = get_cp_postcontent($post_id, $esc = true);
-			$cp_post_description = wp_trim_words( $cp_post_content, 55, '...' );
+			if (!empty(get_the_excerpt($post_id))) {
+				$cp_post_description = get_the_excerpt($post_id);
+			} else {
+				$cp_post_content = get_cp_postcontent($post_id, $esc = true);
+				$cp_post_description = wp_trim_words( $cp_post_content, 55, '...' );
+			} //end if
 		} //end if
 	} //end if
 	if ($esc == false) {
