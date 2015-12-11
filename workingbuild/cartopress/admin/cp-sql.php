@@ -283,7 +283,6 @@ if (!class_exists('cartopress_sync')) {
 					$sql_update = trim($sql_update, ' ');
 					$sql_update = trim($sql_update, ',');
 					$sql_update .= ' WHERE cp_post_id = ' . $post_id;
-					
 					cartopress_sync::update_cartodb($sql_update, cartopress_apikey, cartopress_username, true);
 				}
 			} //end if

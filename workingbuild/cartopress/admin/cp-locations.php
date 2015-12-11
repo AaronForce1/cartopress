@@ -38,17 +38,17 @@ if (!class_exists('geocoder_metabox')) {
 		 */
 		public function cartopress_add_geocoder( $post_type ) {
 				$cpoptions = get_option( 'cartopress_admin_options', '' );
-				if ($cpoptions['cartopress_collect_posts'] == 1) {
+				if (isset($cpoptions['cartopress_collect_posts']) && $cpoptions['cartopress_collect_posts'] == 1) {
 					$posts = 'post';
 				} else {
 					$posts = null;
 				}
-				if ($cpoptions['cartopress_collect_pages'] == 1) {
+				if (isset($cpoptions['cartopress_collect_pages']) && $cpoptions['cartopress_collect_pages'] == 1) {
 					$pages = 'page';
 				} else {
 					$pages = null;
 				}
-				if ($cpoptions['cartopress_collect_media'] == 1) {
+				if (isset($cpoptions['cartopress_collect_media']) && $cpoptions['cartopress_collect_media'] == 1) {
 					$media = 'attachment';
 				} else {
 					$media = null;
@@ -180,6 +180,7 @@ if (!class_exists('geocoder_metabox')) {
 
 			// Use get_post_meta to retrieve an existing value from the database.
 			$donotsync_value = get_post_meta( $post->ID, '_cp_post_donotsync', true );
+			$geodata = get_post_meta( $post->ID, '_cp_post_geo_data', true );
 			
 			//redefine $vars if cartodb values are true
 			$cp_post = cartopress_sync::cartodb_select($post->ID);
@@ -200,8 +201,6 @@ if (!class_exists('geocoder_metabox')) {
 				$cp_geo_adminlevel0_country = $cp_values->cp_geo_adminlevel0_country;
 				$cp_post_description = $cp_values->cp_post_description;
 			} else {
-				$geodata = get_post_meta( $post->ID, '_cp_post_geo_data', true );
-				
 				if ( $geodata != null) {
 					$cartodb_id = null;
 					$cp_geo_displayname = $geodata['cp_geo_displayname'];
@@ -234,7 +233,6 @@ if (!class_exists('geocoder_metabox')) {
 				}
 				
 			}
-
 			// Display the metabox
 			echo '<p class="howto">Use the search bar to find lookup an address. Select the correct address from the results, or fill in the location fields manually. Note: Latitude and longitude cooridnates are required.</p>';
 			echo '<div id="cpdb-metabox-wrapper">

@@ -93,22 +93,12 @@ function get_cp_description($post_id, $esc = true) {
 	if (!empty(get_post_meta( $post_id, '_cp_post_description', true ))) {
 		$cp_post_description = get_post_meta( $post_id, '_cp_post_description', true );
 	} else {
-		$post_type= get_post_type($post_id);
-		if ('attachment' === $post_type) {
-			if (!empty(get_post_field('post_excerpt', $post_id))) {
-				$cp_post_description = get_post_field('post_excerpt', $post_id);
-			} else {
-				$cp_post_content = get_cp_postcontent($post_id, $esc = true);
-				$cp_post_description = wp_trim_words( $cp_post_content, 55, '...' );
-			}
+		if (!empty(get_post_field('post_excerpt', $post_id))) {
+			$cp_post_description = get_post_field('post_excerpt', $post_id);
 		} else {
-			if (!empty(get_the_excerpt($post_id))) {
-				$cp_post_description = get_the_excerpt($post_id);
-			} else {
-				$cp_post_content = get_cp_postcontent($post_id, $esc = true);
-				$cp_post_description = wp_trim_words( $cp_post_content, 55, '...' );
-			} //end if
-		} //end if
+			$cp_post_content = get_cp_postcontent($post_id, $esc = true);
+			$cp_post_description = wp_trim_words( $cp_post_content, 55, '...' );
+		}
 	} //end if
 	if ($esc == false) {
 		return $cp_post_description;
@@ -127,7 +117,7 @@ function get_cp_description($post_id, $esc = true) {
 function get_cp_categories($post_id, $esc = true) {
 	//defines objects based on user settings
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
-	if ($cpoptions['cartopress_sync_categories'] == 1) {
+	if (isset($cpoptions['cartopress_sync_categories']) && $cpoptions['cartopress_sync_categories'] == 1) {
 		$cats = array();
 		foreach(wp_get_post_categories($post_id) as $c) {
 			$cat = get_category($c);
@@ -167,7 +157,7 @@ function get_cp_categories($post_id, $esc = true) {
  */				
 function get_cp_tags($post_id, $esc = true) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
-	if ($cpoptions['cartopress_sync_tags'] == 1) {
+	if (isset($cpoptions['cartopress_sync_tags']) && $cpoptions['cartopress_sync_tags'] == 1) {
 		$tags = array();
 		foreach(wp_get_post_tags($post_id) as $tag) {
 			array_push($tags,$tag->name);
@@ -205,7 +195,7 @@ function get_cp_tags($post_id, $esc = true) {
  */				
 function get_cp_featuredimageurl($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
-	if ($cpoptions['cartopress_sync_featuredimage'] == 1) {
+	if (isset($cpoptions['cartopress_sync_featuredimage']) && $cpoptions['cartopress_sync_featuredimage'] == 1) {
 		$post_type = get_post_type($post_id);
 		if ('attachment' === $post_type) {
 			$cp_post_featuredimage_url = wp_get_attachment_url($post_id);
@@ -231,7 +221,7 @@ function get_cp_featuredimageurl($post_id) {
  */			
 function get_cp_postformat($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
-	if ($cpoptions['cartopress_sync_format'] == 1) {
+	if (isset($cpoptions['cartopress_sync_format']) && $cpoptions['cartopress_sync_format'] == 1) {
 		$cp_post_format = get_post_format( $post_id );
 		if ( false === $cp_post_format ) {
 			$cp_post_format = 'standard';
@@ -250,7 +240,7 @@ function get_cp_postformat($post_id) {
  */				
 function get_cp_author($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
-	if ($cpoptions['cartopress_sync_author'] == 1) {
+	if (isset($cpoptions['cartopress_sync_author']) && $cpoptions['cartopress_sync_author'] == 1) {
 		$the_author_id = get_post_field( 'post_author', $post_id );
 		$cp_post_author = get_the_author_meta( 'display_name', $the_author_id );
 	} else {
@@ -267,15 +257,19 @@ function get_cp_author($post_id) {
  */			
 function get_cp_customfields($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
-	if ($cpoptions['cartopress_sync_customfields'] == 1) {
+	if (isset($cpoptions['cartopress_sync_customfields']) && $cpoptions['cartopress_sync_customfields'] == 1) {
 		$customfield_options = get_option('cartopress_custom_fields');
 		$fields = array();
-		foreach ($customfield_options as $key=>$value) {
-			if ($value['sync'] == 1) {
-				$adds = array($key => get_post_meta($post_id, $value['custom_field'], true));
-				$fields = array_merge($fields, $adds);
+		if (!empty($customfield_options)) {
+			foreach ($customfield_options as $key=>$value) {
+				if ($value['sync'] == 1) {
+					$adds = array($key => get_post_meta($post_id, $value['custom_field'], true));
+					$fields = array_merge($fields, $adds);
+				}
 			}
 		}
+	} else {
+		$fields = null;
 	}
 	return $fields;
 }			
@@ -447,8 +441,11 @@ function get_cp_sync_fields($post_id) {
 		);
 	
 	// merge in custom fields
-	$fields = get_cp_customfields($post_id);
-	$args = array_merge($args, $fields);
+	$cpoptions = get_option( 'cartopress_admin_options', '' );
+	if (isset($cpoptions['cartopress_sync_customfields']) && $cpoptions['cartopress_sync_customfields'] == 1) {
+		$fields = get_cp_customfields($post_id);
+		$args = array_merge($args, $fields);
+	}
 	
 	//return
 	return $args;
