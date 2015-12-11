@@ -44,8 +44,8 @@ if (!class_exists('cartopress')) {
 			cartopress::add_geolocator();
 			cartopress::add_bulkactions();
 			
-			require( cartopress_admin_dir . 'cp-sql.php' );
-			require( cartopress_admin_dir . 'cp-actions.php' );
+			require( CARTOPRESS_ADMIN_DIR . 'cp-sql.php' );
+			require( CARTOPRESS_ADMIN_DIR . 'cp-actions.php' );
 			
 			add_action( 'admin_init', 'register_admin_styles');
 			add_action( 'admin_init', 'register_admin_scripts');
@@ -54,11 +54,11 @@ if (!class_exists('cartopress')) {
 				// add google fonts
 				$query_args = array( 'family' => 'Montserrat:400,700', 'subset' => 'latin,latin-ext' ); 
 				wp_register_style( 'google_fonts', add_query_arg( $query_args, "//fonts.googleapis.com/css" ), array(), null );
-				wp_register_style( 'cartopress', cartopress_url . '/admin/css/cartopress-settings.css', array(), cartopress_vers );
-				wp_register_style( 'cartopress-geocode-styles', cartopress_url . '/admin/css/geocoder-styles.css', array(), cartopress_vers );
+				wp_register_style( 'cartopress', CARTOPRESS_URL . '/admin/css/cartopress-settings.css', array(), CARTOPRESS_VERS );
+				wp_register_style( 'cartopress-geocode-styles', CARTOPRESS_URL . '/admin/css/geocoder-styles.css', array(), CARTOPRESS_VERS );
 				wp_register_style( 'leaflet', 'http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css');
 				wp_register_style( 'ionicons', 'http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css');
-				wp_register_style( 'cartopress-leaflet-styles', cartopress_url . '/admin/css/leaflet-awesome-markers.css', array(), cartopress_vers );
+				wp_register_style( 'cartopress-leaflet-styles', CARTOPRESS_URL . '/admin/css/leaflet-awesome-markers.css', array(), CARTOPRESS_VERS );
 
 			} // end get_admin_styles
 			
@@ -66,15 +66,15 @@ if (!class_exists('cartopress')) {
 				wp_register_script('jquery2.1.4', 'https://code.jquery.com/jquery-2.1.4.min.js');
 				wp_register_script('leaflet', 'http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js');
 				wp_register_script('cartodb', 'http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js');
-				wp_register_script('ionicons', cartopress_url . '/admin/js/leaflet.awesome-markers.min.js', array(), cartopress_vers);
-				wp_register_script('admin-script', cartopress_url . '/admin/js/admin.js', array('jquery'), cartopress_vers );
-				wp_register_script('cartopress-geocode-script', cartopress_url . '/admin/js/geocoder.js', array('jquery2.1.4','leaflet'), cartopress_vers );
-				wp_register_script('cartopress-geocode-helper-script', cartopress_url . '/admin/js/geocoder-helper.js', array('jquery'), cartopress_vers );
+				wp_register_script('ionicons', CARTOPRESS_URL . '/admin/js/leaflet.awesome-markers.min.js', array(), CARTOPRESS_VERS);
+				wp_register_script('admin-script', CARTOPRESS_URL . '/admin/js/admin.js', array('jquery'), CARTOPRESS_VERS );
+				wp_register_script('cartopress-geocode-script', CARTOPRESS_URL . '/admin/js/geocoder.js', array('jquery2.1.4','leaflet'), CARTOPRESS_VERS );
+				wp_register_script('cartopress-geocode-helper-script', CARTOPRESS_URL . '/admin/js/geocoder-helper.js', array('jquery'), CARTOPRESS_VERS );
 			} // end get_admin_scripts
 				
-			add_action( 'save_post', 'update_row', 2000);
-			add_action( 'edit_attachment', 'update_row', 2000);
-			add_action( 'delete_post', 'delete_attachment' );
+			add_action( 'save_post', 'cartopress_update_row', 2000);
+			add_action( 'edit_attachment', 'cartopress_update_row', 2000);
+			add_action( 'delete_post', 'cartopress_delete_attachment' );
 
 		} // initialize()
 		
@@ -83,22 +83,22 @@ if (!class_exists('cartopress')) {
 		* @since 0.1.0
 		*/
 		private static function load_constants() {
-			define('cartopress_plugin_name', plugin_basename(__FILE__));
-			define('cartopress_dir_path', dirname( __FILE__ ));
-			define('cartopress_admin_dir', cartopress_dir_path . '/admin/' );
-			define('cartopress_url', trim( plugin_dir_url( __FILE__ ), '/' ) );
-			define('cartopress_dir', dirname( cartopress_plugin_name ) );
-			define('cartopress_vers', '0.1.0');
+			define('CARTOPRESS_PLUGIN_NAME', plugin_basename(__FILE__));
+			define('CARTOPRESS_DIR_PATH', dirname( __FILE__ ));
+			define('CARTOPRESS_ADMIN_DIR', CARTOPRESS_DIR_PATH . '/admin/' );
+			define('CARTOPRESS_URL', trim( plugin_dir_url( __FILE__ ), '/' ) );
+			define('CARTOPRESS_DIR', dirname( CARTOPRESS_PLUGIN_NAME ) );
+			define('CARTOPRESS_VERS', '0.1.0');
 			
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
 			if (isset($cpoptions['cartopress_cartodb_apikey'])) {
-				define('cartopress_apikey', $cpoptions['cartopress_cartodb_apikey'] );
+				define('CARTOPRESS_APIKEY', $cpoptions['cartopress_cartodb_apikey'] );
 			}
 			if (isset($cpoptions['cartopress_cartodb_username'])) {
-				define('cartopress_username', $cpoptions['cartopress_cartodb_username'] );
+				define('CARTOPRESS_USERNAME', $cpoptions['cartopress_cartodb_username'] );
 			}
 			if (isset($cpoptions['cartopress_cartodb_tablename'])) {
-				define('cartopress_table', $cpoptions['cartopress_cartodb_tablename'] );
+				define('CARTOPRESS_TABLE', $cpoptions['cartopress_cartodb_tablename'] );
 			}
 		} // end load_constants()
 		
@@ -110,7 +110,7 @@ if (!class_exists('cartopress')) {
 			
 			if (is_admin()) {
 				
-				require( cartopress_admin_dir . 'cp-settings.php' );
+				require( CARTOPRESS_ADMIN_DIR . 'cp-settings.php' );
 				$cartopress_settings = new cartopress_settings();
 				
 				 // add settings link
@@ -119,7 +119,7 @@ if (!class_exists('cartopress')) {
 				  array_unshift($links, $settings_link); 
 				  return $links; 
 				} //end cartopress_settings_link
-				$plugin = cartopress_plugin_name; 
+				$plugin = CARTOPRESS_PLUGIN_NAME; 
 				add_filter("plugin_action_links_$plugin", 'cartopress_settings_link' );
 		
 			} // end is admin()
@@ -136,7 +136,7 @@ if (!class_exists('cartopress')) {
 			if (is_admin()) {
 					
 				// add the geolocator metabox
-				require( cartopress_admin_dir . 'cp-locations.php' );
+				require( CARTOPRESS_ADMIN_DIR . 'cp-locations.php' );
 				
 				function get_cartopress_geolocator() {
 					$geocoder_metabox = new geocoder_metabox();
@@ -160,7 +160,7 @@ if (!class_exists('cartopress')) {
 		private static function add_bulkactions() {
 		
 			if (is_admin()) {
-				require( cartopress_admin_dir . 'cp-bulkactions.php' );
+				require( CARTOPRESS_ADMIN_DIR . 'cp-bulkactions.php' );
 				new cartopress_bulkactions();
 			}
 		

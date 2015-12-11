@@ -12,7 +12,7 @@
 ?>
 <div class="wrap">
 	<header>
-		<?php echo '<img src="' . cartopress_url . '/admin/images/cartopress-logo.png" id="cartopress-logo" />' ?>
+		<?php echo '<img src="' . CARTOPRESS_URL . '/admin/images/cartopress-logo.png" id="cartopress-logo" />' ?>
 	</header>
 	<div id="content">
 		<h1 id="title">CartoPress — A CartoDB Client for WordPress</h1>
@@ -38,8 +38,8 @@
 				<p>Note: Checking these boxes will allow CartoPress to add the geolocator widget to the post, page and media edit screens.</p> 
 				<?php do_settings_fields( 'cartopress-settings', 'cartopress_collect_info' ); ?>
 	        	<h4>Data Sync Options</h4>
-				<p>CartoPress will automatically sync the post title, post content, post description, permalink, post date, and all geo data to your CartoDB account. You may also select from the following additional options. Checking these boxes will add these features to sync so they can be featured and styled in the CartoDB infobox.</p>
-				<p><em>Note: Unchecking will not remove existing data from your CartoDB table, any new data, however, will not sync.</em> </p> 
+				<p>CartoPress will automatically sync the Post Title, Summary Description, Permalink, Post Date, and all Geo Data to your CartoDB account. You may also select from the following additional options. Checking these boxes will add these features to sync so they can be featured and styled in the CartoDB infobox.</p>
+				<p><em>Note: Unchecking will not remove existing data from your CartoDB table. Any new data, however, will not sync.</em> </p> 
 				<?php do_settings_fields( 'cartopress-settings', 'cartopress_sync_info' ); ?>
 	        	<div id="cpdb-customfields-select">
 					<h5>Custom Field Selection</h5>

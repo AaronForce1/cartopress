@@ -123,7 +123,7 @@ pro.mapping = new Object;
 		.queue(function(){
 			switch (assets.AMap) {
 				case false:
-					if (type == "init") {geo = {lat : 38, lon : -08.10546875, zoom : 2};}
+					if (type == "init") { if ($('#cp_geo_lat').val().length !== 0 && $('#cp_geo_long').val().length !== 0) { geo = { lat : $('#cp_geo_lat').val(), lon : $('#cp_geo_long').val(), zoom : 15 }; } else { geo = { lat : 38, lon : -08.10546875, zoom : 2 }; } }
 					else {}
 					createMap();
 					break;
@@ -196,6 +196,9 @@ pro.mapping = new Object;
 				pro.mapping.bind(type, geo);
 				break;
 			case "init":
+				if ($('#cp_geo_lat').val().length !== 0 && $('#cp_geo_long').val().length !== 0) {
+					marker.init = L.marker([geo.lat, geo.lon], {icon:assets.primaryMARK}).addTo(assets.map);
+				}
 				break;
 			default:
 				// Display ERROR

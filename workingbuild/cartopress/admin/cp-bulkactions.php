@@ -18,7 +18,7 @@ if (!class_exists('cartopress_bulkactions')) {
 			
 			if(is_admin()) {
 				// admin actions/filters
-				require( cartopress_admin_dir . 'cp-sql.php' );
+				require( CARTOPRESS_ADMIN_DIR . 'cp-sql.php' );
 				
 				//add_action('admin_footer-edit.php', array(&$this, 'custom_bulk_admin_footer'));
 				add_action('admin_footer', array(&$this, 'custom_bulk_admin_footer'));
@@ -96,8 +96,8 @@ if (!class_exists('cartopress_bulkactions')) {
 						// if we set up user permissions/capabilities, the code might look like:
 						//if ( !current_user_can($post_type_object->cap->export_post, $post_id) )
 						//	wp_die( __('You are not allowed to export this post.') );
-						$sql_distinct = 'SELECT DISTINCT cp_post_id FROM ' . cartopress_table;
-						$cartopress_ids = cartopress_sync::update_cartodb($sql_distinct, cartopress_apikey, cartopress_username, true);
+						$sql_distinct = 'SELECT DISTINCT cp_post_id FROM ' . CARTOPRESS_TABLE;
+						$cartopress_ids = cartopress_sync::update_cartodb($sql_distinct, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
 						$cartopress_ids = $cartopress_ids->rows;
 						$temp = array();
 						foreach ($cartopress_ids as $key=>$value) {

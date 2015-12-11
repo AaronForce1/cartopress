@@ -135,28 +135,28 @@
 	float: left;
 }
 
-div.row .col-12 {
+div.row .cp-col-12 {
 	width: 100%;
 	float: left;
 }
 
-div.row .col-6 {
+div.row .cp-col-6 {
 	width: 49%;
 	float: left;
 	margin-left: 2%;
 }
 
-div.row .col-4 {
+div.row .cp-col-4 {
 	width: 31.3333%;
 	float: left;
 	margin-left: 3%;
 }
 
-div.row > .col-6:first-child {
+div.row > .cp-col-6:first-child {
 	margin-left: 0;
 }
 
-div.row > .col-4:first-child {
+div.row > .cp-col-4:first-child {
 	margin-left: 0;
 }
 

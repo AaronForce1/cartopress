@@ -12,7 +12,7 @@
  * @param $post_id The global post id.
  * @return int - returns $cp_post_id as integer
  */
-function get_cp_postid($post_id) {
+function get_cartopress_postid($post_id) {
 	$cp_post_id = $post_id;
 	return $cp_post_id;
 }
@@ -23,25 +23,9 @@ function get_cp_postid($post_id) {
  * @param $post_id The global post id.
  * @return string - returns $cp_post_type as string
  */ 
-function get_cp_posttype($post_id) {
+function get_cartopress_posttype($post_id) {
 	$cp_post_type = get_post_type($post_id);
 	return $cp_post_type;
-}
-
-/**
- * Gets CartoPress Post Content
- * @since 0.1.0
- * @param $post_id The global post id.
- * @param bool $esc Return escaped value, default true.
- * @return string - returns $cp_post_content as escaped or unescaped string
- */ 
-function get_cp_postcontent($post_id, $esc = true) {
-	$cp_post_content = get_post_field('post_content', $post_id);
-	if ($esc == false) {
-		return $cp_post_content;
-	} else {
-		return esc_html($cp_post_content);
-	}
 }
 
 /**
@@ -51,7 +35,7 @@ function get_cp_postcontent($post_id, $esc = true) {
  * @param bool $esc Return escaped value, default true.
  * @return string - returns $cp_post_title as escaped or unescaped string
  */
-function get_cp_posttitle($post_id, $esc = true) {
+function get_cartopress_posttitle($post_id, $esc = true) {
 	$cp_post_title = get_the_title($post_id);
 	if ($esc == false) {
 		return $cp_post_title;
@@ -66,7 +50,7 @@ function get_cp_posttitle($post_id, $esc = true) {
  * @param $post_id The global post id.
  * @return string - returns $cp_post_permalink as string
  */
-function get_cp_permalink($post_id) {
+function get_cartopress_permalink($post_id) {
 	$cp_post_permalink = get_permalink($post_id);
 	return $cp_post_permalink;
 }
@@ -77,7 +61,7 @@ function get_cp_permalink($post_id) {
  * @param $post_id The global post id.
  * @return date - returns $cp_post_date as date
  */
-function get_cp_postdate($post_id) {
+function get_cartopress_postdate($post_id) {
 	$cp_post_date = get_the_date(get_option('date_format'), $post_id);
 	return $cp_post_date;
 }			
@@ -89,14 +73,14 @@ function get_cp_postdate($post_id) {
  * @param bool $esc Return escaped value, default true.
  * @return string - returns $cp_post_description as escaped or unescaped string
  */			
-function get_cp_description($post_id, $esc = true) {
+function get_cartopress_description($post_id, $esc = true) {
 	if (!empty(get_post_meta( $post_id, '_cp_post_description', true ))) {
 		$cp_post_description = get_post_meta( $post_id, '_cp_post_description', true );
 	} else {
 		if (!empty(get_post_field('post_excerpt', $post_id))) {
 			$cp_post_description = get_post_field('post_excerpt', $post_id);
 		} else {
-			$cp_post_content = get_cp_postcontent($post_id, $esc = true);
+			$cp_post_content = get_cartopress_postcontent($post_id, $esc = true);
 			$cp_post_description = wp_trim_words( $cp_post_content, 55, '...' );
 		}
 	} //end if
@@ -105,7 +89,38 @@ function get_cp_description($post_id, $esc = true) {
 	} else {
 		return esc_html($cp_post_description);
 	}
-}			
+}
+			
+/**
+ * Gets CartoPress Post Content
+ * @since 0.1.0
+ * @param $post_id The global post id.
+ * @param bool $esc Return escaped value, default true.
+ * @return string - returns $cp_post_content as escaped or unescaped string
+ */ 
+function get_cartopress_postcontent($post_id, $esc = true) {
+	$cpoptions = get_option( 'cartopress_admin_options', '' );
+	if (isset($cpoptions['cartopress_sync_postcontent']) && $cpoptions['cartopress_sync_postcontent'] == 1) {
+		$cp_post_content = get_post_field('post_content', $post_id);
+	} else {
+		$cp_post_content = null;
+	} //end if
+	if ($esc == false) {
+		if (!empty($cp_post_content)) {
+			return $cp_post_content;
+		}
+		else {
+			return null;
+		}
+	} else {
+		if (!empty($cp_post_content)) {
+			return esc_html($cp_post_content);
+		}
+		else {
+			return null;
+		}
+	}
+}
 
 /**
  * Gets CartoPress Post Categories
@@ -114,7 +129,7 @@ function get_cp_description($post_id, $esc = true) {
  * @param bool $esc Return escaped value, default true.
  * @return string - returns $cp_post_categories as escaped or unescaped string of comma separated categories
  */			
-function get_cp_categories($post_id, $esc = true) {
+function get_cartopress_categories($post_id, $esc = true) {
 	//defines objects based on user settings
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
 	if (isset($cpoptions['cartopress_sync_categories']) && $cpoptions['cartopress_sync_categories'] == 1) {
@@ -155,7 +170,7 @@ function get_cp_categories($post_id, $esc = true) {
  * @param bool $esc Return escaped value, default true.
  * @return string - returns $cp_post_tags as escaped or unescaped string of comma separated tags
  */				
-function get_cp_tags($post_id, $esc = true) {
+function get_cartopress_tags($post_id, $esc = true) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
 	if (isset($cpoptions['cartopress_sync_tags']) && $cpoptions['cartopress_sync_tags'] == 1) {
 		$tags = array();
@@ -193,7 +208,7 @@ function get_cp_tags($post_id, $esc = true) {
  * @param $post_id The global post id.
  * @return string - returns $cp_post_featuredimage_url as string
  */				
-function get_cp_featuredimageurl($post_id) {
+function get_cartopress_featuredimageurl($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
 	if (isset($cpoptions['cartopress_sync_featuredimage']) && $cpoptions['cartopress_sync_featuredimage'] == 1) {
 		$post_type = get_post_type($post_id);
@@ -219,7 +234,7 @@ function get_cp_featuredimageurl($post_id) {
  * @param $post_id The global post id.
  * @return string - returns $cp_post_format as string
  */			
-function get_cp_postformat($post_id) {
+function get_cartopress_postformat($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
 	if (isset($cpoptions['cartopress_sync_format']) && $cpoptions['cartopress_sync_format'] == 1) {
 		$cp_post_format = get_post_format( $post_id );
@@ -238,7 +253,7 @@ function get_cp_postformat($post_id) {
  * @param $post_id The global post id.
  * @return string - returns $cp_post_author as string
  */				
-function get_cp_author($post_id) {
+function get_cartopress_author($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
 	if (isset($cpoptions['cartopress_sync_author']) && $cpoptions['cartopress_sync_author'] == 1) {
 		$the_author_id = get_post_field( 'post_author', $post_id );
@@ -255,7 +270,7 @@ function get_cp_author($post_id) {
  * @param $post_id The global post id.
  * @return array - returns array $fields as key/value pairs for each custom fields that is to be synced
  */			
-function get_cp_customfields($post_id) {
+function get_cartopress_customfields($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
 	if (isset($cpoptions['cartopress_sync_customfields']) && $cpoptions['cartopress_sync_customfields'] == 1) {
 		$customfield_options = get_option('cartopress_custom_fields');
@@ -280,7 +295,7 @@ function get_cp_customfields($post_id) {
  * @param $post_id The global post id.
  * @return string
  */				
-function get_cp_displayname($post_id) {
+function get_cartopress_displayname($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_displayname = $geodata['cp_geo_displayname'];
 	return $cp_geo_displayname;
@@ -292,7 +307,7 @@ function get_cp_displayname($post_id) {
  * @param $post_id The global post id.
  * @return string
  */	
-function get_cp_latitude($post_id) {
+function get_cartopress_latitude($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_lat = $geodata['cp_geo_lat'];
 	return $cp_geo_lat;
@@ -304,7 +319,7 @@ function get_cp_latitude($post_id) {
  * @param $post_id The global post id.
  * @return string
  */	
-function get_cp_longitude($post_id) {
+function get_cartopress_longitude($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_long = $geodata['cp_geo_long'];
 	return $cp_geo_long;
@@ -316,7 +331,7 @@ function get_cp_longitude($post_id) {
  * @param $post_id The global post id.
  * @return string
  */	
-function get_cp_streetnumber($post_id) {
+function get_cartopress_streetnumber($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_streetnumber = $geodata['cp_geo_streetnumber'];
 	return $cp_geo_streetnumber;
@@ -328,7 +343,7 @@ function get_cp_streetnumber($post_id) {
  * @param $post_id The global post id.
  * @return string
  */				
-function get_cp_street($post_id) {
+function get_cartopress_street($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_street = $geodata['cp_geo_street'];
 	return $cp_geo_street;
@@ -340,7 +355,7 @@ function get_cp_street($post_id) {
  * @param $post_id The global post id.
  * @return string
  */	
-function get_cp_postcode($post_id) {
+function get_cartopress_postcode($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_postal = $geodata['cp_geo_postal'];
 	return $cp_geo_postal;
@@ -352,7 +367,7 @@ function get_cp_postcode($post_id) {
  * @param $post_id The global post id.
  * @return string
  */	
-function get_cp_adminlevel4_vill_neigh($post_id) {
+function get_cartopress_adminlevel4_vill_neigh($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_adminlevel4_vill_neigh = $geodata['cp_geo_adminlevel4_vill_neigh'];
 	return $cp_geo_adminlevel4_vill_neigh;
@@ -364,7 +379,7 @@ function get_cp_adminlevel4_vill_neigh($post_id) {
  * @param $post_id The global post id.
  * @return string
  */				
-function get_cp_adminlevel3_city($post_id) {
+function get_cartopress_adminlevel3_city($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_adminlevel3_city = $geodata['cp_geo_adminlevel3_city'];
 	return $cp_geo_adminlevel3_city;
@@ -376,7 +391,7 @@ function get_cp_adminlevel3_city($post_id) {
  * @param $post_id The global post id.
  * @return string
  */		
-function get_cp_adminlevel2_county($post_id) {
+function get_cartopress_adminlevel2_county($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_adminlevel2_county = $geodata['cp_geo_adminlevel2_county'];
 	return $cp_geo_adminlevel2_county;
@@ -388,7 +403,7 @@ function get_cp_adminlevel2_county($post_id) {
  * @param $post_id The global post id.
  * @return string
  */		
-function get_cp_adminlevel1_st_prov_region($post_id) {
+function get_cartopress_adminlevel1_st_prov_region($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_adminlevel1_st_prov_region = $geodata['cp_geo_adminlevel1_st_prov_region'];
 	return $cp_geo_adminlevel1_st_prov_region;
@@ -400,7 +415,7 @@ function get_cp_adminlevel1_st_prov_region($post_id) {
  * @param $post_id The global post id.
  * @return string
  */	
-function get_cp_adminlevel0_country($post_id) {
+function get_cartopress_adminlevel0_country($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_adminlevel0_country = $geodata['cp_geo_adminlevel0_country'];
 	return $cp_geo_adminlevel0_country;
@@ -412,38 +427,38 @@ function get_cp_adminlevel0_country($post_id) {
  * @param $post_id The global post id.
  * @return string
  */	
-function get_cp_sync_fields($post_id) {
+function get_cartopress_sync_fields($post_id) {
 	// set up the fields
 	$args = array(
-		'cp_post_id' => get_cp_postid($post_id),
-		'cp_post_title' => get_cp_posttitle($post_id, true),
-		'cp_post_content' => get_cp_postcontent($post_id, true),
-		'cp_post_description' => get_cp_description($post_id, true),
-		'cp_post_date' => get_cp_postdate($post_id),
-		'cp_post_type' => get_cp_posttype($post_id),
-		'cp_post_permalink' => get_cp_permalink($post_id),
-		'cp_post_categories' => get_cp_categories($post_id, true), 
-		'cp_post_tags' => get_cp_tags($post_id, true),
-		'cp_post_featuredimage_url' => get_cp_featuredimageurl($post_id),
-		'cp_post_format' => get_cp_postformat($post_id),
-		'cp_post_author' => get_cp_author($post_id),
-		'cp_geo_displayname' => get_cp_displayname($post_id),
-		'cp_geo_streetnumber' => get_cp_streetnumber($post_id),
-		'cp_geo_street' => get_cp_street($post_id),
-		'cp_geo_postal' => get_cp_postcode($post_id),
-		'cp_geo_adminlevel4_vill_neigh' => get_cp_adminlevel4_vill_neigh($post_id),
-		'cp_geo_adminlevel3_city' => get_cp_adminlevel3_city($post_id),
-		'cp_geo_adminlevel2_county' => get_cp_adminlevel2_county($post_id),
-		'cp_geo_adminlevel1_st_prov_region' => get_cp_adminlevel1_st_prov_region($post_id),
-		'cp_geo_adminlevel0_country' => get_cp_adminlevel0_country($post_id),
-		'cp_geo_lat' => get_cp_latitude($post_id),
-		'cp_geo_long' => get_cp_longitude($post_id)
+		'cp_post_id' => get_cartopress_postid($post_id),
+		'cp_post_title' => get_cartopress_posttitle($post_id, true),
+		'cp_post_content' => get_cartopress_postcontent($post_id, true),
+		'cp_post_description' => get_cartopress_description($post_id, true),
+		'cp_post_date' => get_cartopress_postdate($post_id),
+		'cp_post_type' => get_cartopress_posttype($post_id),
+		'cp_post_permalink' => get_cartopress_permalink($post_id),
+		'cp_post_categories' => get_cartopress_categories($post_id, true), 
+		'cp_post_tags' => get_cartopress_tags($post_id, true),
+		'cp_post_featuredimage_url' => get_cartopress_featuredimageurl($post_id),
+		'cp_post_format' => get_cartopress_postformat($post_id),
+		'cp_post_author' => get_cartopress_author($post_id),
+		'cp_geo_displayname' => get_cartopress_displayname($post_id),
+		'cp_geo_streetnumber' => get_cartopress_streetnumber($post_id),
+		'cp_geo_street' => get_cartopress_street($post_id),
+		'cp_geo_postal' => get_cartopress_postcode($post_id),
+		'cp_geo_adminlevel4_vill_neigh' => get_cartopress_adminlevel4_vill_neigh($post_id),
+		'cp_geo_adminlevel3_city' => get_cartopress_adminlevel3_city($post_id),
+		'cp_geo_adminlevel2_county' => get_cartopress_adminlevel2_county($post_id),
+		'cp_geo_adminlevel1_st_prov_region' => get_cartopress_adminlevel1_st_prov_region($post_id),
+		'cp_geo_adminlevel0_country' => get_cartopress_adminlevel0_country($post_id),
+		'cp_geo_lat' => get_cartopress_latitude($post_id),
+		'cp_geo_long' => get_cartopress_longitude($post_id)
 		);
 	
 	// merge in custom fields
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
 	if (isset($cpoptions['cartopress_sync_customfields']) && $cpoptions['cartopress_sync_customfields'] == 1) {
-		$fields = get_cp_customfields($post_id);
+		$fields = get_cartopress_customfields($post_id);
 		$args = array_merge($args, $fields);
 	}
 	
@@ -456,7 +471,7 @@ function get_cp_sync_fields($post_id) {
  * @since 0.1.0
  * @param $post_id The global post id.
  */	
-function update_row($post_id) {
+function cartopress_update_row($post_id) {
 	if (get_post_meta($post_id, '_cp_post_donotsync', true) == 1) {
 		return;
 	} else {
@@ -476,7 +491,7 @@ function update_row($post_id) {
  * @since 0.1.0
  * @param $post_id The global post id.
  */	
-function delete_attachment($post_id) {
+function cartopress_delete_attachment($post_id) {
 	$post_type = get_post_type($post_id);
 	if ('attachment' === $post_type) {
 		cartopress_sync::cartodb_delete($post_id);

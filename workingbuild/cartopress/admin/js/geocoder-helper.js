@@ -14,8 +14,7 @@
 			pro.mapping.create("current", assets.currentPOS);
 		}	
 	}
-	
-	
+		
 	function doClick() {
 		pro.OpenStreetQUERY = new Object;
 		pro.results.show();

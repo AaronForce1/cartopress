@@ -37,7 +37,7 @@ if (!class_exists('cartopress_sync')) {
 			
 			//return results
 			return $result;
-		} //end process_curl()
+		} //end update_cartodb()
 		
 		
 		/**
@@ -227,8 +227,8 @@ if (!class_exists('cartopress_sync')) {
 		 * @return array $cp_post, $status Returns decoded json in [0] and boolean value if single row is selected in [1]
 		 */
 		public static function cartodb_select($post_id) {
-			$sql_select = 'SELECT * FROM ' . cartopress_table . ' WHERE cp_post_id = ' . $post_id;
-			$cp_post = cartopress_sync::update_cartodb($sql_select, cartopress_apikey, cartopress_username, true);
+			$sql_select = 'SELECT * FROM ' . CARTOPRESS_TABLE . ' WHERE cp_post_id = ' . $post_id;
+			$cp_post = cartopress_sync::update_cartodb($sql_select, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
 			if ($cp_post->total_rows == 1) {
 				$status = true;
 			} else {
@@ -245,7 +245,7 @@ if (!class_exists('cartopress_sync')) {
 		 * @param $post_id The post id of the WP post.
 		 */
 		public static function cartodb_sync($post_id) {
-			$args = get_cp_sync_fields($post_id);
+			$args = get_cartopress_sync_fields($post_id);
 			// removes null fields and creates array for inserting null values
 			$args_remove = array();
 			foreach($args as $key=>$value) {
@@ -258,19 +258,19 @@ if (!class_exists('cartopress_sync')) {
 			if (is_null($args['cp_geo_lat']) || $args['cp_geo_lat'] == '' || is_null($args['cp_geo_long']) || $args['cp_geo_long'] == '') {
 				return;
 			} else {
-				$sql_verifyupdate = 'SELECT COUNT(*) FROM ' . cartopress_table . ' WHERE cp_post_id = ' .$post_id;
-				$count = cartopress_sync::update_cartodb($sql_verifyupdate, cartopress_apikey, cartopress_username, true);
+				$sql_verifyupdate = 'SELECT COUNT(*) FROM ' . CARTOPRESS_TABLE . ' WHERE cp_post_id = ' .$post_id;
+				$count = cartopress_sync::update_cartodb($sql_verifyupdate, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
 				$count = $count->rows[0]->count;
 				
 				if ($count == 0) {
-					$sql_insert = sprintf('INSERT INTO ' . cartopress_table . '(%s, the_geom) VALUES (\'%s\', (CDB_LatLng(' . $args['cp_geo_lat'] . ', ' . $args['cp_geo_long'] . ')));', implode(', ',array_keys($args)), implode('\', \'',array_values($args)) );
-					cartopress_sync::update_cartodb($sql_insert, cartopress_apikey, cartopress_username, true);
+					$sql_insert = sprintf('INSERT INTO ' . CARTOPRESS_TABLE . '(%s, the_geom) VALUES (\'%s\', (CDB_LatLng(' . $args['cp_geo_lat'] . ', ' . $args['cp_geo_long'] . ')));', implode(', ',array_keys($args)), implode('\', \'',array_values($args)) );
+					cartopress_sync::update_cartodb($sql_insert, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
 				} 
 				if ($count >= 2) {
 					wp_die('Multiple records exist for Post ID: ' . $post_id . '. Please check your CartoDB table and eliminate any duplicates.');
 				} 
 				if ($count == 1) {
-					$sql_update = 'UPDATE ' . cartopress_table . ' SET the_geom = CDB_LatLng(' . $args['cp_geo_lat'] . ', ' . $args['cp_geo_long'] . '), ';
+					$sql_update = 'UPDATE ' . CARTOPRESS_TABLE . ' SET the_geom = CDB_LatLng(' . $args['cp_geo_lat'] . ', ' . $args['cp_geo_long'] . '), ';
 					foreach($args as $key=>$value) {
 					   if(is_numeric($value))
 					      $sql_update .= $key . " = " . $value . ", "; 
@@ -283,7 +283,7 @@ if (!class_exists('cartopress_sync')) {
 					$sql_update = trim($sql_update, ' ');
 					$sql_update = trim($sql_update, ',');
 					$sql_update .= ' WHERE cp_post_id = ' . $post_id;
-					cartopress_sync::update_cartodb($sql_update, cartopress_apikey, cartopress_username, true);
+					cartopress_sync::update_cartodb($sql_update, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
 				}
 			} //end if
 		} // end cartodb sync
@@ -296,8 +296,8 @@ if (!class_exists('cartopress_sync')) {
 		 * @param $post_id The post id of the WP post.
 		 */
 		public static function cartodb_delete($post_id) {
-			$sql_verifyupdate = 'SELECT COUNT(*) FROM ' . cartopress_table . ' WHERE cp_post_id = ' .$post_id;
-			$count = cartopress_sync::update_cartodb($sql_verifyupdate, cartopress_apikey, cartopress_username, true);
+			$sql_verifyupdate = 'SELECT COUNT(*) FROM ' . CARTOPRESS_TABLE . ' WHERE cp_post_id = ' .$post_id;
+			$count = cartopress_sync::update_cartodb($sql_verifyupdate, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
 			$count = $count->rows[0]->count;
 			
 			if ($count == 0) {
@@ -307,8 +307,8 @@ if (!class_exists('cartopress_sync')) {
 				wp_die('Multiple records exist for Post ID: ' . $post_id . '. Please check your CartoDB table and eliminate any duplicates.');
 			} 
 			if ($count == 1) {
-				$sql_delete = 'DELETE FROM ' . cartopress_table .  ' WHERE cp_post_id = ' . $post_id;
-				cartopress_sync::update_cartodb($sql_delete, cartopress_apikey, cartopress_username, true);
+				$sql_delete = 'DELETE FROM ' . CARTOPRESS_TABLE .  ' WHERE cp_post_id = ' . $post_id;
+				cartopress_sync::update_cartodb($sql_delete, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
 			}
 			
 		} //end cartodb delete
@@ -325,8 +325,8 @@ if (!class_exists('cartopress_sync')) {
 		   if (!isset( $_POST['cartopress_delete_row_nonce'] ) || !wp_verify_nonce($_POST['cartopress_delete_row_nonce'], 'cartopress_delete_row_nonce') )
 		   	die('Unauthorized access denied.');
 		   $post_id = $_POST['post_id'];
-		   $sql_delete = 'DELETE FROM ' . cartopress_table .  ' WHERE cp_post_id = ' . $post_id;
-		   $results = cartopress_sync::update_cartodb($sql_delete, cartopress_apikey, cartopress_username, true);
+		   $sql_delete = 'DELETE FROM ' . CARTOPRESS_TABLE .  ' WHERE cp_post_id = ' . $post_id;
+		   $results = cartopress_sync::update_cartodb($sql_delete, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
 		   if ($results->total_rows == 1) {
 		   	$message = "success";
 		   } else {

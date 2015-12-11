@@ -41,7 +41,7 @@ if (!class_exists('cartopress_settings')) {
 			if ( !current_user_can( 'manage_options' ) )  {
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 			}
-			require( cartopress_admin_dir . 'cp-options.php' );
+			require( CARTOPRESS_ADMIN_DIR . 'cp-options.php' );
 		} // end cartopress_options
 		
 		public static function cartopress_get_admin_styles() {
@@ -184,6 +184,7 @@ if (!class_exists('cartopress_settings')) {
 		}
 		
 		public function cartopress_sync_info() {
+			add_settings_field('cartopress_collect_postcontent', null, array($this, 'cartopress_cartodb_postcontent_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_categories', null, array($this, 'cartopress_cartodb_categories_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_tags', null, array($this, 'cartopress_cartodb_tags_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_featuredimage', null, array($this, 'cartopress_cartodb_featuredimage_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
@@ -196,6 +197,17 @@ if (!class_exists('cartopress_settings')) {
 		/** 
 		 * Get the settings option array and print one of its values
 		 */
+		public function cartopress_cartodb_postcontent_callback()
+		{
+			$cpoptions = get_option( 'cartopress_admin_options', '' );
+			if (!isset($cpoptions['cartopress_sync_postcontent'])) {
+				$cpoptions['cartopress_sync_postcontent'] = 0;
+			}	
+			$theoption = esc_attr($cpoptions['cartopress_sync_postcontent']);
+			printf(
+				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_postcontent]" id="cartopress_sync_postcontent"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_postcontent" class="label">Post Content</label>'
+			);
+		} 
 		public function cartopress_cartodb_categories_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
