@@ -1,16 +1,18 @@
 <?php
 /**
- * CartoPress Sync
+ * CartoPress Sync Actions
  *
  * @package cartopress
+ * @since 0.1.0
  */
  
 
 /**
  * Gets CartoPress Post ID
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return int - returns $cp_post_id as integer
+ * @param int $post_id The global post id.
+ * @return int Returns $cp_post_id as integer
  */
 function get_cartopress_postid($post_id) {
 	$cp_post_id = $post_id;
@@ -19,9 +21,10 @@ function get_cartopress_postid($post_id) {
 
 /**
  * Gets CartoPress Post Type
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string - returns $cp_post_type as string
+ * @param int $post_id The global post id.
+ * @return string Returns $cp_post_type as string
  */ 
 function get_cartopress_posttype($post_id) {
 	$cp_post_type = get_post_type($post_id);
@@ -30,10 +33,11 @@ function get_cartopress_posttype($post_id) {
 
 /**
  * Gets CartoPress Post Title
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @param bool $esc Return escaped value, default true.
- * @return string - returns $cp_post_title as escaped or unescaped string
+ * @param int $post_id The global post id.
+ * @param boolean $esc Return escaped value, default true.
+ * @return string Returns $cp_post_title as escaped or unescaped string
  */
 function get_cartopress_posttitle($post_id, $esc = true) {
 	$cp_post_title = get_the_title($post_id);
@@ -46,9 +50,10 @@ function get_cartopress_posttitle($post_id, $esc = true) {
 
 /**
  * Gets CartoPress Post Permalink
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string - returns $cp_post_permalink as string
+ * @param int $post_id The global post id.
+ * @return string Returns $cp_post_permalink as string
  */
 function get_cartopress_permalink($post_id) {
 	$cp_post_permalink = get_permalink($post_id);
@@ -57,9 +62,10 @@ function get_cartopress_permalink($post_id) {
 
 /**
  * Gets CartoPress Post Date
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return date - returns $cp_post_date as date
+ * @param int $post_id The global post id.
+ * @return date Returns $cp_post_date as date
  */
 function get_cartopress_postdate($post_id) {
 	$cp_post_date = get_the_date(get_option('date_format'), $post_id);
@@ -68,10 +74,11 @@ function get_cartopress_postdate($post_id) {
 			
 /**
  * Gets CartoPress Post Description
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @param bool $esc Return escaped value, default true.
- * @return string - returns $cp_post_description as escaped or unescaped string
+ * @param int $post_id The global post id.
+ * @param boolean $esc Return escaped value, default true.
+ * @return string Returns $cp_post_description as escaped or unescaped string
  */			
 function get_cartopress_description($post_id, $esc = true) {
 	if (!empty(get_post_meta( $post_id, '_cp_post_description', true ))) {
@@ -93,10 +100,11 @@ function get_cartopress_description($post_id, $esc = true) {
 			
 /**
  * Gets CartoPress Post Content
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @param bool $esc Return escaped value, default true.
- * @return string - returns $cp_post_content as escaped or unescaped string
+ * @param int $post_id The global post id.
+ * @param boolean $esc Return escaped value, default true.
+ * @return string Returns $cp_post_content as escaped or unescaped string
  */ 
 function get_cartopress_postcontent($post_id, $esc = true) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -124,10 +132,11 @@ function get_cartopress_postcontent($post_id, $esc = true) {
 
 /**
  * Gets CartoPress Post Categories
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @param bool $esc Return escaped value, default true.
- * @return string - returns $cp_post_categories as escaped or unescaped string of comma separated categories
+ * @param int $post_id The global post id.
+ * @param boolean $esc Return escaped value, default true.
+ * @return string Returns $cp_post_categories as escaped or unescaped string of comma separated categories
  */			
 function get_cartopress_categories($post_id, $esc = true) {
 	//defines objects based on user settings
@@ -165,10 +174,11 @@ function get_cartopress_categories($post_id, $esc = true) {
 
 /**
  * Gets CartoPress Post Tags
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @param bool $esc Return escaped value, default true.
- * @return string - returns $cp_post_tags as escaped or unescaped string of comma separated tags
+ * @param int $post_id The global post id.
+ * @param boolean $esc Return escaped value, default true.
+ * @return string Returns $cp_post_tags as escaped or unescaped string of comma separated tags
  */				
 function get_cartopress_tags($post_id, $esc = true) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -203,10 +213,11 @@ function get_cartopress_tags($post_id, $esc = true) {
 }		
 
 /**
- * Gets CartoPress Featured Image Url. Gets Attachment URL for Attachment Post Type
+ * Gets CartoPress Featured Image Url. Gets Attachment URL for Attachment Post Type.
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string - returns $cp_post_featuredimage_url as string
+ * @param int $post_id The global post id.
+ * @return string Returns $cp_post_featuredimage_url as string
  */				
 function get_cartopress_featuredimageurl($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -230,9 +241,10 @@ function get_cartopress_featuredimageurl($post_id) {
 
 /**
  * Gets CartoPress Post Format
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string - returns $cp_post_format as string
+ * @param int $post_id The global post id.
+ * @return string Returns $cp_post_format as string
  */			
 function get_cartopress_postformat($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -249,9 +261,10 @@ function get_cartopress_postformat($post_id) {
 
 /**
  * Gets CartoPress Post Author
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string - returns $cp_post_author as string
+ * @param int $post_id The global post id.
+ * @return string Returns $cp_post_author as string
  */				
 function get_cartopress_author($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -266,9 +279,10 @@ function get_cartopress_author($post_id) {
 
 /**
  * Gets CartoPress Custom Fields
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return array - returns array $fields as key/value pairs for each custom fields that is to be synced
+ * @param int $post_id The global post id.
+ * @return array Returns array $fields as key/value pairs for each custom fields that is to be synced
  */			
 function get_cartopress_customfields($post_id) {
 	$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -291,9 +305,10 @@ function get_cartopress_customfields($post_id) {
 
 /**
  * Gets CartoPress Display Name
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns display name from postmeta
  */				
 function get_cartopress_displayname($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -303,9 +318,10 @@ function get_cartopress_displayname($post_id) {
 
 /**
  * Gets CartoPress Latitude
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns latitire from postmeta
  */	
 function get_cartopress_latitude($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -315,9 +331,10 @@ function get_cartopress_latitude($post_id) {
 
 /**
  * Gets CartoPress Longitude
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns longitude from postmeta
  */	
 function get_cartopress_longitude($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -327,9 +344,10 @@ function get_cartopress_longitude($post_id) {
 
 /**
  * Gets CartoPress Street Number
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns street number from postmeta
  */	
 function get_cartopress_streetnumber($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -339,9 +357,10 @@ function get_cartopress_streetnumber($post_id) {
 
 /**
  * Gets CartoPress Street
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns street name from postmeta
  */				
 function get_cartopress_street($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -350,10 +369,11 @@ function get_cartopress_street($post_id) {
 }			
 
 /**
- * Gets CartoPress Post Code
+ * Gets CartoPress Postal Code
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns postal code from postmeta
  */	
 function get_cartopress_postcode($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -363,9 +383,10 @@ function get_cartopress_postcode($post_id) {
 
 /**
  * Gets CartoPress Admin Level 4
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns Admin Level 4 from postmeta
  */	
 function get_cartopress_adminlevel4_vill_neigh($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -375,9 +396,10 @@ function get_cartopress_adminlevel4_vill_neigh($post_id) {
 
 /**
  * Gets CartoPress Admin Level 3
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns Admin Level 3 from postmeta
  */				
 function get_cartopress_adminlevel3_city($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -387,9 +409,10 @@ function get_cartopress_adminlevel3_city($post_id) {
 
 /**
  * Gets CartoPress Admin Level 2
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns Admin Level 2 from postmeta
  */		
 function get_cartopress_adminlevel2_county($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -399,9 +422,10 @@ function get_cartopress_adminlevel2_county($post_id) {
 
 /**
  * Gets CartoPress Admin Level 1
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns Admin Level 1 from postmeta
  */		
 function get_cartopress_adminlevel1_st_prov_region($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -411,9 +435,10 @@ function get_cartopress_adminlevel1_st_prov_region($post_id) {
 
 /**
  * Gets CartoPress Admin Level 0
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return string Returns Admin Level 0 from postmeta
  */	
 function get_cartopress_adminlevel0_country($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
@@ -424,8 +449,8 @@ function get_cartopress_adminlevel0_country($post_id) {
 /**
  * Gets CartoPress Sync Fields as array
  * @since 0.1.0
- * @param $post_id The global post id.
- * @return string
+ * @param int $post_id The global post id.
+ * @return array $args Returns array of all of the fields to be synced to CartoDB.
  */	
 function get_cartopress_sync_fields($post_id) {
 	// set up the fields
@@ -468,8 +493,9 @@ function get_cartopress_sync_fields($post_id) {
 
 /**
  * Performs add, update and delete functions for selected CartoDB row
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
+ * @param int $post_id The global post id.
  */	
 function cartopress_update_row($post_id) {
 	if (get_post_meta($post_id, '_cp_post_donotsync', true) == 1) {
@@ -478,6 +504,7 @@ function cartopress_update_row($post_id) {
 		if (get_post_status( $post_id ) != 'publish') {
 			cartopress_sync::cartodb_delete($post_id);
 		} else {
+			// Special case: Post Format is not updated until after 'save_post' is called when using the Bulk Edit tool. The below sets the post format during the save_post process if the $_POST data is available.
 			if ( isset( $_REQUEST['post_format'] ) && $_REQUEST['post_format'] != -1 ) {
 				set_post_format($post_id, $_REQUEST['post_format']);
 			}
@@ -488,8 +515,9 @@ function cartopress_update_row($post_id) {
 
 /**
  * Delete function for attachment post type
+ * 
  * @since 0.1.0
- * @param $post_id The global post id.
+ * @param int $post_id The global post id.
  */	
 function cartopress_delete_attachment($post_id) {
 	$post_type = get_post_type($post_id);

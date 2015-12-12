@@ -1,14 +1,12 @@
 <?php
 /**
  * CartoPress Settings Page
+ * 
+ * HTML markup for the settings page
  *
  * @package cartopress
+ * @since 0.1.0
  */
- 
- /* CartoPress settings markup
- *	@since 0.1.0
- */
-
 ?>
 <div class="wrap">
 	<header>

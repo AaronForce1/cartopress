@@ -5,9 +5,10 @@
  * @package cartopress
  */
  
- /* adds Bulk Action capabilities to CartoPress
- *	@since 0.1.0
- */
+ /** 
+  * Adds custom bulk action capabilities for CartoPress
+  *	@since 0.1.0
+  */
 
 
 if (!class_exists('cartopress_bulkactions')) {
@@ -29,7 +30,11 @@ if (!class_exists('cartopress_bulkactions')) {
 		
 		
 		/**
-		 * Step 1: add the custom Bulk Action to the select menus
+		 * Adds the custom Bulk Action to the select menus
+		 * 
+		 * Uses jQuery in the page footer to modify the select menus.
+		 * 
+		 * @since 0.1.0
 		 */
 		function custom_bulk_admin_footer() {
 			global $post_type; $pagenow;
@@ -49,11 +54,12 @@ if (!class_exists('cartopress_bulkactions')) {
 		
 		}
 		
-		
 		/**
-		 * Step 2: handle the custom Bulk Action
+		 * Handle the custom Bulk Action
 		 * 
-		 * Based on the post http://wordpress.stackexchange.com/questions/29822/custom-bulk-action
+		 * Uses switch/case to either delete or restore CartoDB data. Does not effect any WordPress data. Based on the post http://wordpress.stackexchange.com/questions/29822/custom-bulk-action
+		 * 
+		 * @since 0.1.0
 		 */
 		function custom_bulk_action() {
 			global $typenow; $pagenow;
@@ -93,9 +99,6 @@ if (!class_exists('cartopress_bulkactions')) {
 				switch($action) {
 					case 'cartopress_delete':
 						
-						// if we set up user permissions/capabilities, the code might look like:
-						//if ( !current_user_can($post_type_object->cap->export_post, $post_id) )
-						//	wp_die( __('You are not allowed to export this post.') );
 						$sql_distinct = 'SELECT DISTINCT cp_post_id FROM ' . CARTOPRESS_TABLE;
 						$cartopress_ids = cartopress_sync::update_cartodb($sql_distinct, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
 						$cartopress_ids = $cartopress_ids->rows;
@@ -138,9 +141,10 @@ if (!class_exists('cartopress_bulkactions')) {
 
 		}
 		
-		
 		/**
-		 * Step 3: display an admin notice on the Posts page after exporting
+		 * Displays an admin notice on the Posts or Pages page after exporting
+		 * 
+		 * @since 0.1.0
 		 */
 		function custom_bulk_admin_notices() {
 			global $post_type, $pagenow;

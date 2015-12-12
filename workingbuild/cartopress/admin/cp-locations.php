@@ -1,13 +1,17 @@
 <?php
 /**
  * CartoPress Locations
+ * 
+ * The main Geocoder class.
  *
  * @package cartopress
  */
  
- /* add geocoder meta box
- *	@since 0.1.0
- */
+ /** 
+  * Add geocoder meta box
+  * 
+  *	@since 0.1.0
+  */
 
 if (!class_exists('geocoder_metabox')) {
 

@@ -1,13 +1,17 @@
 <?php
 /**
  * CartoPress Settings
+ * 
+ * The main settings class.
  *
  * @package cartopress
  */
  
- /* register cartopress-settings
- *	@since 0.1.0
- */
+ /**
+  * Register cartopress-settings
+  * 
+  *	@since 0.1.0
+  */
 
 if (!class_exists('cartopress_settings')) {
 	
@@ -15,6 +19,8 @@ if (!class_exists('cartopress_settings')) {
 	{
 		/**
 		 * Start up
+		 * 
+		 * @since 0.1.0
 		 */
 		public function __construct() {
 			
@@ -37,6 +43,11 @@ if (!class_exists('cartopress_settings')) {
 			
 		} //end __construct
 		
+		/**
+		 * Adds the Settings page
+		 * 
+		 * @since 0.1.0
+		 */
 		public static function cartopress_get_settings_page() {
 			if ( !current_user_can( 'manage_options' ) )  {
 				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
@@ -44,11 +55,21 @@ if (!class_exists('cartopress_settings')) {
 			require( CARTOPRESS_ADMIN_DIR . 'cp-options.php' );
 		} // end cartopress_options
 		
+		/**
+		 * Enqueue Styles
+		 * 
+		 * @since 0.1.0
+		 */
 		public static function cartopress_get_admin_styles() {
 		   wp_enqueue_style( 'cartopress' );
 		   wp_enqueue_style ( 'google_fonts');
 	    } // end cartopress_admin_styles
 	    
+	    /**
+		 * Enqueue Scripts
+		 * 
+		 * @since 0.1.0
+		 */
 	    public static function cartopress_get_admin_scripts() {
 	    	wp_enqueue_script('admin-script');
 			wp_localize_script('admin-script','cartopress_admin_ajax', array(
@@ -60,9 +81,10 @@ if (!class_exists('cartopress_settings')) {
 			);
 	    } //end cartopress_admin_scripts
 		    
-	
 		/**
-		 * Register and add settings
+		 * Initializes the settings, registers the settings and defines the settings sections
+		 * 
+		 * @since 0.1.0
 		 */
 		public function initialize_settings() {        
 			register_setting( 'cartopress-settings', 'cartopress_admin_options', array( $this, 'sanitize' ) );
@@ -75,10 +97,12 @@ if (!class_exists('cartopress_settings')) {
 		
 		/**
 		* Update custom field settings
-		* @since 0.1.0
 		* 
-		* @param $custom_field, the custom field name; $cartodb_column, the corresponding CartoDB column name; $action, string for action to perform ('set' or 'unset')
-		* returns true
+		* @since 0.1.0
+		* @param string $custom_field The custom field name
+		* @param string $cartodb_column The corresponding CartoDB column name
+		* @param string $action String for action to perform ('set' or 'unset')
+		* @return boolean Returns true when run
 		*/
 		public static function update_customfield_settings($custom_field, $cartodb_column, $action) {
 			$option = get_option('cartopress_custom_fields');
@@ -92,11 +116,11 @@ if (!class_exists('cartopress_settings')) {
 		}
 		
 		/**
-		* helper method to create column names
+		* Helper method to create column names
+		 * 
 		* @since 0.1.0
-		* 
-		* @param $string, the string to convert to column name
-		* returns string with spaces and special chars replaced with underscores
+		* @param string $string The string to convert to column name
+		* @return string $string Returns string with spaces and special chars replaced with underscores
 		*/
 		public static function create_column_name($string) {
 		    $string = strtolower($string);
@@ -107,7 +131,12 @@ if (!class_exists('cartopress_settings')) {
 		    return $string;
 		} //end create_column_name()
 		
-		// generate array of all non-hidden metakeys
+		/**
+		* Generate array of all non-hidden metakeys
+		* 
+		* @since 0.1.0
+		* @return array $meta_keys Returns string with spaces and special chars replaced with underscores
+		*/
 		public static function generate_metakeys(){
 		    global $wpdb;
 		    $query = "
@@ -143,7 +172,7 @@ if (!class_exists('cartopress_settings')) {
 		 * Sanitize each setting field as needed
 		 * @since 0.1.0
 		 * @param array $input Contains all settings fields as array keys
-		 * @return mixed - returns sanitized inputs
+		 * @return string Returns sanitized inputs
 		 */
 		public function sanitize( $input ) {
 			$new_input = array();
@@ -154,7 +183,9 @@ if (!class_exists('cartopress_settings')) {
 		}
 
 		/** 
-		 * Print the Section text
+		 * Prints the Custom Field settings on the settings page
+		 * 
+		 * @since 0.1.0
 		 */
 		public function cartopress_sync_customfields() {
 			$customfield_options = get_option('cartopress_custom_fields');
@@ -170,19 +201,34 @@ if (!class_exists('cartopress_settings')) {
 			}
 		}
 		
+		/** 
+		 * Adds the settings fields for the Required Info section
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_required_info() {
 			add_settings_field( 'cartopress_cartodb_apikey', 'API Key:', array( $this, 'cartopress_cartodb_apikey_callback' ), 'cartopress-settings', 'cartopress_required_info', array( 'label_for' => 'cartopress_cartodb_apikey', 'type' => 'text') );      
 			add_settings_field( 'cartopress_cartodb_username', 'Username:', array( $this, 'cartopress_cartodb_username_callback' ), 'cartopress-settings', 'cartopress_required_info', array( 'label_for' => 'cartopress_cartodb_username', 'type' => 'text') );      
 			add_settings_field( 'cartopress_cartodb_tablename', 'Table Name:', array( $this, 'cartopress_cartodb_tablename_callback' ), 'cartopress-settings', 'cartopress_required_info', array( 'label_for' => 'cartopress_cartodb_tablename', 'type' => 'text') );      
 			add_settings_field( 'cartopress_cartodb_verified', null, array( $this, 'cartopress_cartodb_verified_callback' ), 'cartopress-settings', 'cartopress_required_info', array( 'type' => 'text') );      
 		}
-
+		
+		/** 
+		 * Adds the settings fields for the Collect Data section
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_collect_info() {
 			add_settings_field('cartopress_collect_posts', null, array($this, 'cartopress_cartodb_posts_callback'), 'cartopress-settings', 'cartopress_collect_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_pages', null, array($this, 'cartopress_cartodb_pages_callback'), 'cartopress-settings', 'cartopress_collect_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_media', null, array($this, 'cartopress_cartodb_media_callback'), 'cartopress-settings', 'cartopress_collect_info', array( 'type' => 'checkbox') );
 		}
 		
+		/** 
+		 * Adds the settings fields for the Sync Info section
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_sync_info() {
 			add_settings_field('cartopress_collect_postcontent', null, array($this, 'cartopress_cartodb_postcontent_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 			add_settings_field('cartopress_collect_categories', null, array($this, 'cartopress_cartodb_categories_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
@@ -193,9 +239,12 @@ if (!class_exists('cartopress_settings')) {
 			add_settings_field('cartopress_collect_customfields', null, array($this, 'cartopress_cartodb_customfields_callback'), 'cartopress-settings', 'cartopress_sync_info', array( 'type' => 'checkbox') );
 		}
 		
-		
 		/** 
+		 * Post Content setting
+		 * 
 		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
 		 */
 		public function cartopress_cartodb_postcontent_callback()
 		{
@@ -208,6 +257,14 @@ if (!class_exists('cartopress_settings')) {
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_postcontent]" id="cartopress_sync_postcontent"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_postcontent" class="label">Post Content</label>'
 			);
 		} 
+
+		/** 
+		 * Categories setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_categories_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -219,6 +276,14 @@ if (!class_exists('cartopress_settings')) {
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_categories]" id="cartopress_sync_categories"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_categories" class="label">Categories</label>'
 			);
 		}
+
+		/** 
+		 * Tags setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_tags_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -230,6 +295,14 @@ if (!class_exists('cartopress_settings')) {
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_tags]" id="cartopress_sync_tags"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_tags" class="label">Tags</label>'
 			);
 		}
+
+		/** 
+		 * Featured Image setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_featuredimage_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -241,6 +314,14 @@ if (!class_exists('cartopress_settings')) {
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_featuredimage]" id="cartopress_sync_featuredimage"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_featuredimage" class="label">Featured Image</label>'
 			);
 		}
+		
+		/** 
+		 * Custom Field setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_customfields_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -252,6 +333,14 @@ if (!class_exists('cartopress_settings')) {
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_customfields]" id="cartopress_sync_customfields"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_customfields" class="label">Custom Fields</label>'
 			);
 		}
+		
+		/** 
+		 * Author setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_author_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -263,6 +352,14 @@ if (!class_exists('cartopress_settings')) {
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_author]" id="cartopress_sync_author"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_author" class="label">Author</label>'
 			);
 		}
+		
+		/** 
+		 * Post Format setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_format_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -274,6 +371,14 @@ if (!class_exists('cartopress_settings')) {
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_sync_format]" id="cartopress_sync_format"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_sync_format" class="label">Post Format</label>'
 			);
 		}
+		
+		/** 
+		 * Collect Posts setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_posts_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -286,6 +391,13 @@ if (!class_exists('cartopress_settings')) {
 			);
 		}
 		
+		/** 
+		 * Collect Pages setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_pages_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -298,6 +410,13 @@ if (!class_exists('cartopress_settings')) {
 			);
 		}
 		
+		/** 
+		 * Collect Attachment setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_media_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -309,7 +428,14 @@ if (!class_exists('cartopress_settings')) {
 				'<input type="checkbox" name="cartopress_admin_options[cartopress_collect_media]" id="cartopress_collect_media"  value="1"' . checked( 1, $theoption, false ) . '/><label for="cartopress_collect_media" class="label">Media</label>'
 			);
 		}
-	
+		
+		/** 
+		 * CartoDB API Key setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_apikey_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -319,6 +445,13 @@ if (!class_exists('cartopress_settings')) {
 			);
 		}
 		
+		/** 
+		 * CartoDB Account Verified setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_verified_callback()
 		{
 			$str = esc_attr(get_option('cartopress_cartodb_verified'));
@@ -326,7 +459,14 @@ if (!class_exists('cartopress_settings')) {
 				'<input type="hidden" name="cartopress_cartodb_verified" id="cartopress_cartodb_verified" value="%s" />', $str
 			);
 		}
-
+		
+		/** 
+		 * CartoDB Username setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_username_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
@@ -336,6 +476,13 @@ if (!class_exists('cartopress_settings')) {
 			);
 		}
 		
+		/** 
+		 * CartoDB Dataset Name setting
+		 * 
+		 * Get the settings option array and print one of its values
+		 * 
+		 * @since 0.1.0
+		 */
 		public function cartopress_cartodb_tablename_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );

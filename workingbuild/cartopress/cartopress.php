@@ -2,14 +2,14 @@
 /**
  * Plugin Name: CartoPress
  * Plugin URI: https://github.com/MasterBaideme1021/cartopress
- * Description: This plugin allows you to connect your WordPress database to your CartoDB account in order to sync your posts, pages, media attachments and other content.
+ * Description: This plugin allows you to easily make CartoDB maps with your WordPress data. Simply connect to your CartoDB account and set your options in the settings, and CartoPress will automatically sync your WordPress data to your CartoDB account. Utilize the intuitive CartoDB user interface to visualize and style maps with your data. Publish on your site using CartoDB's powerful and customizable publishing options.
  * Version: 0.1.0
- * Author: Aaron Baideme and Troy Andrew Hallisey
- * Author URI: http://troyhallisey.com
+ * Author: Troy Andrew Hallisey and Aaron Baideme
+ * Author URI: https://github.com/MasterBaideme1021/cartopress
  * License: GPL2
  */
  
- /*  Copyright 2015  CartoPress — CartoDB Client for WordPress
+ /*  Copyright 2015  CartoPress — A CartoDB Client for WordPress
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2 or later, as
@@ -27,7 +27,9 @@
 
 /**
  * Main CartoPress file
+ * 
  * @package cartopress
+ * @since 0.1.0
  */
  
 if (!class_exists('cartopress')) {
@@ -35,7 +37,8 @@ if (!class_exists('cartopress')) {
 	class cartopress {
 		
 		/**
-		* cartopress initialize
+		* CartoPress initialize
+		*
 		* @since 0.1.0
 		*/
 		public static function initialize() {
@@ -79,7 +82,8 @@ if (!class_exists('cartopress')) {
 		} // initialize()
 		
 		/**
-		* load constants
+		* Loads the global constants
+		*
 		* @since 0.1.0
 		*/
 		private static function load_constants() {
@@ -103,7 +107,8 @@ if (!class_exists('cartopress')) {
 		} // end load_constants()
 		
 		/**
-		* load settings
+		* Loads the settings
+		*
 		* @since 0.1.0
 		*/
 		private static function add_settings() {
@@ -128,7 +133,8 @@ if (!class_exists('cartopress')) {
 		
 		
 		/**
-		* add geolocator
+		* Creates a new instance of the Geocoder
+		*
 		* @since 0.1.0
 		*/
 		private static function add_geolocator() {
@@ -154,7 +160,8 @@ if (!class_exists('cartopress')) {
 		} //end add_geolocator
 		
 		/**
-		* add bulk actions
+		* Adds custom bulk actions
+		*
 		* @since 0.1.0
 		*/
 		private static function add_bulkactions() {

@@ -1,12 +1,11 @@
 <?php
 /**
  * CartoPress Geocoder
+ * 
+ * HTML markup for the Geocoder content. Included in 'cartopress_geocoder_content' method of the geocoder_metabox class. 
  *
  * @package cartopress
- */
- 
- /* Display the Geocoder content
- *	@since 0.1.0
+ * @since 0.1.0
  */
 ?>
 <p class="howto">Use the search bar to find lookup an address. Select the correct address from the results, or fill in the location fields manually. Note: Latitude and longitude cooridnates are required.</p>

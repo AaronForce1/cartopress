@@ -3,11 +3,14 @@
  * CartoPress Sync
  *
  * @package cartopress
+ * @since 0.1.0
  */
  
- /* syncs to CartoDB
- *	@since 0.1.0
- */
+ /** 
+  * Syncs to CartoDB
+  * 
+  *	@since 0.1.0
+  */
 
 if (!class_exists('cartopress_sync')) {
 
@@ -15,12 +18,15 @@ if (!class_exists('cartopress_sync')) {
 		
 		/**
 		* Perform CartoDB queries
-		* @since 0.1.0
 		* 
-		* @param $sql, the sql query; $username, CartoDB username; $apikey, CartoDB API key; $return, return transfer boolean
-		* @return json 
+		* @since 0.1.0
+		* @param string $sql The SQL query. PostgreSQL for CartoDB.
+		* @param string $username CartoDB username. Either the global constant or POST variable if used in AJAX,
+		* @param string $apikey CartoDB API Key. Either the global constant or POST variable if used in AJAX.
+		* @param boolean $return Optional. The return transfer boolean. Default is true.
+		* @return array $result A php decoded json object. 
 		*/
-		public static function update_cartodb($sql, $apikey, $username, $return){
+		public static function update_cartodb($sql, $apikey, $username, $return = true){
 			//curl init	
 			$ch = curl_init("https://" . $username . ".cartodb.com/api/v2/sql");
 			$query = http_build_query(array('q'=>$sql,'api_key'=>$apikey));
@@ -42,6 +48,9 @@ if (!class_exists('cartopress_sync')) {
 		
 		/**
 		* Create table in CartoDB
+		*
+		* Used in AJAX.
+		*
 		* @since 0.1.0
 		* @return string String response
 		*/
@@ -96,8 +105,11 @@ if (!class_exists('cartopress_sync')) {
 		
 		/**
 		* Checks for and adds necessary columns to CartoDB table
+		*
+		* Used in AJAX.
+		* 
 		* @since 0.1.0
-		* returns string String response 
+		* @return string String response 
 		*/
 		public static function cartopress_cartopressify_table() {
 		   	
@@ -148,9 +160,12 @@ if (!class_exists('cartopress_sync')) {
 		} //end cartopressify()
 		
 		/**
-		* Create column in cartodb and save the settings
+		* Create column in CartoDB and save the settings
+		*
+		* Used in AJAX
+		*
 		* @since 0.1.0
-		* returns encoded json containing a user message, option_status boolean, cartodb status boolean
+		* @return array $return Encoded json containing a user message, option_status boolean, cartodb status boolean
 		*/
 		public static function cartopress_create_column() {
 		   	
@@ -187,9 +202,12 @@ if (!class_exists('cartopress_sync')) {
 		} //end cartopress_create_column()
 		
 		/**
-		* Delete column in cartodb and save the settings
+		* Delete column in CartoDB and save the settings
+		*
+		* Used in AJAX
+		*
 		* @since 0.1.0
-		* returns encoded json containing a user message, option_status boolean, cartodb status boolean
+		* @return array $return Encoded json containing a user message, option_status boolean, cartodb status boolean
 		*/
 		public static function cartopress_delete_column() {
 		   	
@@ -240,12 +258,15 @@ if (!class_exists('cartopress_sync')) {
 	
 		/**
 		 * Add or update row in CartoDB
+		 * 
+		 * The main sync function when saving and adding posts.
 		 *
 		 * @since 0.1.0
 		 * @param $post_id The post id of the WP post.
 		 */
 		public static function cartodb_sync($post_id) {
 			$args = get_cartopress_sync_fields($post_id);
+			
 			// removes null fields and creates array for inserting null values
 			$args_remove = array();
 			foreach($args as $key=>$value) {
@@ -291,6 +312,8 @@ if (!class_exists('cartopress_sync')) {
 		
 		/**
 		 * Delete row from CartoDB
+		 * 
+		 * Method for deleting from CartoDB. Primarily used when post status is changed to anything but Publish and when trashing.
 		 *
 		 * @since 0.1.0
 		 * @param $post_id The post id of the WP post.
@@ -315,10 +338,12 @@ if (!class_exists('cartopress_sync')) {
 		
 		
 		/**
-		 * Delete row from CartoPress - deletes all geo data from both CartoDB and CartoPress post meta
+		 * Delete row from CartoDB
+		 * 
+		 * Used in AJAX. Deletes all geo data from both CartoDB and postmeta.
 		 *
 		 * @since 0.1.0
-		 * @param $post_id The post id of the WP post.
+		 * @return string $message Reponse message indicating success or error
 		 */
 		public static function cartopress_delete_row() {
 		   // checks the referer to ensure authorized access
@@ -338,11 +363,12 @@ if (!class_exists('cartopress_sync')) {
 		
 		
 		/**
-		 * Reset record - gets the saved values from CartoPress post meta
+		 * Resets the geodata to most recently saved.
+		 * 
+		 * Used in AJAX. Gets geo data values that are saved in postmeta as opposed to CartoDB.
 		 *
 		 * @since 0.1.0
-		 * @param $post_id The post id of the WP post.
-		 * @return json Encoded json for use in Ajax
+		 * @return array Encoded json for use in AJAX
 		 */
 		public static function cartopress_reset_record() {
 		   // checks the referer to ensure authorized access
