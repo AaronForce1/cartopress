@@ -5,16 +5,20 @@
  * @package cartopress
  */
  
- /** 
-  * Adds custom bulk action capabilities for CartoPress
-  *	@since 0.1.0
-  */
-
-
 if (!class_exists('cartopress_bulkactions')) {
- 
+	
+ 	 /** 
+	  * Adds custom bulk action capabilities for CartoPress
+	  * 
+	  *	@since 0.1.0
+	  */
 	class cartopress_bulkactions {
 		
+		/** 
+		 * Constructor for the cartopress_bulkactions class
+		 * 
+		 * @since 0.1.0
+		 */
 		public function __construct() {
 			
 			if(is_admin()) {
@@ -27,7 +31,6 @@ if (!class_exists('cartopress_bulkactions')) {
 				add_action('admin_notices', array(&$this, 'custom_bulk_admin_notices'));
 			}
 		}
-		
 		
 		/**
 		 * Adds the custom Bulk Action to the select menus

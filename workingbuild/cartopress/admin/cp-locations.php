@@ -7,14 +7,13 @@
  * @package cartopress
  */
  
- /** 
-  * Add geocoder meta box
-  * 
-  *	@since 0.1.0
-  */
-
 if (!class_exists('geocoder_metabox')) {
-
+	
+	 /** 
+	  * Geocoder metabox class
+	  * 
+	  *	@since 0.1.0
+	  */
 	class geocoder_metabox {
 	
 		/**
@@ -32,7 +31,6 @@ if (!class_exists('geocoder_metabox')) {
 			add_action( 'edit_attachment', array ( $this, 'save_geodata'), 10, 1 );
 	
 		} // end __construct
-		
 		
 		/**
 		 * Adds the geolocator according to post type.
@@ -64,7 +62,11 @@ if (!class_exists('geocoder_metabox')) {
 					
 					add_meta_box('cartopress_locator', __( 'CartoPress Geolocator', 'cartopress_textdomain' ), array( $this, 'cartopress_geocoder_content' ), $post_type, 'normal', 'high' );
 					
-					//enqueue dependencies only if geolocator is present
+					/**
+					 * Enqueue dependencies only if geolocator is present
+					 * 
+					 * @param string $location The php file to which to load to
+					 */
 					function load_geocoder_dependencies($location) {
 					   if( 'post.php' == $location || 'post-new.php' == $location ) {
 					     wp_enqueue_script('jquery2');
@@ -88,8 +90,6 @@ if (!class_exists('geocoder_metabox')) {
 				} // end if
 				
 		} // end cartopress_add_geocoder
-		
-		
 		
 		/**
 		 * Save the geodata when the post is saved.

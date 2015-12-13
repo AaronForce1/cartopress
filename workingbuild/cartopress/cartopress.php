@@ -33,11 +33,15 @@
  */
  
 if (!class_exists('cartopress')) {
-
+	/** 
+	  * CartoPress class definition. Used as a single source for initializing CartoPress classes using :: operator and adding hooking globally accessible actions.
+	  *
+	  *	@since 0.1.0
+	  */
 	class cartopress {
 		
 		/**
-		* CartoPress initialize
+		* Initializes the CartoPress plugin
 		*
 		* @since 0.1.0
 		*/
@@ -53,6 +57,9 @@ if (!class_exists('cartopress')) {
 			add_action( 'admin_init', 'register_admin_styles');
 			add_action( 'admin_init', 'register_admin_scripts');
 			
+			/**
+			 * Registers all stylesheets required by CartoPress.
+			 */ 
 			function register_admin_styles() {
 				// add google fonts
 				$query_args = array( 'family' => 'Montserrat:400,700', 'subset' => 'latin,latin-ext' ); 
@@ -65,6 +72,11 @@ if (!class_exists('cartopress')) {
 
 			} // end get_admin_styles
 			
+			/**
+			 * Registers all linked scripts required by CartoPress.
+			 * 
+			 * @todo Use default WordPress install of jQuery instead of 2.1.4 for cartopress-geocode-script
+			 */ 
 			function register_admin_scripts() {
 				wp_register_script('jquery2.1.4', 'https://code.jquery.com/jquery-2.1.4.min.js');
 				wp_register_script('leaflet', 'http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js');
@@ -118,7 +130,12 @@ if (!class_exists('cartopress')) {
 				require( CARTOPRESS_ADMIN_DIR . 'cp-settings.php' );
 				$cartopress_settings = new cartopress_settings();
 				
-				 // add settings link
+				/**
+				* Adds the settings link to the array of plugin actions links
+				 * 
+				* @param array The plugin action links
+				* @return array $links The new plugin action links
+				*/
 			    function cartopress_settings_link($links) { 
 				  $settings_link = '<a href="options-general.php?page=cartopress-settings.php">Settings</a>'; 
 				  array_unshift($links, $settings_link); 
@@ -133,7 +150,7 @@ if (!class_exists('cartopress')) {
 		
 		
 		/**
-		* Creates a new instance of the Geocoder
+		* Loads the geocoder
 		*
 		* @since 0.1.0
 		*/
@@ -144,6 +161,9 @@ if (!class_exists('cartopress')) {
 				// add the geolocator metabox
 				require( CARTOPRESS_ADMIN_DIR . 'cp-locations.php' );
 				
+				/**
+				* Creates a new instance of the Geocoder class
+				*/
 				function get_cartopress_geolocator() {
 					$geocoder_metabox = new geocoder_metabox();
 				}
@@ -160,7 +180,7 @@ if (!class_exists('cartopress')) {
 		} //end add_geolocator
 		
 		/**
-		* Adds custom bulk actions
+		* Loads custom bulk actions
 		*
 		* @since 0.1.0
 		*/

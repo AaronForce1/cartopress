@@ -1,9 +1,10 @@
 <?php
 /**
  * CartoPress Sync Actions
- *
+ * 
+ * Globally accessible actions for accessing geo and post data.
+ * 
  * @package cartopress
- * @since 0.1.0
  */
  
 

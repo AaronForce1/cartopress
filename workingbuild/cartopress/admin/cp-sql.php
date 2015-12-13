@@ -2,29 +2,36 @@
 /**
  * CartoPress Sync
  *
+ * Methods for performing SQL queries with CartoDB. File contains cartopress_sync class.
+ * 
  * @package cartopress
- * @since 0.1.0
+ * 
  */
  
- /** 
-  * Syncs to CartoDB
-  * 
-  *	@since 0.1.0
-  */
 
 if (!class_exists('cartopress_sync')) {
-
+	
+	 /** 
+	  * Syncs to CartoDB
+	  * 
+	  * Defines static methods for syncing to CartoDB.
+	  * 
+	  *	@since 0.1.0
+	  */
 	class cartopress_sync {
 		
 		/**
 		* Perform CartoDB queries
-		* 
+		*
+		* Uses curl to connect to CartoDB. 
+		*
 		* @since 0.1.0
-		* @param string $sql The SQL query. PostgreSQL for CartoDB.
-		* @param string $username CartoDB username. Either the global constant or POST variable if used in AJAX,
+		* @todo This should be eventually replaced with the WordPress HTTP API instead of calling curl directly.
+		* @param string $sql The SQL query. Use PostgreSQL for CartoDB.
+		* @param string $username CartoDB username. Either the global constant or POST variable if used in AJAX.
 		* @param string $apikey CartoDB API Key. Either the global constant or POST variable if used in AJAX.
-		* @param boolean $return Optional. The return transfer boolean. Default is true.
-		* @return array $result A php decoded json object. 
+		* @param boolean $return _Optional._ Setting to false will reset CURL_RETURNTRANSFER to false.
+		* @return array $result _A php decoded json object._ 
 		*/
 		public static function update_cartodb($sql, $apikey, $username, $return = true){
 			//curl init	
@@ -49,10 +56,18 @@ if (!class_exists('cartopress_sync')) {
 		/**
 		* Create table in CartoDB
 		*
-		* Used in AJAX.
+		* AJAX handler for generating CartoDB tables from the settings page.
 		*
 		* @since 0.1.0
-		* @return string String response
+		* @return string Sends a string response to the ajax function.
+		* <ul>
+		* 	<li>_exists:_ If the dataset already exists in CartoDB</li>
+		* 	<li>_notfound:_ Usually the result of a 500 error if the username is not set or incorrect</li>
+		* 	<li>_badapikey:_ If the username is correct but the API Key auth is incorrect</li>
+		* 	<li>_specialchar:_ The table name input contains invalid characters</li>
+		* 	<li>_success:_ The table was successfully created</li>
+		* 	<li>_Unknown error:_ Catch all for other error types, prints the response directly</li>
+		* </ul>
 		*/
 		public static function cartopress_generate_table() {
 		   	
@@ -109,12 +124,15 @@ if (!class_exists('cartopress_sync')) {
 		} //end cartopress_generate__table()
 		
 		/**
-		* Checks for and adds necessary columns to CartoDB table
+		* Checks for and adds required default CartoPress columns to CartoDB table
 		*
-		* Used in AJAX.
+		* AJAX handler for formatting new and existing tables into the CartoPress schema.
 		* 
 		* @since 0.1.0
-		* @return string String response 
+		* @return string Sends a string response to the ajax function.
+		* <ul>
+		*	<li>_success:_ The function was completed successfully</li>
+		* </ul>
 		*/
 		public static function cartopress_cartopressify_table() {
 		   	
@@ -167,7 +185,7 @@ if (!class_exists('cartopress_sync')) {
 		/**
 		* Create column in CartoDB and save the settings
 		*
-		* Used in AJAX
+		* AJAX handler for adding custom field columns to the CartoDB table.
 		*
 		* @since 0.1.0
 		* @return array $return Encoded json containing a user message, option_status boolean, cartodb status boolean
@@ -209,7 +227,7 @@ if (!class_exists('cartopress_sync')) {
 		/**
 		* Delete column in CartoDB and save the settings
 		*
-		* Used in AJAX
+		* AJAX handler for deleting custom field columns from the CartoDB table.
 		*
 		* @since 0.1.0
 		* @return array $return Encoded json containing a user message, option_status boolean, cartodb status boolean
@@ -244,10 +262,19 @@ if (!class_exists('cartopress_sync')) {
 		
 		/**
 		 * Select row in CartoDB
+		 * 
+		 * Used to get CartoDB information for any given Post ID.
+		 * 
+		 * **Example:** _Gets the CartoDB ID for a Post_
+		 * `$cp_post = cartopress_sync::update_cartodb($sql_select, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);`
+		 *
+		 * `$cp_values = $cp_post[0]->rows[0];`
+		 * 
+		 * `$cartodb_id = $cp_values->cartodb_id;`
 		 *
 		 * @since 0.1.0
 		 * @param $post_id The post id of the WP post.
-		 * @return array $cp_post, $status Returns decoded json in [0] and boolean value if single row is selected in [1]
+		 * @return array $cp_post, $status Returns decoded json data in [0] and boolean value if single row is selected in [1]
 		 */
 		public static function cartodb_select($post_id) {
 			$sql_select = 'SELECT * FROM ' . CARTOPRESS_TABLE . ' WHERE cp_post_id = ' . $post_id;
@@ -264,10 +291,11 @@ if (!class_exists('cartopress_sync')) {
 		/**
 		 * Add or update row in CartoDB
 		 * 
-		 * The main sync function when saving and adding posts.
+		 * The main sync function when saving and adding posts. Only syncs to CartoDB if latitude and longitude data are present and the Post Status is set to 'Publish.' Will delete from CartoDB if Post Status is changed from 'Publish' to any other format.
 		 *
 		 * @since 0.1.0
 		 * @param $post_id The post id of the WP post.
+		 * @return void
 		 */
 		public static function cartodb_sync($post_id) {
 			$args = get_cartopress_sync_fields($post_id);
@@ -322,7 +350,7 @@ if (!class_exists('cartopress_sync')) {
 		/**
 		 * Delete row from CartoDB
 		 * 
-		 * Method for deleting from CartoDB. Primarily used when post status is changed to anything but Publish and when trashing.
+		 * Method for deleting from CartoDB. Primarily used when Post Status is changed to anything but Publish and when trashing.
 		 *
 		 * @since 0.1.0
 		 * @param $post_id The post id of the WP post.
@@ -353,7 +381,7 @@ if (!class_exists('cartopress_sync')) {
 		/**
 		 * Delete row from CartoDB
 		 * 
-		 * Used in AJAX. Deletes all geo data from both CartoDB and postmeta.
+		 * AJAX handler for removing all geo data. Deletes both CartoDB record and all geo data stored in wp_postmeta.
 		 *
 		 * @since 0.1.0
 		 * @return string $message Reponse message indicating success or error
@@ -378,10 +406,10 @@ if (!class_exists('cartopress_sync')) {
 		/**
 		 * Resets the geodata to most recently saved.
 		 * 
-		 * Used in AJAX. Gets geo data values that are saved in postmeta as opposed to CartoDB.
+		 * AJAX handler to retrieve the most recent geodata saved in wp_postmeta.
 		 *
 		 * @since 0.1.0
-		 * @return array Encoded json for use in AJAX
+		 * @return array Encoded json data for use in AJAX to populate the geo fields of the geocoder
 		 */
 		public static function cartopress_reset_record() {
 		   // checks the referer to ensure authorized access

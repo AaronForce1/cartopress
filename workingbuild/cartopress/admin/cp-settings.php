@@ -7,18 +7,18 @@
  * @package cartopress
  */
  
- /**
-  * Register cartopress-settings
-  * 
-  *	@since 0.1.0
-  */
 
 if (!class_exists('cartopress_settings')) {
 	
+	 /**
+	  * Register CartoPress settings
+	  * 
+	  *	@since 0.1.0
+	  */
 	class cartopress_settings
 	{
 		/**
-		 * Start up
+		 * Constructor for enqueing styles and scripts and adding ajax action hooks
 		 * 
 		 * @since 0.1.0
 		 */
@@ -26,6 +26,12 @@ if (!class_exists('cartopress_settings')) {
 			
 			// add settings menu
 			add_action( 'admin_menu', 'cartopress_add_settings_menu' );
+			
+			/**
+			 * Adds the settings menu link to the dashboard panel
+			 * 
+			 * @since 0.1.0
+			 */
 			function cartopress_add_settings_menu() {
 				$admin_page = add_options_page( 'CartoPress Settings', 'CartoPress', 'manage_options', 'cartopress-settings', array('cartopress_settings', 'cartopress_get_settings_page') );
 				add_action( 'admin_print_styles-' . $admin_page, array('cartopress_settings', 'cartopress_get_admin_styles') );
@@ -154,7 +160,11 @@ if (!class_exists('cartopress_settings')) {
 		    return $meta_keys;
 		} //end generate_metakeys()
 		
-		//get metakeys
+		/**
+		 * Generates option tags for the custom field select menu
+		 * 
+		 * @since 0.1.0
+		 */
 		public static function get_metakey_menu() {
 			$meta_keys = cartopress_settings::generate_metakeys();
 			if ($meta_keys == null) {
@@ -170,6 +180,7 @@ if (!class_exists('cartopress_settings')) {
 	
 		/**
 		 * Sanitize each setting field as needed
+		 * 
 		 * @since 0.1.0
 		 * @param array $input Contains all settings fields as array keys
 		 * @return string Returns sanitized inputs
@@ -191,6 +202,9 @@ if (!class_exists('cartopress_settings')) {
 			$customfield_options = get_option('cartopress_custom_fields');
 			if (!empty($customfield_options)) {
 				foreach ($customfield_options as $key=>$value) {
+					if (!isset($value['sync'])) {
+						$value['sync'] = false;
+					}
 					echo '<tr id="cpdb_rowfor_' . $value['cartodb_column'] . '">
 							<td align="center"><input type="checkbox" name="cartopress_custom_fields[' . $value['cartodb_column'] . '][sync]" id="cartopress_custom_fields_sync_'.$value['cartodb_column'].'"  value="1"' . checked( 1, $value['sync'], false ) . '/></td>
 							<td><input type="text" name="cartopress_custom_fields[' . $value['cartodb_column'] . '][custom_field]" id="cartopress_custom_fields_fieldname_'.$value['cartodb_column'].'" value="'.esc_attr($value['custom_field']).'" class="disabled" readonly/></td>
