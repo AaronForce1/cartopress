@@ -72,8 +72,13 @@ if (!class_exists('cartopress_sync')) {
 		   $result_create = cartopress_sync::update_cartodb($sql_create, $apikey, $username, true);
 		   
 		   //parse result
-		   $error = $result_create->error[0];
-		   $success = $result_create->notices[0];
+		   if ($result_create) {
+			   $error = $result_create->error[0];
+			   $success = $result_create->notices[0];
+		   } else {
+		   	   $error = null;
+			   $success = null;
+		   }
 		   
 		   if ($error == (string)('relation "' . $tablename . '" already exists')) {
 			   update_option('cartopress_cartodb_verified', 'notverified');
@@ -247,7 +252,7 @@ if (!class_exists('cartopress_sync')) {
 		public static function cartodb_select($post_id) {
 			$sql_select = 'SELECT * FROM ' . CARTOPRESS_TABLE . ' WHERE cp_post_id = ' . $post_id;
 			$cp_post = cartopress_sync::update_cartodb($sql_select, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
-			if ($cp_post->total_rows == 1) {
+			if ($cp_post && $cp_post->total_rows == 1) {
 				$status = true;
 			} else {
 				$status = false;
@@ -281,7 +286,11 @@ if (!class_exists('cartopress_sync')) {
 			} else {
 				$sql_verifyupdate = 'SELECT COUNT(*) FROM ' . CARTOPRESS_TABLE . ' WHERE cp_post_id = ' .$post_id;
 				$count = cartopress_sync::update_cartodb($sql_verifyupdate, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
-				$count = $count->rows[0]->count;
+				if (!$count) {
+					return;
+				} else {
+					$count = $count->rows[0]->count;
+				}
 				
 				if ($count == 0) {
 					$sql_insert = sprintf('INSERT INTO ' . CARTOPRESS_TABLE . '(%s, the_geom) VALUES (\'%s\', (CDB_LatLng(' . $args['cp_geo_lat'] . ', ' . $args['cp_geo_long'] . ')));', implode(', ',array_keys($args)), implode('\', \'',array_values($args)) );
@@ -321,7 +330,11 @@ if (!class_exists('cartopress_sync')) {
 		public static function cartodb_delete($post_id) {
 			$sql_verifyupdate = 'SELECT COUNT(*) FROM ' . CARTOPRESS_TABLE . ' WHERE cp_post_id = ' .$post_id;
 			$count = cartopress_sync::update_cartodb($sql_verifyupdate, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
-			$count = $count->rows[0]->count;
+			if (!$count) {
+				return;
+			} else {
+				$count = $count->rows[0]->count;
+			}
 			
 			if ($count == 0) {
 				return false;
@@ -352,7 +365,7 @@ if (!class_exists('cartopress_sync')) {
 		   $post_id = $_POST['post_id'];
 		   $sql_delete = 'DELETE FROM ' . CARTOPRESS_TABLE .  ' WHERE cp_post_id = ' . $post_id;
 		   $results = cartopress_sync::update_cartodb($sql_delete, CARTOPRESS_APIKEY, CARTOPRESS_USERNAME, true);
-		   if ($results->total_rows == 1) {
+		   if ($results && $results->total_rows == 1) {
 		   	$message = "success";
 		   } else {
 		   	$message = "An unknown error occured: " . $results;

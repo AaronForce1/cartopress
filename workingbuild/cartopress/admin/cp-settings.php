@@ -439,7 +439,11 @@ if (!class_exists('cartopress_settings')) {
 		public function cartopress_cartodb_apikey_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
-			$str = esc_attr($cpoptions['cartopress_cartodb_apikey']);
+			if (isset($cpoptions['cartopress_cartodb_apikey'])) {
+				$str = esc_attr($cpoptions['cartopress_cartodb_apikey']);
+			} else {
+				$str = null;
+			}
 			printf(
 				'<input type="text" name="cartopress_admin_options[cartopress_cartodb_apikey]" id="cartopress_cartodb_apikey" placeholder="Enter CartoDB API Key" value="%s" />', $str
 			);
@@ -470,7 +474,11 @@ if (!class_exists('cartopress_settings')) {
 		public function cartopress_cartodb_username_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
-			$str = esc_attr($cpoptions['cartopress_cartodb_username']);
+			if (isset($cpoptions['cartopress_cartodb_username'])) {
+				$str = esc_attr($cpoptions['cartopress_cartodb_username']);
+			} else {
+				$str = null;
+			}
 			printf(
 				'<input type="text" name="cartopress_admin_options[cartopress_cartodb_username]" id="cartopress_cartodb_username" placeholder="Enter CartoDB Username" value="%s" />', $str
 			);
@@ -486,7 +494,11 @@ if (!class_exists('cartopress_settings')) {
 		public function cartopress_cartodb_tablename_callback()
 		{
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
-			$str = esc_attr($cpoptions['cartopress_cartodb_tablename']);
+			if (isset($cpoptions['cartopress_cartodb_tablename'])) {
+				$str = esc_attr($cpoptions['cartopress_cartodb_tablename']);
+			} else {
+				$str = null;
+			}
 			printf(
 				'<p class="cpdb-specialinstruction">Please enter a table name. You may use an existing table from your CartoDB database, or if you use a unique table name, a new table will be created in your CartoDB account (recommended).</p>
 				<img src="' . admin_url('/images/yes.png') . '" id="cpbd_tableconnect_connected" /><input type="text" name="cartopress_admin_options[cartopress_cartodb_tablename]" id="cartopress_cartodb_tablename" placeholder="Enter A Unique Name for Your CartoDB Table" value="%s" />', $str

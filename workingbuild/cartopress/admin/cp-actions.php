@@ -87,7 +87,7 @@ function get_cartopress_description($post_id, $esc = true) {
 		if (!empty(get_post_field('post_excerpt', $post_id))) {
 			$cp_post_description = get_post_field('post_excerpt', $post_id);
 		} else {
-			$cp_post_content = get_cartopress_postcontent($post_id, $esc = true);
+			$cp_post_content = get_post_field('post_content', $post_id);
 			$cp_post_description = wp_trim_words( $cp_post_content, 55, '...' );
 		}
 	} //end if

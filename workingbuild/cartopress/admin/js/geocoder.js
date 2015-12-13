@@ -111,6 +111,11 @@ pro.mapping = new Object;
 			$('#cpdb-geocode-fields input, #cpdb-geocode-fields textarea').val("").removeClass("ent");
 			$(pro.mapMe).dequeue();
 		}
+		else if (marker.init) {
+			assets.map.removeLayer(marker.init);
+			setTimeout(function(){delete marker.init;}, 200);
+			$(pro.mapMe).dequeue();
+		}
 		else {
 			$(pro.mapMe).dequeue();
 		}
@@ -123,7 +128,7 @@ pro.mapping = new Object;
 		.queue(function(){
 			switch (assets.AMap) {
 				case false:
-					if (type == "init") { if ($('#cp_geo_lat').val().length !== 0 && $('#cp_geo_long').val().length !== 0) { geo = { lat : $('#cp_geo_lat').val(), lon : $('#cp_geo_long').val(), zoom : 15 }; } else { geo = { lat : 38, lon : -08.10546875, zoom : 2 }; } }
+					if (type == "init") { if ($('#cp_geo_lat').val().length !== 0 && $('#cp_geo_long').val().length !== 0) { geo = { lat : $('#cp_geo_lat').val(), lon : $('#cp_geo_long').val(), zoom : 18 }; } else { geo = { lat : 38, lon : -08.10546875, zoom : 2 }; } }
 					else {}
 					createMap();
 					break;

@@ -74,10 +74,10 @@ jQuery(document).ready(function($){
 				alert("Your API Key is not valid or does not match your CartoDB account. Please re-enter your API Key.");
 				$('#cartopress_cartodb_apikey').val("");
 			} else if (response == 'notfound') {
-				alert("Could not connect to your CartoDB account. Please verify your user name is correct.");
+				alert("CartoPress could not connect to your CartoDB account. Please verify your user name is correct.");
 				$('#cartopress_cartodb_username').val("");
 			} else if (response == 'specialchar') {
-				alert("Your table name is invalid. Please use only alpha-numeric characters and underscores. Example: tablename1 or table_name1");
+				alert("Your table name is invalid. Please use only alpha-numeric characters and underscores. Example: tablename or table_name");
 				$('#cartopress_cartodb_tablename').val("");
 			} else if (response == 'success') {
 				alert("Your table has been successfully created in your CartoDB account. Please note it may take a few moments to appear. If you are currently logged into your account, you may need to refresh your browser to see it among your datasets.");
