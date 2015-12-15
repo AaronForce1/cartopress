@@ -5,7 +5,7 @@ CartoPress is a plugin that links CartoDB, an open-source and API-driven webmapp
 
 CartoPress was built to provide the ability to turn your WordPress-based site into a geo-CMS using the CartoDB platform, allowing you to design interesting interactive maps and geo-spatial appliations from your existing WordPress data. Here we have created a bridge, a means to traverse the infinite possibilites of mapping styles and visualizations with the ease of Wordpress. Users can now link directly to the CartoDB-hosted account and immediately link their posts/stories, with georeferencing data.
 
-####Key Features
+####KEY FEATURES
 * Use CartoDB's intuitive user-interface to quickly and easily make maps and spatialize your WordPress data
 * Georeferece your posts, pages and media attachments using the built-in CartoPress geocoder
 * Configure settings to sync Post Content, Featured Image, Taxonomies, Author, and Custom Fields to your CartoDB dataset
@@ -18,7 +18,7 @@ CartoPress was built to provide the ability to turn your WordPress-based site in
 * Easily publish maps on your site using CartoDB's iframe embedding or build a custom geo-spatial application from your WordPress data using the cartodb.js API
 * Use CartoDB to export your data into various geo datatypes including SHP, KML, GeoJSON, CSV and SVG
 
-***INSTALLATION
+####INSTALLATION
 
 As simple as any other Wordpress plugin. Simply upload the zip file or add the folder to wp-contents/plugins in your wordpress distribution and ACTIVATE!
 
