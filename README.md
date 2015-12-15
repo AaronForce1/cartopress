@@ -1,26 +1,24 @@
 #CartoPress
 ###A CartoDB Client for WordPress
 
-CartoDB is an open source tool that allows for the storage and visualization of geospatial data on the web.
+CartoPress is a plugin that links CartoDB, an open-source and API-driven webmapping platform, to the world's most popular CMS: WordPress.
 
-CartoPress is an open source plugin that links CartoDB to the world's most popular Content Management System: Wordpress.
+CartoPress was built to provide the ability to turn your WordPress-based site into a geo-CMS using the CartoDB platform, allowing you to design interesting interactive maps and geo-spatial appliations from your existing WordPress data. Here we have created a bridge, a means to traverse the infinite possibilites of mapping styles and visualizations with the ease of Wordpress. Users can now link directly to the CartoDB-hosted account and immediately link their posts/stories, with georeferencing data.
 
+####Key Features
+* Use CartoDB's intuitive user-interface to quickly and easily make maps and spatialize your WordPress data
+* Georeferece your posts, pages and media attachments using the built-in CartoPress geocoder
+* Configure settings to sync Post Content, Featured Image, Taxonomies, Author, and Custom Fields to your CartoDB dataset
+* Ability to manually input and edit geodata
+* Streamlined processes will automatically insert new data to your existing maps
+* Use existing tables from your CartoDB account
+* Add a custom summary description to your post to display in your map's infowindow
+* Enhance your map by adding additional layers
+* Make use of CartoDB's extensive styling wizards and CartoCSS to create beautiful maps with your data
+* Easily publish maps on your site using CartoDB's iframe embedding or build a custom geo-spatial application from your WordPress data using the cartodb.js API
+* Use CartoDB to export your data into various geo datatypes including SHP, KML, GeoJSON, CSV and SVG
 
-Cartopress was built to provide unique, flexible and intuitive ways to create maps and design geospatial applications. The visualizations and capabilities fostered by CartoDB are limited only by one's imagination, but currently have been trapped in the confines of data sets and table values.
-
-Here we have created a bridge, a means to traverse the infiniette possibilites of mapping styles and visualizations with the ease of Wordpress. Users can now link directly to the CartoDB-hosted account and immediately link their posts/stories, with georeferencing data. 
-
-Instead of just searching Wordpress with keywords and tags, we've now introduced a fantastic way to search by location. Websites can now be enhanced with state-of-the-art mapping views and navigation of these sites can be redefined to imitate the dimensions of the world we live in.
-
-
-CASE STUDY: Nate's Site... Example Screenshots... Etc.
-
-
-Refer to CartoDB Site.
-Refer to AB and TH Sites.
-Refer to Vimeo Walkthrough?
-
-INSTALLATION
+***INSTALLATION
 
 As simple as any other Wordpress plugin. Simply upload the zip file or add the folder to wp-contents/plugins in your wordpress distribution and ACTIVATE!
 
