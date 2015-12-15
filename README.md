@@ -1,5 +1,5 @@
-# cartopress
-CartoDB Plugin for Wordpress
+#CartoPress
+###A CartoDB Client for WordPress
 
 CartoDB is an open source tool that allows for the storage and visualization of geospatial data on the web.
 
