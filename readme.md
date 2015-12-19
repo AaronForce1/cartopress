@@ -27,7 +27,7 @@ CartoPress is a plugin for WordPress that links CartoDB, an open-source and API-
 ####GETTING STARTED
 Installation is as simple as any other WordPress plugin. Just upload the zip file to the plugins directory in your WordPress distribution and ACTIVATE! The recently stable release should be located in the WordPress plugins directory, while this GitHub repository will be used for development purposes.
 
-CartoPress requires at least a free <a href="https://cartodb.com/signup">CartoDB account</a>. Once your have your account created, all you need is your API Key and your username to get started. CartoPress can automatically generate your CartoDB table and add all the required field sets - linking the two platforms with ease.
+CartoPress requires at least a free [CartoDB account](https://cartodb.com/signup). Once your have your account created, all you need is your API Key and your username to get started. CartoPress can automatically generate your CartoDB table and add all the required field sets - linking the two platforms with ease.
 
 Check out the CartoPress documentation for instruction on basic setup and usage and information for developers. Check out CartoDB's documentation for information on using the CartoDB editor, styling and publishing maps.
 
@@ -37,6 +37,8 @@ CartoPress requires at least WordPress 4.3.
 ####FUTURE DEVELOPMENT AND CONTRIBUTING
 Since this is our first ever WordPress plugin, we would love all the help we can get! Our aim is to make to CartoPress as extendable as possible for developers and ideas for improving the existing codebase or adding new features will definitely be taken to heart.
 
-Please see our [todo](todo.md) list to see what we have planned for future releases.
+Please use the GitHub [issue reporting tool](https://github.com/MasterBaideme1021/cartopress/issues) to report bugs in the existing build and request additional features or enhancements.
+
+Please see our [todo](todo.md) list to see what we have planned for future releases. CartoPress uses GPLv2 so feel free to use as you wish!
 
 
