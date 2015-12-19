@@ -25,7 +25,7 @@ CartoPress is a plugin for WordPress that links CartoDB, an open-source and API-
 * CartoDB is an open-source platform and offers a free account providing a wide range of abilities for individual users, while upgraded accounts offer enterprise-ready solutions
 
 ####GETTING STARTED
-Installation is as simple as any other WordPress plugin. Just upload the zip file to the plugins directory in your WordPress distribution and ACTIVATE! The recently stable release should be located in the WordPress plugins directory, while this GitHub repository will be used for development purposes.
+Installation is as simple as any other WordPress plugin. Just upload the zip file to the plugins directory in your WordPress distribution and ACTIVATE! The recent stable release should be located in the WordPress plugins directory, while this GitHub repository will be used for development purposes.
 
 CartoPress requires at least a free [CartoDB account](https://cartodb.com/signup). Once your have your account created, all you need is your API Key and your username to get started. CartoPress can automatically generate your CartoDB table and add all the required field sets - linking the two platforms with ease.
 
