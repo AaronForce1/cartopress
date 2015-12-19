@@ -1,48 +1,42 @@
 #CartoPress
 ###A CartoDB Client for WordPress
 
-CartoPress is a plugin that links CartoDB, an open-source and API-driven webmapping platform, to the world's most popular CMS: WordPress.
+CartoPress is a plugin for WordPress that links CartoDB, an open-source and API-driven web-mapping platform, to the world's most popular content management system. While there are multitudes of other plugins providing mapping support, most are exclusively Google Maps-based instead of based on open-source solutions such as Leaflet; few are focused on geo-referencing your WordPress content; and CartoPress is the first to specifically target CartoDB. 
 
-CartoPress was built to provide the ability to turn your WordPress-based site into a geo-CMS using the CartoDB platform, allowing you to design interesting interactive maps and geo-spatial appliations from your existing WordPress data. Here we have created a bridge, a means to traverse the infinite possibilites of mapping styles and visualizations with the ease of Wordpress. Users can now link directly to the CartoDB-hosted account and immediately link their posts/stories, with georeferencing data.
+CartoPress was built to provide the ability to turn your WordPress-based site into a geo-CMS using the CartoDB platform, allowing you to design dynamic interactive maps and geo-spatial appliations from your existing WordPress data.
+
+While CartoPress allows you to add robust geolocation to your WordPress posts, pages and media, CartoDB brings infinite possibilites of mapping and visualization. CartoPress makes use of CartoDB's powerful APIs to act as a bridge, enabling you to easily import your WordPress data directly into your CartoDB account. Add or update points on your map simply by adding or updating a post!
 
 ####KEY FEATURES
-* Use CartoDB's intuitive user-interface to quickly and easily make maps and spatialize your WordPress data
 * Georeferece your posts, pages and media attachments using the built-in CartoPress geocoder
-* Configure settings to sync Post Content, Featured Image, Taxonomies, Author, and Custom Fields to your CartoDB dataset
-* Ability to manually input and edit geodata
-* Streamlined processes will automatically insert new data to your existing maps
-* Use existing tables from your CartoDB account
+* Automatically sync Post Title, Summary Description, Permalink, Post Date, and all Geo Data to your CartoDB dataset
+* Intuitive interface allows you to easily configure settings to sync Post Content, Featured Image, Taxonomies, Author, and Custom Fields to your CartoDB dataset
+* Streamlined processes will automatically insert new posts, pages and media to your maps
+* Provides the ability to manually input and edit and delete geodata, optionally choose to not sync data on a case-by-case basis
 * Add a custom summary description to your post to display in your map's infowindow
-* Enhance your map by adding additional layers
-* Make use of CartoDB's extensive styling wizards and CartoCSS to create beautiful maps with your data
-* Easily publish maps on your site using CartoDB's iframe embedding or build a custom geo-spatial application from your WordPress data using the cartodb.js API
+
+####BENEFITS OF CARTODB
+* Use CartoDB's intuitive visual editor to quickly and easily spatialize your WordPress data with wizards to make simple, clustered, choropleth and categorized maps, density and heat maps, time-based torque maps and more
+* Customize your map's styling using CartoCSS, an end-user-friendly styling language based on CSS; choose from a variety of built-in basemaps or use your own custom basemap
+* Create custom views based on your data using built-in SQL support
+* Enhance your map by adding additional layers from the CartoDB dataset library or your own source
+* Easily publish maps simply by sharing a link, embedding directly on your site, or build a custom geo-spatial application from your WordPress data using the cartodb.js API
 * Use CartoDB to export your data into various geo datatypes including SHP, KML, GeoJSON, CSV and SVG
+* CartoDB is an open-source platform and offers a free account providing a wide range of abilities for individual users, while upgraded accounts offer enterprise-ready solutions
 
-####INSTALLATION
+####GETTING STARTED
+Installation is as simple as any other WordPress plugin. Simply upload the zip file to the plugins directory in your WordPress distribution and ACTIVATE!
 
-As simple as any other Wordpress plugin. Simply upload the zip file or add the folder to wp-contents/plugins in your wordpress distribution and ACTIVATE!
+CartoPress requires a CartoDB at least a free <a href="https://cartodb.com/signup">CartoDB account</a>. Once your have your account created, all you need is your API Key and your username to get started. CartoPress can automatically generate your CartoDB table and add all the required field sets - linking the two platforms with ease.
 
-CartoDB requires an initial account. Our plugin provides instructions to quickly establish an account through CartoDB.com; From there, our wordpress plugin with automatically generate all required tables and field sets - linking the two platforms with ease.
+Check out the CartoPress documentation for instruction on basic setup and usage and information for developers. Check out CartoDB's documentation for information on using the CartoDB editor, styling and publishing maps.
 
-HOW DOES CARTOPRESS HELP ME?
+####INSTALLATION REQUIREMENTS
+CartoPress requires at least WordPress 4.3
 
-CartoDB is an extremely powerful platform, but understanding datasets, shapefiles, and GeoJSON data can be overwhelming and time-consuming for many users. CartoPress simplifies this process by linking these datasets and making them as simple as adding a new blog post. Each post, page, or even custom wordpress instance can have it's own linked CartoDB dataset.
+####FUTURE DEVELOPMENT AND CONTRIBUTING
+Since this is our first ever WordPress plugin, we would love all the help we can get! Our aim is to make to CartoPress as extendable as possible for developers and ideas for improving the existing codebase or adding new features will definitely be taken to heart.
 
-With the tables already synced from Wordpress, all you have to do is make your CartoDB map visualization as pretty as your little heart desires using their powerful CartoCSS platform enhanced with various APIs.
-
-Future releases of CartoPress also hope to bring these visualizations to life in various fashions on your own Wordpress site! Without the need for embedding iFrames or exporting data from CartoDB!
-
-<< Sign up here to keep updated on our progress!! >>
-
-BROWSER / WP REQUIREMENTS
-
-Specs...
-
-DEVELOPING AND CONTRIBUTING
-
-- We've got our own to-do list 
-    - Stuff marked that we're working on
-    - Stuff we need help with
-    - Blah blah blah.
+Please see our [todo](todo.md) list to see what we have planned for future releases.
 
 
