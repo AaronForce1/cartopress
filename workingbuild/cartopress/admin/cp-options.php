@@ -15,7 +15,7 @@
 	</header>
 	<div id="content">
 		<h1 id="title">CartoPress — A CartoDB Client for WordPress</h1>
-    	<p>This plugin allows you to take advantage of the CartoDB's visualization tools while using your existing WordPress database as a data source. Input your CartoDB account settings and set your Data Collection options to sync your Wordpress site with your CartoDB account. <a href="http://hallisey.github.io/cartopress/documentation/" target="_blank">Documentation</a></p>
+    	<p>This plugin allows you to take advantage of the CartoDB's visualization tools while using your existing WordPress database as a data source. Input your CartoDB account settings and set your Data Collection options to sync your Wordpress site with your CartoDB account. <a href="https://github.com/MasterBaideme1021/cartopress/wiki" target="_blank">Documentation</a></p>
 		<?php echo "<h2 id=" . "settings" . ">" . __( 'Settings', 'menu-test' ) . "</h2>";?> 
 		<p>CartoPress requires a CartoDB account. Please visit <a href="https://cartodb.com/signup" target="_blank"><span class="button">cartodb.com/signup</span></a> to create an account.</p>
 		<form id="cpdb-form-settings" action="options.php" method="post">
