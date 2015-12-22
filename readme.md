@@ -37,6 +37,8 @@ CartoPress requires at least WordPress 4.3.
 ####FUTURE DEVELOPMENT AND CONTRIBUTING
 Since this is our first ever WordPress plugin, we would love all the help we can get! Our aim is to make to CartoPress as extendable as possible for developers and ideas for improving the existing codebase or adding new features will definitely be taken to heart.
 
+See the [documentation](https://github.com/MasterBaideme1021/cartopress/wiki) for notes on how CartoPress works and accessing the PHP API generated documentation
+
 Please use the GitHub [issue reporting tool](https://github.com/MasterBaideme1021/cartopress/issues) to report bugs in the existing build and request additional features or enhancements.
 
 Please see our [todo](todo.md) list to see what we have planned for future releases. CartoPress uses GPLv2 so feel free to use as you wish!
