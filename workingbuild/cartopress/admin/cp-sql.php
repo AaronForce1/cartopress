@@ -433,6 +433,53 @@ if (!class_exists('cartopress_sync')) {
 		   die(print_r(json_encode($geofields), true));
 		} //end cartopress_delete_row()
 		
+		/**
+		 * Updates the geo field data stored in wp_postmeta with the values from CartoDB.
+		 * 
+		 * AJAX handler to update the geodata saved in wp_postmeta with the corresponding CartoDB value.
+		 *
+		 * @since 0.1.0
+		 */
+		public static function cartopress_update_postmeta($post_id){
+			$cp_post = cartopress_sync::cartodb_select($post_id);
+			$donotsync_value = get_post_meta( $post_id, '_cp_post_donotsync', true );
+			if ($cp_post[1] == true && $donotsync_value != 1) {
+				$cp_values = $cp_post[0]->rows[0];
+				
+				$geodata = array(
+					'cp_geo_displayname' => $cp_values->cp_geo_displayname,
+					'cp_geo_lat' => $cp_values->cp_geo_lat,
+					'cp_geo_long' => $cp_values->cp_geo_long,
+					'cp_geo_streetnumber' => $cp_values->cp_geo_streetnumber,
+					'cp_geo_street' => $cp_values->cp_geo_street,
+					'cp_geo_postal' => $cp_values->cp_geo_postal,
+					'cp_geo_adminlevel4_vill_neigh' => $cp_values->cp_geo_adminlevel4_vill_neigh,
+					'cp_geo_adminlevel3_city' => $cp_values->cp_geo_adminlevel3_city,
+					'cp_geo_adminlevel2_county' => $cp_values->cp_geo_adminlevel2_county,
+					'cp_geo_adminlevel1_st_prov_region' => $cp_values->cp_geo_adminlevel1_st_prov_region,
+					'cp_geo_adminlevel0_country' => $cp_values->cp_geo_adminlevel0_country
+				);
+				update_post_meta( $post_id, '_cp_post_geo_data', $geodata );
+				
+			} else {
+				//default values
+				$geodata = array(
+					'cp_geo_displayname' => '',
+					'cp_geo_lat' => '',
+					'cp_geo_long' => '',
+					'cp_geo_streetnumber' => '',
+					'cp_geo_street' => '',
+					'cp_geo_postal' => '',
+					'cp_geo_adminlevel4_vill_neigh' => '',
+					'cp_geo_adminlevel3_city' => '',
+					'cp_geo_adminlevel2_county' => '',
+					'cp_geo_adminlevel1_st_prov_region' => '',
+					'cp_geo_adminlevel0_country' => ''
+				);
+			} //end if
+			
+		} //end cartopress_update_postmeta()
+		
 			
 	} // end class cartopress_sync
 		

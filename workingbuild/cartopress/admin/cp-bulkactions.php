@@ -50,6 +50,8 @@ if (!class_exists('cartopress_bulkactions')) {
 							jQuery('<option>').val('cartopress_delete').text('<?php _e('Delete From CartoDB')?>').appendTo("select[name='action2']");
 							jQuery('<option>').val('cartopress_restore').text('<?php _e('Restore To CartoDB')?>').appendTo("select[name='action']");
 							jQuery('<option>').val('cartopress_restore').text('<?php _e('Restore To CartoDB')?>').appendTo("select[name='action2']");
+							jQuery('<option>').val('cartopress_update').text('<?php _e('Update Post With CartoDB')?>').appendTo("select[name='action']");
+							jQuery('<option>').val('cartopress_update').text('<?php _e('Update Post With CartoDB')?>').appendTo("select[name='action2']");
 						});
 					</script>
 				<?php
@@ -60,7 +62,7 @@ if (!class_exists('cartopress_bulkactions')) {
 		/**
 		 * Handle the custom Bulk Action
 		 * 
-		 * Uses switch/case to either delete or restore CartoDB data. Does not effect any WordPress data. Based on the post http://wordpress.stackexchange.com/questions/29822/custom-bulk-action
+		 * Uses switch/case to either delete from CartoDB, restore to CartoDB, or update postmeta with CartoDB data. Does not effect any WordPress core data. Based on the post http://wordpress.stackexchange.com/questions/29822/custom-bulk-action
 		 * 
 		 * @since 0.1.0
 		 */
@@ -74,7 +76,7 @@ if (!class_exists('cartopress_bulkactions')) {
 				$wp_list_table = _get_list_table('WP_Posts_List_Table');  // depending on your resource type this could be WP_Users_List_Table, WP_Comments_List_Table, etc
 				$action = $wp_list_table->current_action();
 				
-				$allowed_actions = array("cartopress_delete", "cartopress_restore");
+				$allowed_actions = array("cartopress_delete", "cartopress_restore", "cartopress_update");
 				if(!in_array($action, $allowed_actions)) {
 					return;
 				}
@@ -92,7 +94,7 @@ if (!class_exists('cartopress_bulkactions')) {
 				}
 				
 				// this is based on wp-admin/edit.php
-				$sendback = remove_query_arg( array('cartopress_deleted', 'cartopress_restored', 'untrashed', 'deleted', 'ids'), wp_get_referer() );
+				$sendback = remove_query_arg( array('cartopress_deleted', 'cartopress_restored', 'cartopress_updated', 'untrashed', 'deleted', 'ids'), wp_get_referer() );
 				if ( ! $sendback ) {
 					$sendback = admin_url( "edit.php?post_type=$post_type" );
 				}
@@ -133,6 +135,15 @@ if (!class_exists('cartopress_bulkactions')) {
 						$sendback = add_query_arg( array('cartopress_restored' => $restored, 'ids' => join(',', $post_ids) ), $sendback );
 					break;
 					
+					case 'cartopress_update':
+						$updated = 0;
+						foreach( $post_ids as $post_id ) {
+							cartopress_sync::cartopress_update_postmeta($post_id);
+							$updated++;
+						}
+						$sendback = add_query_arg( array('cartopress_updated' => $updated, 'ids' => join(',', $post_ids) ), $sendback );
+					break;
+					
 					default: return;
 				}
 				
@@ -160,6 +171,10 @@ if (!class_exists('cartopress_bulkactions')) {
 				$message = sprintf( _n( 'Post Restored To CartoDB.', '%s posts restored to CartoDB.', $_REQUEST['cartopress_restored'] ), number_format_i18n( $_REQUEST['cartopress_restored'] ) );
 				echo "<div class=\"updated\"><p>{$message}</p></div>";
 			}
+			if($pagenow == 'edit.php' && $post_type == 'post' && isset($_REQUEST['cartopress_updated']) && (int) $_REQUEST['cartopress_updated']) {
+				$message = sprintf( _n( 'Post Updated With CartoDB Geo Data.', '%s posts updated with CartoDB geo data.', $_REQUEST['cartopress_updated'] ), number_format_i18n( $_REQUEST['cartopress_updated'] ) );
+				echo "<div class=\"updated\"><p>{$message}</p></div>";
+			}
 			if($pagenow == 'edit.php' && $post_type == 'page' && isset($_REQUEST['cartopress_deleted']) && (int) $_REQUEST['cartopress_deleted']) {
 				$message = sprintf( _n( 'Page Deleted From CartoDB.', '%s pages deleted from CartoDB.', $_REQUEST['cartopress_deleted'] ), number_format_i18n( $_REQUEST['cartopress_deleted'] ) );
 				echo "<div class=\"updated\"><p>{$message}</p></div>";
@@ -168,6 +183,11 @@ if (!class_exists('cartopress_bulkactions')) {
 				$message = sprintf( _n( 'Page Restored To CartoDB.', '%s pages restored to CartoDB.', $_REQUEST['cartopress_restored'] ), number_format_i18n( $_REQUEST['cartopress_restored'] ) );
 				echo "<div class=\"updated\"><p>{$message}</p></div>";
 			}
+			if($pagenow == 'edit.php' && $post_type == 'page' && isset($_REQUEST['cartopress_updated']) && (int) $_REQUEST['cartopress_updated']) {
+				$message = sprintf( _n( 'Post Updated With CartoDB Geo Data.', '%s posts updated with CartoDB geo data.', $_REQUEST['cartopress_updated'] ), number_format_i18n( $_REQUEST['cartopress_updated'] ) );
+				echo "<div class=\"updated\"><p>{$message}</p></div>";
+			}
+
 		}
 		
 	}
