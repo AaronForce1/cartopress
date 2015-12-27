@@ -293,8 +293,9 @@ function get_cartopress_customfields($post_id) {
 		if (!empty($customfield_options)) {
 			foreach ($customfield_options as $key=>$value) {
 				if ($value['sync'] == 1) {
-					$adds = array($key => get_post_meta($post_id, $value['custom_field'], true));
+					$adds = array($key => esc_html(get_post_meta($post_id, $value['custom_field'], true)));
 					$fields = array_merge($fields, $adds);
+					
 				}
 			}
 		}
@@ -314,7 +315,7 @@ function get_cartopress_customfields($post_id) {
 function get_cartopress_displayname($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_displayname = $geodata['cp_geo_displayname'];
-	return $cp_geo_displayname;
+	return wp_specialchars($cp_geo_displayname);
 }
 
 /**
@@ -366,7 +367,7 @@ function get_cartopress_streetnumber($post_id) {
 function get_cartopress_street($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_street = $geodata['cp_geo_street'];
-	return $cp_geo_street;
+	return wp_specialchars($cp_geo_street);
 }			
 
 /**
@@ -392,7 +393,7 @@ function get_cartopress_postcode($post_id) {
 function get_cartopress_adminlevel4_vill_neigh($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_adminlevel4_vill_neigh = $geodata['cp_geo_adminlevel4_vill_neigh'];
-	return $cp_geo_adminlevel4_vill_neigh;
+	return wp_specialchars($cp_geo_adminlevel4_vill_neigh);
 }		
 
 /**
@@ -405,7 +406,7 @@ function get_cartopress_adminlevel4_vill_neigh($post_id) {
 function get_cartopress_adminlevel3_city($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_adminlevel3_city = $geodata['cp_geo_adminlevel3_city'];
-	return $cp_geo_adminlevel3_city;
+	return wp_specialchars($cp_geo_adminlevel3_city);
 }			
 
 /**
@@ -418,7 +419,7 @@ function get_cartopress_adminlevel3_city($post_id) {
 function get_cartopress_adminlevel2_county($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_adminlevel2_county = $geodata['cp_geo_adminlevel2_county'];
-	return $cp_geo_adminlevel2_county;
+	return wp_specialchars($cp_geo_adminlevel2_county);
 }		
 
 /**
@@ -431,7 +432,7 @@ function get_cartopress_adminlevel2_county($post_id) {
 function get_cartopress_adminlevel1_st_prov_region($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_adminlevel1_st_prov_region = $geodata['cp_geo_adminlevel1_st_prov_region'];
-	return $cp_geo_adminlevel1_st_prov_region;
+	return wp_specialchars($cp_geo_adminlevel1_st_prov_region);
 }
 
 /**
@@ -444,7 +445,7 @@ function get_cartopress_adminlevel1_st_prov_region($post_id) {
 function get_cartopress_adminlevel0_country($post_id) {
 	$geodata = get_post_meta( $post_id, '_cp_post_geo_data', true );
 	$cp_geo_adminlevel0_country = $geodata['cp_geo_adminlevel0_country'];
-	return $cp_geo_adminlevel0_country;
+	return wp_specialchars($cp_geo_adminlevel0_country);
 }
 
 /**
