@@ -82,10 +82,12 @@ function get_cartopress_postdate($post_id) {
  * @return string Returns $cp_post_description as escaped or unescaped string
  */			
 function get_cartopress_description($post_id, $esc = true) {
-	if (!empty(get_post_meta( $post_id, '_cp_post_description', true ))) {
+	$desc = get_post_meta( $post_id, '_cp_post_description', true );
+	if (!empty($desc)) {
 		$cp_post_description = get_post_meta( $post_id, '_cp_post_description', true );
 	} else {
-		if (!empty(get_post_field('post_excerpt', $post_id))) {
+		$excerpt = get_post_field('post_excerpt', $post_id);
+		if (!empty ($excerpt)) {
 			$cp_post_description = get_post_field('post_excerpt', $post_id);
 		} else {
 			$cp_post_content = get_post_field('post_content', $post_id);
