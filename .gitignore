@@ -1,0 +1,5 @@
+#IGNORE DEVELOPMENT ITEMS
+
+node_modules
+bower_componentes
+dist
