@@ -1,0 +1,23 @@
+{
+  "name": "cartopress",
+  "version": "1.1",
+  "authors": [
+    "Aaron Baideme <aaron@baide.me>",
+    "Troy Hallisey <twarrior3dc@gmail.com>"
+  ],
+  "description": "CartoDB Integration with Wordpress",
+  "main": "gulpfile.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "dist"
+  ],
+  "dependencies": {
+    "Leaflet.awesome-markers": "~2.0.0"
+  },
+  "private": true
+}
