@@ -1,10 +1,11 @@
+$ = jQuery;
 // VARIABLE CONTAINERS FOR FUNCTION SETTINGS!
 	var pro = {};
 	var assets = {};
 	var marker = {};
 	var inputs = {};
 
-jQuery(document).ready(function($){
+$(document).ready(function(){
 	pro.InitializeGeocoder();
 });
 

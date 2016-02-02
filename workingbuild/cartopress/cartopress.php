@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: CartoPress
- * Plugin URI: https://github.com/MasterBaideme1021/cartopress
+ * Plugin URI: https://github.com/MasterBaideme1021/cartopress/
  * Description: This plugin allows you to easily make CartoDB maps with your WordPress data. Simply connect to your CartoDB account and set your options in the settings, and CartoPress will automatically sync your WordPress data to your CartoDB account. Utilize the intuitive CartoDB user interface to visualize and style maps with your data. Publish on your site using CartoDB's powerful and customizable publishing options.
- * Version: 0.1.0
+ * Version: 1.0.0
  * Author: Troy Andrew Hallisey and Aaron Baideme
- * Author URI: https://github.com/MasterBaideme1021/cartopress
+ * Author URI: https://hallisey.github.io/cartopress
  * License: GPL2
  */
  
@@ -64,26 +64,21 @@ if (!class_exists('cartopress')) {
 				// add google fonts
 				$query_args = array( 'family' => 'Montserrat:400,700', 'subset' => 'latin,latin-ext' ); 
 				wp_register_style( 'google_fonts', add_query_arg( $query_args, "//fonts.googleapis.com/css" ), array(), null );
-				wp_register_style( 'cartopress', CARTOPRESS_URL . '/admin/css/cartopress-settings.css', array(), CARTOPRESS_VERS );
+				wp_register_style( 'cartopress-settings', CARTOPRESS_URL . '/admin/css/cartopress-settings.css', array(), CARTOPRESS_VERS );
 				wp_register_style( 'cartopress-geocode-styles', CARTOPRESS_URL . '/admin/css/geocoder-styles.css', array(), CARTOPRESS_VERS );
-				wp_register_style( 'leaflet', 'http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css');
-				wp_register_style( 'ionicons', 'http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css');
+				wp_register_style( 'cartopress-leaflet', CARTOPRESS_URL . '/admin/css/leaflet.css', array(), CARTOPRESS_VERS);
 				wp_register_style( 'cartopress-leaflet-styles', CARTOPRESS_URL . '/admin/css/leaflet-awesome-markers.css', array(), CARTOPRESS_VERS );
 
 			} // end get_admin_styles
 			
 			/**
 			 * Registers all linked scripts required by CartoPress.
-			 * 
-			 * @todo Use default WordPress install of jQuery instead of 2.1.4 for cartopress-geocode-script
 			 */ 
 			function register_admin_scripts() {
-				wp_register_script('jquery2.1.4', 'https://code.jquery.com/jquery-2.1.4.min.js');
-				wp_register_script('leaflet', 'http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js');
-				wp_register_script('cartodb', 'http://libs.cartocdn.com/cartodb.js/v3/3.11/cartodb.js');
-				wp_register_script('ionicons', CARTOPRESS_URL . '/admin/js/leaflet.awesome-markers.min.js', array(), CARTOPRESS_VERS);
-				wp_register_script('admin-script', CARTOPRESS_URL . '/admin/js/admin.js', array('jquery'), CARTOPRESS_VERS );
-				wp_register_script('cartopress-geocode-script', CARTOPRESS_URL . '/admin/js/geocoder.js', array('jquery2.1.4','leaflet'), CARTOPRESS_VERS );
+				wp_register_script('cartopress-leaflet', CARTOPRESS_URL . '/admin/js/leaflet.js', array(), CARTOPRESS_VERS);
+				wp_register_script('cartopress-leaflet-markers', CARTOPRESS_URL . '/admin/js/leaflet-awesome-markers.min.js', array(), CARTOPRESS_VERS);
+				wp_register_script('cartopress-admin-script', CARTOPRESS_URL . '/admin/js/admin.js', array('jquery'), CARTOPRESS_VERS );
+				wp_register_script('cartopress-geocode-script', CARTOPRESS_URL . '/admin/js/geocoder.js', array('jquery','cartopress-leaflet'), CARTOPRESS_VERS );
 				wp_register_script('cartopress-geocode-helper-script', CARTOPRESS_URL . '/admin/js/geocoder-helper.js', array('jquery'), CARTOPRESS_VERS );
 			} // end get_admin_scripts
 				
@@ -104,7 +99,7 @@ if (!class_exists('cartopress')) {
 			define('CARTOPRESS_ADMIN_DIR', CARTOPRESS_DIR_PATH . '/admin/' );
 			define('CARTOPRESS_URL', trim( plugin_dir_url( __FILE__ ), '/' ) );
 			define('CARTOPRESS_DIR', dirname( CARTOPRESS_PLUGIN_NAME ) );
-			define('CARTOPRESS_VERS', '0.1.0');
+			define('CARTOPRESS_VERS', '1.0.0');
 			
 			$cpoptions = get_option( 'cartopress_admin_options', '' );
 			if (isset($cpoptions['cartopress_cartodb_apikey'])) {

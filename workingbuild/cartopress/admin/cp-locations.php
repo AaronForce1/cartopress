@@ -69,13 +69,13 @@ if (!class_exists('geocoder_metabox')) {
 					 */
 					function load_geocoder_dependencies($location) {
 					   if( 'post.php' == $location || 'post-new.php' == $location ) {
-					     wp_enqueue_script('jquery2');
+					     wp_enqueue_script('jquery');
 						 wp_enqueue_style('google_fonts');
-						 wp_enqueue_style('leaflet');
-						 wp_enqueue_style('ionicons');
+						 wp_enqueue_style('cartopress-leaflet');
 					     wp_enqueue_script(array('cartopress-geocode-script'));
 						 wp_enqueue_script(array('cartopress-geocode-helper-script'));
-						 wp_enqueue_script('ionicons');
+						 wp_enqueue_script('cartopress-leaflet-markers');
+						 wp_enqueue_script('cartopress-leaflet');
 					     wp_enqueue_style(array('cartopress-geocode-styles', 'cartopress-leaflet-styles'));
 					  }
 					}

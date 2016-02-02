@@ -67,7 +67,7 @@ if (!class_exists('cartopress_settings')) {
 		 * @since 0.1.0
 		 */
 		public static function cartopress_get_admin_styles() {
-		   wp_enqueue_style( 'cartopress' );
+		   wp_enqueue_style( 'cartopress-settings' );
 		   wp_enqueue_style ( 'google_fonts');
 	    } // end cartopress_admin_styles
 	    
@@ -77,8 +77,8 @@ if (!class_exists('cartopress_settings')) {
 		 * @since 0.1.0
 		 */
 	    public static function cartopress_get_admin_scripts() {
-	    	wp_enqueue_script('admin-script');
-			wp_localize_script('admin-script','cartopress_admin_ajax', array(
+	    	wp_enqueue_script('cartopress-admin-script');
+			wp_localize_script('cartopress-admin-script','cartopress_admin_ajax', array(
 					"cartopress_admin_nonce" => wp_create_nonce('cartopress_admin_nonce'),
 					"cartopress_cartopressify_nonce" => wp_create_nonce('cartopress_cartopressify_nonce'),
 					"cartopress_create_column_nonce" => wp_create_nonce('cartopress_create_column_nonce'),
