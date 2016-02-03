@@ -11,7 +11,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 CartoPress allows you to geocode your WP site's posts and pages, and connect your data directly to CartoDB to create awesome interactive maps.
 
 == Description ==
-CartoPress links your WordPress site directly to CartoDB, an open-source and API-driven web-mapping platform, to the world's most popular content management system. Geocode your posts, pages, and media and CartoPress will sync to your CartoDB account, allowing you to take advantage of CartoDB's visual editor and CartoCSS styling options.
+CartoPress links your WordPress site directly to CartoDB, an open-source and API-driven web-mapping platform. Geocode your posts, pages, and media and CartoPress will sync to your CartoDB account, allowing you to take advantage of CartoDB's visual editor and CartoCSS styling options.
 
 **_One of a kind:_** While there are multitudes of other plugins providing mapping support, most are exclusively Google Maps-based instead of based on open-source solutions such as Leaflet; few are focused on geo-referencing your WordPress content; and CartoPress is the first to specifically target CartoDB. 
 
