@@ -1,17 +1,17 @@
 === Plugin Name ===
-Contributors: Aaron Baideme, Troy Andrew Hallisey
+Contributors: Aaron Baideme, twarrior3dc
 Donate link: http://troyhallisey.com
-Tags: CartoPress, CartoDB, CartoCSS, georeference, geocode, Google Maps, Leaflet, mapping, Google, cartodb, cartopress, map
+Tags: CartoPress, CartoDB, Leaflet, georeference, geocode, Google Maps, CartoCSS, mapping, cartodb, cartopress, map, cartography, sql, interactive map, maps
 Requires at least: 4.3
 Tested up to: 4.4
 Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin allows you to use your exisitng WordPress database as source data for your CartoDB account. Georeference your posts, pages, and media and CartoPress will sync to your CartoDB account, allowing you to take advantage of CartoDB's visual editor and CartoCSS styling options.
+CartoPress allows you to geocode your WP site's posts and pages, and connect your data directly to CartoDB to create awesome interactive maps.
 
 == Description ==
-CartoPress is a plugin for WordPress that links CartoDB, an open-source and API-driven web-mapping platform, to the world's most popular content management system. 
+CartoPress links your WordPress site directly to CartoDB, an open-source and API-driven web-mapping platform, to the world's most popular content management system. Geocode your posts, pages, and media and CartoPress will sync to your CartoDB account, allowing you to take advantage of CartoDB's visual editor and CartoCSS styling options.
 
 **_One of a kind:_** While there are multitudes of other plugins providing mapping support, most are exclusively Google Maps-based instead of based on open-source solutions such as Leaflet; few are focused on geo-referencing your WordPress content; and CartoPress is the first to specifically target CartoDB. 
 
@@ -30,7 +30,7 @@ CartoPress is a plugin for WordPress that links CartoDB, an open-source and API-
 * Customize your map's styling using CartoCSS, an end-user-friendly styling language based on CSS; choose from a variety of built-in basemaps or use your own custom basemap
 * Create custom views based on your data using built-in SQL support
 * Enhance your map by adding additional layers from the CartoDB dataset library or your own source
-* Easily publish maps simply by sharing a link, embedding directly on your site, or build a custom geo-spatial application from your WordPress data using the cartodb.js API
+* Easily publish maps simply by sharing a link, embedding directly on your site, or build a custom geo-spatial application from your WordPress data using the cartodb.js API and Leaflet
 * Use CartoDB to export your data into various geo datatypes including SHP, KML, GeoJSON, CSV and SVG
 * CartoDB is an open-source platform and offers a free account providing a wide range of abilities for individual users, while upgraded accounts offer enterprise-ready solutions
 
@@ -38,8 +38,8 @@ CartoPress is a plugin for WordPress that links CartoDB, an open-source and API-
 
 1. Installation is as simple as any other WordPress plugin. Just upload the zip file to the plugins directory in your WordPress site and ACTIVATE! Note: The latest stable release can be found in the WordPress plugin directory. For development versions, please see the Github [repo](https://github.com/MasterBaideme1021/cartopress).
 2. Create a CartoDB account if you don't already have one.
-3. Go to Settings > CartoPress and input your CartoDB API Key (available at https://yoursubdomain.cartodb.com/your_apps) and Username (your subdomain).
-4. Create a unique name for your dataset in CartoDB and click the 'Connect to CartoDB' button. Your dataset will then be automatically created in your CartoDB account. Be sure to 'Save' changes on the settings page
+3. Go to **Settings > CartoPress** and input your CartoDB API Key (available at yoursubdomain.cartodb.com/your_apps) and Username (your subdomain).
+4. Create a unique name for your dataset in CartoDB and click the __'Connect to CartoDB'__ button. Your dataset will then be automatically created in your CartoDB account. Be sure to __'Save'__ changes on the settings page
 5. Configure your options: Check the boxes for which post types you would like to geocode — Posts, Pages, and/or Media. Check any additional data sync options for syncing Post Content, Categories, Tags, Featured Image, Author, Post Format or Custom Fields
 
 == Frequently Asked Questions ==
@@ -64,7 +64,7 @@ The Geocoder search feature uses [Nominatim](http://wiki.openstreetmap.org/wiki/
 
 No, only posts with the status of 'Publish' will be synced. If you later change a published post to private, trash, draft or any other type, it will automatically be deleted from your CartoDB dataset.
 
-= Can I choose to not sync a single post on a case-by-case basis?
+= Can I choose to not sync a single post on a case-by-case basis? =
 
 Yes, you can click the 'Do Not Sync' toggle to optionally choose to not sync a published post. You can find this by clicking on the Geocoder settings tool just to the right of the CartoDB ID in the Geocoder. Note that it is only necessary to use this button if you would like to keep geodata stored for the post, but not sync with CartoDB. Any post that does not contain latitude and longitude data will not sync anyway.
 
@@ -111,10 +111,4 @@ The easiest way to do this is to use the 'embed' option in the CartoDB publishin
 First stable release
 
 = 0.1.0 =
-This is the first development version. Please upgrade to the latest stable release.
-
-== Arbitrary section ==
-
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
+This is the first development version. Please upgrade to the latest stable release if you are using this version.
