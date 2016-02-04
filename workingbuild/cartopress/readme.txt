@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: Aaron Baideme, twarrior3dc
+Contributors: AVBaideme, twarrior3dc
 Donate link: http://hallisey.github.io/cartopress/
 Tags: CartoPress, CartoDB, Leaflet, georeference, geocode, Google Maps, CartoCSS, mapping, cartodb, cartopress, map, cartography, sql, interactive map, maps
 Requires at least: 4.3
