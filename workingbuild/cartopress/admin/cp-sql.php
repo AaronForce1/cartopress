@@ -34,8 +34,8 @@ if (!class_exists('cartopress_sync')) {
 		* @return array $result _A php decoded json object._ 
 		*/
 		public static function update_cartodb($sql, $apikey, $username, $return = true){
-			//curl init	
-			$ch = curl_init("https://" . $username . ".cartodb.com/api/v2/sql");
+			//curl init
+			$ch = curl_init("https://" . $username . ".carto.com/api/v2/sql");
 			$query = http_build_query(array('q'=>$sql,'api_key'=>$apikey));
 			
 			//curl opts
